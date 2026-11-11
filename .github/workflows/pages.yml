@@ -1,0 +1,59 @@
+# Builds the prototype app and Storybook and publishes both to GitHub Pages on every push to main:
+#   Prototype  → https://swildricksolar24.github.io/house-cue-prototype/
+#   Storybook  → https://swildricksolar24.github.io/house-cue-prototype/storybook/
+# Requires Settings → Pages → Source: GitHub Actions.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time; a newer push replaces a queued one
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # A type error stops the deploy
+      - run: npm run typecheck
+      # Prototype app at the site root (the type check already ran above)
+      - run: npx vite build
+        env:
+          APP_BASE: /house-cue-prototype/
+      - run: npm run build-storybook
+      - name: Assemble the Pages site
+        run: |
+          mkdir -p site
+          cp -r dist/. site/
+          cp -r storybook-static site/storybook
+          # Pages serves 404.html for unknown paths, so deep links like /homeowner/onboarding/11 still load the app
+          cp dist/index.html site/404.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
