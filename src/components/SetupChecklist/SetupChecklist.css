@@ -1,0 +1,81 @@
+/* HC/Setup Checklist — Figma 19:87 */
+.hc-setup-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  overflow-wrap: break-word;
+}
+
+.hc-setup-checklist__header {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+
+.hc-setup-checklist__title { flex: 1 1 0; min-width: 0; margin: 0; font: 600 14px/20px var(--hc-font); color: var(--hc-text); }
+.hc-setup-checklist__progress-label { flex-shrink: 0; font: 400 12px/18px var(--hc-font); color: var(--hc-link); white-space: nowrap; }
+
+.hc-setup-checklist__track {
+  height: 8px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-fill-10);
+  overflow: hidden;
+}
+
+.hc-setup-checklist__bar {
+  display: block;
+  height: 100%;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-primary);
+}
+
+.hc-setup-checklist__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hc-setup-checklist__item {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-2) 0;
+  border: 0;
+  background: none;
+  color: var(--hc-text);
+  font: inherit;
+  text-align: left;
+}
+
+.hc-setup-checklist__item--interactive { cursor: pointer; border-radius: var(--hc-radius-sm); outline: none; }
+.hc-setup-checklist__item--interactive:hover .hc-setup-checklist__label { text-decoration: underline; }
+.hc-setup-checklist__item--interactive:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+.hc-setup-checklist__label { flex: 1 1 0; min-width: 0; font: 400 14px/20px var(--hc-font); color: var(--hc-text); }
+.hc-setup-checklist__meta { flex-shrink: 0; font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); white-space: nowrap; }
+
+.hc-setup-checklist__see-all {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-sm);
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.hc-setup-checklist__see-all:hover { text-decoration: underline; }
+.hc-setup-checklist__see-all:focus-visible { box-shadow: var(--hc-focus-ring); }

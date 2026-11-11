@@ -1,0 +1,69 @@
+/* HC/Quote Standing Panel — Figma 191:936. Width fills the column (342 mobile, 420 web). */
+.hc-quote-standing {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  overflow-wrap: break-word;
+}
+
+.hc-quote-standing p { margin: 0; }
+
+.hc-quote-standing__header {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+
+.hc-quote-standing__heading { flex: 1 1 0; min-width: 0; font: 700 16px/24px var(--hc-font); color: var(--hc-text); }
+
+/* Local stand-in for HC/Status Pill */
+.hc-quote-standing__pill {
+  flex-shrink: 0;
+  padding: var(--hc-space-1) 10px;
+  border-radius: var(--hc-radius-pill);
+  font: 600 12px/18px var(--hc-font);
+  white-space: nowrap;
+}
+.hc-quote-standing__pill--info { background: var(--hc-info-bg); color: var(--hc-info); }
+.hc-quote-standing__pill--success { background: var(--hc-success-bg); color: var(--hc-success); }
+.hc-quote-standing__pill--warning { background: var(--hc-warning-bg); color: var(--hc-warning); }
+.hc-quote-standing__pill--danger { background: var(--hc-danger-bg); color: var(--hc-danger); }
+
+/* Summary: Standing = small muted; Below floor = medium; Final = medium bold */
+.hc-quote-standing__summary { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+.hc-quote-standing--below-floor .hc-quote-standing__summary { font: 400 14px/20px var(--hc-font); color: var(--hc-text); }
+.hc-quote-standing--final-lost .hc-quote-standing__summary,
+.hc-quote-standing--final-won .hc-quote-standing__summary { font: 700 14px/20px var(--hc-font); color: var(--hc-text); }
+
+.hc-quote-standing__divider {
+  width: 100%;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: var(--hc-border);
+}
+
+.hc-quote-standing__note { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+
+.hc-quote-standing__preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  opacity: 0.45;
+}
+
+.hc-quote-standing__upsell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-3);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-tint);
+}
+
+.hc-quote-standing__upsell-title { font: 700 14px/20px var(--hc-font); color: var(--hc-text); }

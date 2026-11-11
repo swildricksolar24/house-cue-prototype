@@ -1,0 +1,43 @@
+/* C29 Subscription management */
+.hc-c29-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  padding: 15px; /* 16 with the 1px stroke */
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c29-card--saved { border-color: var(--hc-link); }
+.hc-c29-card--web { padding: 23px; }
+.hc-c29-card--gap { gap: var(--hc-space-2); align-items: flex-start; }
+
+.hc-c29-cancel {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-danger);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c29-cancel:hover { text-decoration: underline; }
+
+.hc-c29-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c29-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c29-web__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  flex: 1 1 0;
+  min-width: 0;
+}
+.hc-c29-web__col--side { flex: 0 0 440px; }

@@ -1,0 +1,69 @@
+/* Mobile content: Figma "content" stacks with a 12px gap */
+.hc-c72-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+.hc-c72-stats {
+  display: flex;
+  gap: var(--hc-space-3);
+}
+.hc-c72-stats > * { flex: 1 1 0; min-width: 0; }
+
+.hc-c72-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+
+.hc-c72-actions {
+  display: flex;
+  gap: var(--hc-space-3);
+}
+
+.hc-c72-link-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+}
+.hc-c72-link {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c72-link:hover { text-decoration: underline; }
+.hc-c72-link:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-sm); }
+
+/* Web 1440: header, then main column + 440px side column */
+.hc-c72-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c72-web__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c72-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c72-web__main,
+.hc-c72-web__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+.hc-c72-web__main { flex: 1; min-width: 0; }
+.hc-c72-web__side { width: 440px; flex-shrink: 0; }

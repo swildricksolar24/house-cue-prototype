@@ -1,0 +1,32 @@
+/* HC/List Row — Figma 6:133 */
+.hc-list-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-3) 0;
+}
+
+.hc-list-row__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+
+.hc-list-row__text {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.hc-list-row__title { font: 600 14px/20px var(--hc-font); color: var(--hc-text); }
+.hc-list-row__description { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); }

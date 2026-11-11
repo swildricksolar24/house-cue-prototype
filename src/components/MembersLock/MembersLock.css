@@ -1,0 +1,35 @@
+/* HC/Members Lock — Figma 29:132 */
+.hc-members-lock {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-4);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-tint);
+}
+
+/* The Figma HC/Icon instance sits on a fill-10 tile */
+.hc-members-lock__icon {
+  background: var(--hc-fill-10);
+  color: var(--hc-text);
+}
+
+.hc-members-lock__text {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  min-width: 0;
+}
+
+.hc-members-lock__title {
+  margin: 0;
+  font: 600 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+
+.hc-members-lock__body {
+  margin: 0;
+  font: 400 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+}

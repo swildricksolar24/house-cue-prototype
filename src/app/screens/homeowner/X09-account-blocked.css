@@ -1,0 +1,51 @@
+/* Mobile: message centred vertically between the status bar and bottom actions (Figma content 32/24/24, 16 gap) */
+.hc-x09-mobile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--hc-space-4);
+  min-height: 100%;
+  padding: var(--hc-space-6) var(--hc-space-5) var(--hc-space-5);
+}
+.hc-x09-mobile__center {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+.hc-x09-center-text { text-align: center; }
+
+/* Web: 600px card centred under the top bar (Figma body padding 56 top) */
+.hc-x09-web {
+  display: flex;
+  justify-content: center;
+  padding-top: var(--hc-space-4);
+}
+.hc-x09-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 600px;
+  max-width: 100%;
+  padding: var(--hc-space-7);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-xl);
+  background: var(--hc-card);
+}
+.hc-x09-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding-top: var(--hc-space-2);
+}
+
+.hc-x09-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  text-align: center;
+  cursor: pointer;
+}
+.hc-x09-link:hover { text-decoration: underline; }
+.hc-x09-link:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-sm); }

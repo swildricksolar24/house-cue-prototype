@@ -1,0 +1,28 @@
+/* HC/Console Breadcrumb — Figma 239:27269 */
+.hc-console-breadcrumb__list {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--hc-space-1) * 1.5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font: 400 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+  white-space: nowrap;
+}
+
+.hc-console-breadcrumb__parent {
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-sm);
+  background: transparent;
+  font: 600 12px/18px var(--hc-font);
+  color: var(--hc-primary);
+  text-decoration: none;
+  outline: none;
+}
+a.hc-console-breadcrumb__parent,
+button.hc-console-breadcrumb__parent { cursor: pointer; }
+a.hc-console-breadcrumb__parent:hover,
+button.hc-console-breadcrumb__parent:hover { text-decoration: underline; }
+.hc-console-breadcrumb__parent:focus-visible { box-shadow: var(--hc-focus-ring); }

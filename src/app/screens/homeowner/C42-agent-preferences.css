@@ -1,0 +1,71 @@
+.hc-c42-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+
+/* Figma chips row does not wrap; it scrolls sideways when it overflows */
+.hc-c42-chips {
+  display: flex;
+  gap: var(--hc-space-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.hc-c42-chips::-webkit-scrollbar { display: none; }
+.hc-c42-chip { flex-shrink: 0; white-space: nowrap; }
+.hc-c42-chip {
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c42-chip--selected {
+  border-color: var(--hc-link);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+.hc-c42-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+.hc-c42-link {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c42-link:hover { text-decoration: underline; }
+
+/* Web: three columns (fill, fill, 340) */
+.hc-c42-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c42-web__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c42-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c42-card {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c42-card--list { gap: var(--hc-space-1); }
+.hc-c42-card--side { flex: 0 0 340px; }

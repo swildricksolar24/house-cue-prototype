@@ -1,0 +1,38 @@
+/* HC/Select — Figma 92:27131 (builds on HC/Input classes) */
+.hc-select .hc-input__field {
+  position: relative;
+  padding: 0;
+  cursor: pointer;
+}
+
+.hc-select__control {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  /* 12px inset + 20px chevron + 8px gap on the right */
+  padding: 0 40px 0 var(--hc-space-3);
+  cursor: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.hc-select.hc-input--large .hc-select__control { padding: 0 44px 0 var(--hc-space-4); }
+
+.hc-select--placeholder .hc-select__control { color: var(--hc-text-muted); }
+.hc-select__control option { color: var(--hc-text); background: var(--hc-card); }
+
+/* HC/Icon/Chevron Down (Figma 181:756): stroke bound to text-muted */
+.hc-select__chevron {
+  position: absolute;
+  top: 50%;
+  right: var(--hc-space-3);
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  background: var(--hc-text-muted);
+  -webkit-mask: url('./assets/chevron-down.svg') center / 20px 20px no-repeat;
+  mask: url('./assets/chevron-down.svg') center / 20px 20px no-repeat;
+  pointer-events: none;
+}
+.hc-select.hc-input--large .hc-select__chevron { right: var(--hc-space-4); }
+
+.hc-select.hc-input--disabled .hc-input__field { cursor: not-allowed; }

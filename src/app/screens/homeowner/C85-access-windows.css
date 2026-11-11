@@ -1,0 +1,98 @@
+/* Figma C85 visit card has two actions: hide the Action Card's third button */
+.hc-c85-visit .hc-action-card__button:nth-child(3) { display: none; }
+
+.hc-c85-label {
+  margin: 0;
+  font: 700 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+
+.hc-c85-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}
+.hc-c85-chip {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: none;
+  cursor: pointer;
+}
+.hc-c85-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+/* Web 1440: header, then 600px + 472px columns */
+.hc-c85-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c85-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c85-web__title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c85-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c85-web__main {
+  flex: 0 1 600px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+.hc-c85-web__side {
+  flex: 0 0 472px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+
+.hc-c85-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+
+.hc-c85-table {
+  display: flex;
+  flex-direction: column;
+  padding: var(--hc-space-1) 0;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  overflow: hidden;
+}
+.hc-c85-table__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px 80px;
+  gap: var(--hc-space-3);
+  align-items: center;
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border-top: 1px solid var(--hc-border);
+  font: 400 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+.hc-c85-table__row--head {
+  padding-block: 10px;
+  border-top: 0;
+  font: 600 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+}
+/* Labels are longer than equal-width Action Card buttons allow: size to content, share the rest */
+.hc-c85-visit .hc-action-card__button { flex: 1 0 auto; }

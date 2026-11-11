@@ -1,0 +1,29 @@
+/* Mobile content uses a 12px gap (shell default is 16) */
+.hc-c52-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+/* Web: 640px column (48px top padding as Figma "body") */
+.hc-c52-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c52-web__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c52-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  margin: 0;
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c52-card__submit { align-self: flex-start; }

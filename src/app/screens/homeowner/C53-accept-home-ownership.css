@@ -1,0 +1,33 @@
+/* Mobile content gap is 12 here (Figma "content"), not the shell's 16 */
+.hc-c53-mobile .hc-mobile-shell__body { gap: var(--hc-space-3); }
+
+.hc-c53-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+}
+
+/* Long values share the row 50/50 with the label and wrap (Figma kv rows with a fill-width value) */
+.hc-c53-wrap .hc-metric-row__value { flex: 1 1 0; }
+
+/* Web: centred 640 column */
+.hc-c53-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c53-web__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c53-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c53-cta { align-self: flex-start; }

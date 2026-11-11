@@ -1,0 +1,65 @@
+/* HC/Option Card — Figma 6:80. Stroke is inside in Figma, so padding = 16 minus the border width (no shift on select). */
+.hc-option-card {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  width: 100%;
+  min-height: 64px;
+  padding: calc(var(--hc-space-4) - 1px);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+.hc-option-card:hover { background: linear-gradient(var(--hc-fill-10), var(--hc-fill-10)), var(--hc-card); }
+.hc-option-card:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+.hc-option-card--selected,
+.hc-option-card--selected:hover {
+  padding: calc(var(--hc-space-4) - 2px);
+  border: 2px solid var(--hc-link);
+  background: var(--hc-selected);
+}
+
+.hc-option-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-tint);
+  color: var(--hc-link);
+}
+
+.hc-option-card__text {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.hc-option-card__title { font: 600 14px/20px var(--hc-font); color: var(--hc-text); }
+.hc-option-card__description { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+
+/* Radio: 20px; off = 2px border-strong ring, on = 6px primary ring around an on-primary dot */
+.hc-option-card__radio {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--hc-border-strong);
+  border-radius: var(--hc-radius-pill);
+}
+
+.hc-option-card--selected .hc-option-card__radio {
+  border: 6px solid var(--hc-primary);
+  background: var(--hc-on-primary);
+}

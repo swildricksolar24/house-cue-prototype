@@ -1,0 +1,85 @@
+/* C74 Request thread (homeowner) */
+.hc-c74-thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+/* Composer: pill input, voice button (mobile), Send — same anatomy as C09 */
+.hc-c74-composer {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+  background: var(--hc-card);
+}
+.hc-mobile-shell .hc-c74-composer {
+  padding: var(--hc-space-3) var(--hc-space-5);
+}
+.hc-c74-composer__input {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 44px;
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-tint);
+  color: var(--hc-text);
+  font: 400 14px/20px var(--hc-font);
+}
+.hc-c74-composer__input::placeholder { color: var(--hc-text-muted); }
+.hc-c74-composer__input:focus-visible,
+.hc-c74-composer__mic:focus-visible {
+  outline: 2px solid var(--hc-focus-ring);
+  outline-offset: 2px;
+}
+.hc-c74-composer__mic {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-selected);
+  cursor: pointer;
+}
+/* HC/Icon/Mic (Figma 28:74) is not in the HC icon set */
+.hc-c74-composer__mic-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--hc-link);
+  -webkit-mask: url('./assets/c09-mic.svg') center / contain no-repeat;
+  mask: url('./assets/c09-mic.svg') center / contain no-repeat;
+}
+
+/* Web 1440: title row, chat card + 380px quote card */
+.hc-c74-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c74-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-5);
+}
+.hc-c74-web__head > h1 { flex: 1; }
+.hc-c74-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c74-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c74-card--chat { flex: 1; min-width: 0; }
+.hc-c74-card--chat .hc-c74-thread { gap: var(--hc-space-4); }
+.hc-c74-card--quote { width: 380px; flex-shrink: 0; }

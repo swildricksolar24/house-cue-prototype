@@ -1,0 +1,62 @@
+.hc-c47-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+/* Web */
+.hc-c47-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c47-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c47-web__head > div {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+
+.hc-c47-table {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-card);
+}
+.hc-c47-table__head,
+.hc-c47-table__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px 260px;
+  gap: var(--hc-space-4);
+  align-items: center;
+  padding: var(--hc-space-3) var(--hc-space-4);
+}
+.hc-c47-table__head {
+  padding-block: 10px;
+  background: var(--hc-tint);
+  color: var(--hc-text-muted);
+  font: 600 12px/18px var(--hc-font);
+}
+.hc-c47-table__row {
+  border-top: 1px solid var(--hc-border);
+  color: var(--hc-text);
+  font: 400 14px/20px var(--hc-font);
+}
+
+/* The link pill doubles as the picker trigger */
+.hc-c47-pill-btn {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--hc-radius-pill);
+}
+.hc-c47-pill-btn:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }

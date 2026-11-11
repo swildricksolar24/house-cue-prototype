@@ -1,0 +1,66 @@
+/* Filter chips (no HC chip component yet): 12/16 padding, pill, selected = selected fill + link stroke */
+.hc-c30-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}
+.hc-c30-chip {
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c30-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-c30-chip--selected {
+  border-color: var(--hc-link);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+
+.hc-c30-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+/* Web 1440: title, then a 420px methods card + history card */
+.hc-c30-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c30-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c30-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c30-card--methods {
+  width: 420px;
+  flex-shrink: 0;
+  gap: var(--hc-space-3);
+}
+.hc-c30-card--history {
+  flex: 1;
+  min-width: 0;
+  gap: var(--hc-space-1);
+}
+.hc-c30-card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+.hc-c30-card__head > h2 { flex: 1; }
+
+/* Mobile content gap is 12 in Figma */
+.hc-c30-mobile .hc-mobile-shell__body--default { gap: var(--hc-space-3); }

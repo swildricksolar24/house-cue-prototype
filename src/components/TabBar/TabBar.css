@@ -1,0 +1,65 @@
+/* HC/Tab Bar — Figma 5:188 (also used by HC/Vendor Tab Bar 41:458) */
+.hc-tab-bar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 390px;
+  background: var(--hc-card);
+  border-top: 1px solid var(--hc-border);
+}
+
+.hc-tab-bar__tabs {
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  padding: var(--hc-space-2);
+  list-style: none;
+}
+
+.hc-tab-bar__cell {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+}
+
+.hc-tab-bar__tab {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--hc-space-1);
+  min-height: 48px;
+  border-radius: var(--hc-radius-md);
+  color: var(--hc-text);
+  text-decoration: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hc-tab-bar__label {
+  font: 600 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+  white-space: nowrap;
+}
+
+.hc-tab-bar__tab--active,
+.hc-tab-bar__tab--active .hc-tab-bar__label {
+  color: var(--hc-link);
+}
+
+.hc-tab-bar__tab:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+.hc-tab-bar__home-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+}
+
+.hc-tab-bar__home-indicator > span {
+  width: 134px;
+  height: 5px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-text);
+}

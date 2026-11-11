@@ -1,0 +1,37 @@
+/* Mobile content: 12px gap (Figma "content") instead of the shell's 16 */
+.hc-c61-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+/* Web 1440: header row with CTA, then two equal columns */
+.hc-c61-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c61-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c61-web__head > div {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c61-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c61-web__col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}

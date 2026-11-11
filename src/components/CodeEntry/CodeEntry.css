@@ -1,0 +1,13 @@
+/* HC/Code Entry — Figma 92:22977: label, field and helper sit 8px apart (HC/Input uses 6) */
+.hc-code-entry {
+  gap: var(--hc-space-2);
+}
+
+.hc-code-entry .hc-input__control {
+  letter-spacing: 0.2em;
+  font-variant-numeric: tabular-nums;
+}
+
+.hc-code-entry .hc-input__control::placeholder {
+  letter-spacing: normal;
+}

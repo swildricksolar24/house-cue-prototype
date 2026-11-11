@@ -1,31 +1,90 @@
+/* HC/Button — Figma 176:2811 */
 .hc-button {
-  font: 600 14px/20px var(--font-family-base);
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-md);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hc-space-2);
+  height: 44px;
+  padding: 12px 20px;
   border: 1px solid transparent;
+  border-radius: var(--hc-radius-lg);
+  font: 600 14px/20px var(--hc-font);
+  white-space: nowrap;
+  text-decoration: none;
   cursor: pointer;
+  background: transparent;
+  color: var(--hc-text);
+  outline: none;
 }
 
-.hc-button--primary {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-}
+.hc-button--small { height: 36px; padding: 8px 16px; border-radius: var(--hc-radius-md); }
+.hc-button--large { height: 52px; padding: 14px 24px; font: 700 16px/24px var(--hc-font); }
+.hc-button--icon-only { padding: 12px; }
+.hc-button--small.hc-button--icon-only { padding: 8px; }
+.hc-button--large.hc-button--icon-only { padding: 16px; }
+.hc-button--full { display: flex; width: 100%; }
 
-.hc-button--primary:hover {
-  background: var(--color-primary-hover);
-}
+/* Variants */
+.hc-button--primary { background: var(--hc-primary); color: var(--hc-on-primary); }
+.hc-button--primary:hover { background: var(--hc-primary-hover); }
+.hc-button--primary:active { background: linear-gradient(var(--hc-fill-20), var(--hc-fill-20)), var(--hc-primary-hover); }
 
-.hc-button--secondary {
-  background: var(--color-surface-base);
-  color: var(--color-text-strong);
-  border-color: var(--color-border);
-}
+.hc-button--secondary { border-color: var(--hc-border-strong); color: var(--hc-text); }
+.hc-button--secondary:hover { background: var(--hc-fill-10); }
+.hc-button--secondary:active { background: var(--hc-fill-20); }
 
-.hc-button--secondary:hover {
-  background: var(--color-surface-raised);
-}
+.hc-button--tertiary { color: var(--hc-text); }
+.hc-button--tertiary:hover { background: var(--hc-fill-10); }
+.hc-button--tertiary:active { background: var(--hc-fill-20); }
 
+.hc-button--destructive { background: var(--hc-danger); color: var(--hc-on-primary); }
+.hc-button--destructive:hover { background: linear-gradient(var(--hc-fill-10), var(--hc-fill-10)), var(--hc-danger); }
+.hc-button--destructive:active { background: linear-gradient(var(--hc-fill-20), var(--hc-fill-20)), var(--hc-danger); }
+
+.hc-button--link { padding-inline: 4px; color: var(--hc-link); }
+.hc-button--link .hc-button__label { text-decoration: underline; text-underline-position: from-font; }
+.hc-button--link:hover .hc-button__label { text-decoration-thickness: 2px; }
+
+/* Focus: 2px info ring at 2px offset */
+.hc-button:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--hc-info);
+  border-radius: calc(var(--hc-radius-lg) + 4px);
+  pointer-events: none;
+}
+.hc-button--small:focus-visible::after { border-radius: calc(var(--hc-radius-md) + 4px); }
+
+/* Disabled: fill-disabled + muted label */
 .hc-button:disabled {
-  opacity: 0.5;
   cursor: not-allowed;
+  color: var(--hc-text-muted);
+  border-color: transparent;
+}
+.hc-button--primary:disabled,
+.hc-button--destructive:disabled,
+.hc-button--secondary:disabled { background: var(--hc-fill-10); }
+.hc-button--tertiary:disabled,
+.hc-button--link:disabled { background: transparent; }
+
+/* Loading: keeps width, hides content, spinner in the label color */
+.hc-button--loading { pointer-events: none; }
+.hc-button--loading > :not(.hc-button__spinner) { opacity: 0; }
+.hc-button__spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  background: currentColor;
+  -webkit-mask: url('./assets/spinner.svg') center / contain no-repeat;
+  mask: url('./assets/spinner.svg') center / contain no-repeat;
+  animation: hc-spin 0.9s linear infinite;
+}
+
+@keyframes hc-spin {
+  to { transform: rotate(360deg); }
 }

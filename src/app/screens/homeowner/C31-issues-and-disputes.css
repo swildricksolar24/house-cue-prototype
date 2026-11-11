@@ -1,0 +1,146 @@
+/* C31 Issues and disputes */
+
+/* Mobile content: Figma "content" is 16 top / 24 sides / 24 bottom with a 12 gap (shell default is 16) */
+.hc-c31-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-4) var(--hc-space-5) var(--hc-space-5);
+}
+
+/* Filter chips (no HC chip component yet): 12/16 padding, pill, selected = selected fill + link stroke */
+.hc-c31-chips {
+  display: flex;
+  gap: var(--hc-space-2);
+}
+.hc-c31-chip {
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c31-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-c31-chip--selected {
+  border-color: var(--hc-link);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+
+.hc-c31-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c31-card--compact { padding: var(--hc-space-4); }
+.hc-c31-card h2 { margin: 0; }
+
+.hc-c31-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  margin: 0;
+  padding: 0;
+}
+.hc-c31-web .hc-c31-timeline { gap: var(--hc-space-2); }
+
+/* "Appeal to a person" opens the appeal-fee sheet; keeps the upcoming-step text style */
+.hc-c31-step-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.hc-c31-step-link:hover { color: var(--hc-link); text-decoration: underline; }
+.hc-c31-step-link:focus-visible { outline: none; border-radius: var(--hc-radius-sm); box-shadow: var(--hc-focus-ring); }
+
+.hc-c31-skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+.hc-c31-web .hc-c31-skeletons { gap: var(--hc-space-2); }
+
+/* Web 1440: title row, then the case card + 400px side column */
+.hc-c31-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c31-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c31-web__head > h1 { flex: 1; }
+.hc-c31-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c31-web__main { flex: 1; min-width: 0; }
+.hc-c31-web__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 400px;
+  flex-shrink: 0;
+}
+.hc-c31-web__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+.hc-c31-web__title-row > h2 { flex: 1; min-width: 0; }
+
+.hc-c31-photos {
+  display: flex;
+  gap: var(--hc-space-3);
+}
+.hc-c31-photos > * { flex: 1 1 0; min-width: 0; }
+
+/* Appeal fee: bottom sheet on mobile, centred sheet on web (Figma 242:18496 / web 560px) */
+.hc-c31-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  background: var(--hc-scrim);
+}
+.hc-web-shell .hc-c31-overlay { position: fixed; }
+.hc-c31-overlay--bottom { align-items: flex-end; }
+.hc-c31-overlay--center {
+  align-items: center;
+  justify-content: center;
+  padding: var(--hc-space-5);
+}
+.hc-c31-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-3) var(--hc-space-5) 34px;
+  border-radius: var(--hc-space-5) var(--hc-space-5) 0 0;
+  background: var(--hc-card);
+  color: var(--hc-text);
+}
+.hc-c31-overlay--center .hc-c31-sheet {
+  max-width: 560px;
+  border-radius: var(--hc-space-5);
+}
+.hc-c31-sheet__grabber {
+  align-self: center;
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--hc-border-strong);
+}

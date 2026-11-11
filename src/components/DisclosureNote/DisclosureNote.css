@@ -1,0 +1,99 @@
+/* HC/Disclosure Note — Figma 206:1020 */
+.hc-disclosure-note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-1) 0 var(--hc-space-1) var(--hc-space-3);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-info-bg);
+}
+
+.hc-disclosure-note__icon-slot {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  width: 20px;
+  height: 36px;
+}
+
+/* Icon/info and the dismiss X are the Figma vectors used as masks so they follow theme tokens */
+.hc-disclosure-note__icon,
+.hc-disclosure-note__close {
+  display: block;
+  flex-shrink: 0;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.hc-disclosure-note__icon {
+  width: 20px;
+  height: 20px;
+  background: var(--hc-info);
+  -webkit-mask-image: url('./assets/info.svg');
+  mask-image: url('./assets/info.svg');
+}
+.hc-disclosure-note__icon--muted { background: var(--hc-text-muted); }
+
+.hc-disclosure-note__close {
+  width: 16px;
+  height: 16px;
+  background: var(--hc-text-muted);
+  -webkit-mask-image: url('./assets/close.svg');
+  mask-image: url('./assets/close.svg');
+}
+
+.hc-disclosure-note__copy {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+  padding: var(--hc-space-2) 0;
+}
+
+.hc-disclosure-note__text {
+  margin: 0;
+  font: 400 12px/18px var(--hc-font);
+  color: var(--hc-text);
+}
+
+.hc-disclosure-note__link {
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-sm);
+  background: none;
+  font: 600 12px/18px var(--hc-font);
+  color: var(--hc-link);
+  text-decoration: none;
+  cursor: pointer;
+}
+.hc-disclosure-note__link:hover { text-decoration: underline; }
+
+.hc-disclosure-note__dismiss,
+.hc-disclosure-note-button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-lg);
+  background: transparent;
+  cursor: pointer;
+}
+.hc-disclosure-note__dismiss:hover,
+.hc-disclosure-note-button:hover { background: var(--hc-fill-10); }
+
+.hc-disclosure-note__link:focus-visible,
+.hc-disclosure-note__dismiss:focus-visible,
+.hc-disclosure-note-button:focus-visible {
+  outline: none;
+  box-shadow: var(--hc-focus-ring);
+}

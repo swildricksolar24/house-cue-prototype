@@ -1,0 +1,20 @@
+/* HC/Image Placeholder — Figma 6:126 */
+.hc-image-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--hc-space-4);
+  border: 1px dashed var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-fill-10);
+}
+
+.hc-image-placeholder__label {
+  width: 100%;
+  font: 400 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+  text-align: center;
+  overflow-wrap: break-word;
+}

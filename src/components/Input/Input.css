@@ -1,0 +1,183 @@
+/* HC/Input — Figma 177:1592 */
+.hc-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+}
+
+.hc-input__label {
+  font: 600 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+
+.hc-input__label--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Field: 1px border-strong outline; 2px states use an inset shadow so the layout never shifts */
+.hc-input__field {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+  height: 44px;
+  padding: 0 var(--hc-space-3);
+  border: 1px solid var(--hc-border-strong);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-fill-10);
+  color: var(--hc-text);
+  overflow: hidden;
+  cursor: text;
+}
+
+.hc-input--large .hc-input__field {
+  height: 52px;
+  padding: 0 var(--hc-space-4);
+}
+
+.hc-input__control {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: 400 14px/20px var(--hc-font);
+  text-overflow: ellipsis;
+}
+
+.hc-input__control::placeholder {
+  color: var(--hc-text-muted);
+  opacity: 1;
+}
+
+.hc-input--large .hc-input__control,
+.hc-input--code .hc-input__control {
+  font: 400 16px/24px var(--hc-font);
+}
+
+/* Search: hide the native clear/decoration so only the HC clear action shows */
+.hc-input__control[type='search']::-webkit-search-cancel-button,
+.hc-input__control[type='search']::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.hc-input__icon,
+.hc-input__prefix {
+  flex-shrink: 0;
+  color: var(--hc-text-muted);
+}
+
+.hc-input__prefix {
+  font: 400 14px/20px var(--hc-font);
+}
+.hc-input--large .hc-input__prefix { font: 400 16px/24px var(--hc-font); }
+
+.hc-input__action {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: transparent;
+  color: var(--hc-text);
+  cursor: pointer;
+}
+/* 44px touch target around the 20px clear icon */
+.hc-input__action::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+}
+.hc-input__action:hover { background: var(--hc-fill-10); }
+.hc-input__action:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+.hc-input__trailing {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  color: var(--hc-text-muted);
+}
+
+/* Type modifiers */
+.hc-input--number .hc-input__control { text-align: right; }
+.hc-input--code .hc-input__control { text-align: center; }
+
+.hc-input--multiline .hc-input__field {
+  align-items: flex-start;
+  height: 96px;
+  padding: var(--hc-space-3);
+}
+.hc-input--multiline.hc-input--large .hc-input__field {
+  height: 120px;
+  padding: 14px var(--hc-space-4);
+}
+.hc-input--multiline .hc-input__control {
+  resize: none;
+  overflow: auto;
+}
+
+/* Focus = 2px primary (Mesquite light / Sky dark) */
+.hc-input__field:focus-within {
+  border-color: var(--hc-primary);
+  box-shadow: inset 0 0 0 1px var(--hc-primary);
+}
+
+/* Error = 2px danger + danger-bg + error text */
+.hc-input--error .hc-input__field,
+.hc-input--error .hc-input__field:focus-within {
+  border-color: var(--hc-danger);
+  box-shadow: inset 0 0 0 1px var(--hc-danger);
+  background: var(--hc-danger-bg);
+}
+
+/* Disabled = fill-disabled, border, muted */
+.hc-input--disabled .hc-input__label,
+.hc-input--disabled .hc-input__field { color: var(--hc-text-muted); }
+.hc-input--disabled .hc-input__field {
+  border-color: var(--hc-border);
+  background: var(--hc-fill-10);
+  cursor: not-allowed;
+}
+.hc-input--disabled .hc-input__control { cursor: not-allowed; }
+
+/* Read-only = no fill, border, value stays readable */
+.hc-input--readonly .hc-input__field {
+  border-color: var(--hc-border);
+  box-shadow: none;
+  background: transparent;
+  cursor: default;
+}
+/* Read-only can still take focus: show the standard info ring instead of the edit focus */
+.hc-input--readonly .hc-input__field:focus-within {
+  border-color: var(--hc-border);
+  box-shadow: var(--hc-focus-ring);
+}
+
+.hc-input__helper {
+  margin: 0;
+  font: 400 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+}
+
+.hc-input__error {
+  margin: 0;
+  font: 600 12px/18px var(--hc-font);
+  color: var(--hc-danger);
+}

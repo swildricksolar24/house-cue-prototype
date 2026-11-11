@@ -1,0 +1,32 @@
+/* Big amount stepper (Figma "amount stepper"): tint panel, 48px round − / + buttons, H1 amount */
+.hc-c07-amount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hc-space-5);
+  padding: var(--hc-space-4) 0;
+  border-radius: var(--hc-radius-xl);
+  background: var(--hc-tint);
+}
+.hc-c07-amount output { min-width: 3ch; text-align: center; }
+.hc-c07-step {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--hc-border-strong);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: 800 20px/28px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c07-step:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+.hc-c07-cancels {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+}

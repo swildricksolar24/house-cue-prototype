@@ -1,0 +1,150 @@
+/* HC/Upload — Figma 203:978 */
+.hc-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hc-space-2);
+  min-height: 214px;
+  padding: 28px var(--hc-space-5);
+  border: 1.5px dashed var(--hc-border-strong);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-tint);
+  text-align: center;
+}
+
+.hc-upload__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  opacity: 0;
+}
+
+.hc-upload__title {
+  margin: 0;
+  font: 600 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+
+.hc-upload__hint {
+  margin: 0;
+  font: 400 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+}
+.hc-upload__hint--error { color: var(--hc-text); }
+
+.hc-upload__link {
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-sm);
+  background: none;
+  font: 600 14px/20px var(--hc-font);
+  color: var(--hc-link);
+  cursor: pointer;
+}
+.hc-upload__link:hover { text-decoration: underline; }
+.hc-upload__link:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-upload__link:disabled { color: var(--hc-text-muted); cursor: not-allowed; text-decoration: none; }
+
+/* Icons are the Figma vectors used as masks so they follow the theme tokens */
+.hc-upload__icon {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.hc-upload__icon--upload {
+  background: var(--hc-text-muted);
+  -webkit-mask-image: url('./assets/upload.svg');
+  mask-image: url('./assets/upload.svg');
+}
+.hc-upload__icon--error {
+  background: var(--hc-danger);
+  -webkit-mask-image: url('./assets/alert.svg');
+  mask-image: url('./assets/alert.svg');
+}
+.hc-upload__icon--file {
+  width: 24px;
+  height: 24px;
+  background: var(--hc-text-muted);
+  -webkit-mask-image: url('./assets/file.svg');
+  mask-image: url('./assets/file.svg');
+}
+.hc-upload__icon--done {
+  width: 24px;
+  height: 24px;
+  background: var(--hc-success);
+  -webkit-mask-image: url('./assets/check-circle.svg');
+  mask-image: url('./assets/check-circle.svg');
+}
+
+/* Dragging = 2px dashed primary on selected */
+.hc-upload--dragging {
+  border: 2px dashed var(--hc-primary);
+  background: var(--hc-selected);
+}
+.hc-upload--dragging .hc-upload__icon--upload { background: var(--hc-primary); }
+
+/* Uploading / Done = card with border, content left-aligned */
+.hc-upload--uploading,
+.hc-upload--done {
+  align-items: flex-start;
+  gap: var(--hc-space-3);
+  border: 1.5px solid var(--hc-border);
+  background: var(--hc-card);
+  text-align: left;
+}
+
+.hc-upload__file {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+  max-width: 100%;
+}
+.hc-upload__name {
+  overflow: hidden;
+  font: 600 14px/20px var(--hc-font);
+  color: var(--hc-text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hc-upload__progress {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--hc-fill-weak);
+}
+.hc-upload__bar {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--hc-primary);
+  transition: width 0.2s ease;
+}
+
+.hc-upload__meta {
+  margin: 0;
+  font: 400 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+}
+
+/* Error = danger border on danger-bg */
+.hc-upload--error {
+  border: 1.5px solid var(--hc-danger);
+  background: var(--hc-danger-bg);
+}
+
+.hc-upload--disabled { opacity: 0.6; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-upload__bar { transition: none; }
+}

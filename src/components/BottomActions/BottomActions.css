@@ -1,0 +1,45 @@
+/* HC/Bottom Actions — Figma 6:153 */
+.hc-bottom-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--hc-space-3);
+  width: 100%;
+  max-width: 390px;
+  padding: 0 var(--hc-space-5);
+  background: var(--hc-card);
+}
+
+.hc-bottom-actions__secondary {
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-sm);
+  background: transparent;
+  font: 600 14px/20px var(--hc-font);
+  color: var(--hc-link);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+}
+.hc-bottom-actions__secondary:hover { text-decoration: underline; }
+.hc-bottom-actions__secondary:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+.hc-bottom-actions__home-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  height: 34px;
+  margin: 0 calc(var(--hc-space-5) * -1);
+}
+
+.hc-bottom-actions__home-indicator > span {
+  width: 134px;
+  height: 5px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-text);
+}
+
+/* Without the indicator keep a bottom inset so the button does not touch the edge */
+.hc-bottom-actions__end { height: var(--hc-space-1); }

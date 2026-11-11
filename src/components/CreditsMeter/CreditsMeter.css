@@ -1,0 +1,63 @@
+/* HC/Credits Meter — Figma 93:376 */
+.hc-credits-meter {
+  display: flex;
+  border-radius: var(--hc-radius-lg);
+  overflow-wrap: break-word;
+}
+
+/* Full */
+.hc-credits-meter--full {
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-link);
+  background: var(--hc-card);
+}
+
+.hc-credits-meter__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--hc-space-2);
+  font: 600 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+
+.hc-credits-meter__balance { font-weight: 700; white-space: nowrap; }
+
+.hc-credits-meter__track {
+  height: 8px;
+  border-radius: var(--hc-radius-sm);
+  background: var(--hc-fill-20);
+  overflow: hidden;
+}
+
+.hc-credits-meter__fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--hc-radius-sm);
+  background: var(--hc-primary);
+}
+
+.hc-credits-meter__text { margin: 0; font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+
+/* Compact chip */
+.hc-credits-meter--compact {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+  min-height: 44px;
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 0;
+  background: var(--hc-tint);
+  font: 600 12px/18px var(--hc-font);
+  white-space: nowrap;
+}
+
+button.hc-credits-meter--compact { cursor: pointer; outline: none; }
+button.hc-credits-meter--compact:hover { background: linear-gradient(var(--hc-fill-10), var(--hc-fill-10)), var(--hc-tint); }
+button.hc-credits-meter--compact:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+.hc-credits-meter__chip-label { color: var(--hc-text-muted); }
+.hc-credits-meter__chip-balance { color: var(--hc-text); }

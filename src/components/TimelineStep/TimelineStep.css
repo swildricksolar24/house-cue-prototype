@@ -1,0 +1,45 @@
+/* HC/Timeline Step — Figma 29:110 */
+.hc-timeline-step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-2) 0;
+  list-style: none;
+}
+
+.hc-timeline-step__dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--hc-radius-pill);
+}
+
+.hc-timeline-step--done .hc-timeline-step__dot { background: var(--hc-primary); color: var(--hc-on-primary); }
+.hc-timeline-step--current .hc-timeline-step__dot { border: 1px solid var(--hc-link); background: var(--hc-selected); color: var(--hc-link); }
+.hc-timeline-step--upcoming .hc-timeline-step__dot { border: 1px solid var(--hc-border-strong); background: var(--hc-fill-10); }
+
+.hc-timeline-step__text {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.hc-timeline-step__title { font: 600 14px/20px var(--hc-font); color: var(--hc-text); }
+.hc-timeline-step__meta { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+.hc-timeline-step--upcoming .hc-timeline-step__title { font-weight: 400; color: var(--hc-text-muted); }
+
+.hc-timeline-step__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

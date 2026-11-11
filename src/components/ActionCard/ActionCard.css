@@ -1,0 +1,40 @@
+/* HC/Action Card — Figma 19:73 */
+.hc-action-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-link);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  overflow-wrap: break-word;
+}
+
+.hc-action-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+
+/* Local stand-in for HC/Status Pill, tone Warning */
+.hc-action-card__pill {
+  flex-shrink: 0;
+  padding: var(--hc-space-1) 10px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-warning-bg);
+  color: var(--hc-warning);
+  font: 600 12px/18px var(--hc-font);
+  white-space: nowrap;
+}
+
+.hc-action-card__meta { flex: 1 1 0; min-width: 0; font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+.hc-action-card__title { margin: 0; font: 600 14px/20px var(--hc-font); color: var(--hc-text); }
+.hc-action-card__body { margin: 0; font: 400 12px/18px var(--hc-font); color: var(--hc-text); }
+
+.hc-action-card__actions {
+  display: flex;
+  gap: var(--hc-space-2);
+}
+
+.hc-action-card__button { flex: 1 1 0; min-width: 0; }

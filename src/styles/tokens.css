@@ -1,37 +1,139 @@
-/* Placeholder design tokens. Replace with the House Cue tokens once they are exported from Figma. */
+/*
+ * HouseCue Brand v2 tokens (Figma: "Claude — House Cue", page 01 Foundations + Brand — Logo, applied 2026-11-08).
+ * Variable collection "HouseCue Brand", Light / Dark. Figma code syntax is var(--hc-<token>), so names match 1:1.
+ * Values marked [P] are derived/proposed in the Brand v2 palette note, not bound variables yet.
+ * Dark mode: data-theme="dark" on <html>.
+ */
 :root {
-  --font-family-base: 'Inter', system-ui, sans-serif;
+  color-scheme: light;
 
-  --color-surface-base: #ffffff;
-  --color-surface-raised: #f5f7fa;
-  --color-text-strong: #111827;
-  --color-text-muted: #4b5563;
-  --color-border: #d1d5db;
-  --color-primary: #1f4e79;
-  --color-primary-hover: #173c5d;
-  --color-on-primary: #ffffff;
+  /* Brand primitives (same in both modes) */
+  --hc-brand-mesquite-900: #2f2a25;
+  --hc-brand-mesquite-600: #5e5147;
+  --hc-brand-mesquite-400: #a89684;
+  --hc-brand-sky-400: #6db3f0;
+  --hc-brand-sky-700: #2a65a6;
 
-  --radius-md: 8px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-6: 24px;
+  /* Roles */
+  --hc-primary: #2f2a25;
+  --hc-primary-hover: #4a423b; /* [P] */
+  --hc-on-primary: #ffffff;
+  --hc-accent: #6db3f0;
+  --hc-link: #2a65a6;
+  --hc-page: #f7f5f2;
+  --hc-card: #ffffff;
+  --hc-tint: #ece7e1;
+  --hc-border: #dbd9d6;
+  --hc-border-strong: #857b72; /* [P] inputs, selects, code entry (≥3:1) */
+  --hc-text: #221e1a;
+  --hc-text-muted: #5f5850;
+  --hc-selected: #eaf0f6;
+  --hc-fill-weak: #221e1ab2; /* text at 70% — track / skeleton */
+  --hc-fill-10: #221e1a1a; /* [P] */
+  --hc-fill-20: #221e1a33; /* [P] */
+  --hc-scrim: rgba(0, 0, 0, 0.25); /* [P] */
+  --hc-logo-word: #2f2a25;
+  --hc-logo-ai: #2a65a6;
+  --hc-icon-tile: #5e5147;
+
+  /* Semantic */
+  --hc-danger: #b3312f;
+  --hc-danger-bg: #f6e6e6;
+  --hc-success: #05694b; /* [P] */
+  --hc-success-bg: #dceae6;
+  --hc-warning: #7a5c12;
+  --hc-warning-bg: #ece8de; /* [P] */
+  --hc-info: #2a65a6; /* [P] = sky-700 */
+  --hc-info-bg: #e5edf4;
+
+  /* Type: HouseCue/* styles, Plus Jakarta Sans. Letter spacing -1% on headings. */
+  --hc-font: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Layout (HouseCue / Layout, 8pt scale) */
+  --hc-space-1: 4px;
+  --hc-space-2: 8px;
+  --hc-space-3: 12px;
+  --hc-space-4: 16px;
+  --hc-space-5: 24px;
+  --hc-space-6: 32px;
+  --hc-space-7: 40px;
+  --hc-space-8: 48px;
+  --hc-space-9: 64px;
+  --hc-space-10: 80px;
+  --hc-radius-sm: 4px;
+  --hc-radius-md: 8px;
+  --hc-radius-lg: 12px;
+  --hc-radius-xl: 16px;
+  --hc-radius-pill: 999px;
+
+  /* Grids: phone 390×844 (4 col, 24 margin) · web 1440×900 (12 col, 80 margin, 248 app-shell menu) */
+  --hc-mobile-margin: 24px;
+  --hc-web-margin: 80px;
+  --hc-web-menu: 248px;
+
+  /* Focus: 2px info ring at 2px offset */
+  --hc-focus-ring: 0 0 0 2px var(--hc-page), 0 0 0 4px var(--hc-info);
 }
 
 [data-theme='dark'] {
-  --color-surface-base: #0f172a;
-  --color-surface-raised: #1e293b;
-  --color-text-strong: #f1f5f9;
-  --color-text-muted: #94a3b8;
-  --color-border: #334155;
-  --color-primary: #60a5fa;
-  --color-primary-hover: #93c5fd;
-  --color-on-primary: #0f172a;
+  color-scheme: dark;
+
+  --hc-primary: #6db3f0;
+  --hc-primary-hover: #8ec4f3;
+  --hc-on-primary: #1a1714;
+  --hc-accent: #6db3f0;
+  --hc-link: #6db3f0;
+  --hc-page: #1a1714;
+  --hc-card: #2a2521;
+  --hc-tint: #38312b;
+  --hc-border: #3d3a37;
+  --hc-border-strong: #857b72;
+  --hc-text: #f5f1ec;
+  --hc-text-muted: #b5aba0;
+  --hc-selected: #33393e;
+  --hc-fill-weak: #f5f1ecb2;
+  --hc-fill-10: #f5f1ec1a;
+  --hc-fill-20: #f5f1ec33;
+  --hc-logo-word: #f5f1ec;
+  --hc-logo-ai: #6db3f0;
+  --hc-icon-tile: #5e5147;
+
+  --hc-danger: #ef7b72;
+  --hc-danger-bg: #492926;
+  --hc-success: #77c7af;
+  --hc-success-bg: #39453d;
+  --hc-warning: #e0be70;
+  --hc-warning-bg: #4e4431;
+  --hc-info: #8ec4f3;
+  --hc-info-bg: #3b4448;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: var(--color-surface-base);
-  color: var(--color-text-strong);
-  font-family: var(--font-family-base);
+  background: var(--hc-page);
+  color: var(--hc-text);
+  font-family: var(--hc-font);
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* HouseCue/* text styles */
+.hc-h1 { font: 800 40px/48px var(--hc-font); letter-spacing: -0.01em; margin: 0; }
+.hc-h2 { font: 800 32px/40px var(--hc-font); letter-spacing: -0.01em; margin: 0; }
+.hc-h3 { font: 800 24px/32px var(--hc-font); letter-spacing: -0.01em; margin: 0; }
+.hc-h4 { font: 800 20px/28px var(--hc-font); letter-spacing: -0.01em; margin: 0; }
+.hc-large-bold { font: 700 16px/24px var(--hc-font); margin: 0; }
+.hc-large { font: 400 16px/24px var(--hc-font); margin: 0; }
+.hc-medium-semibold { font: 600 14px/20px var(--hc-font); margin: 0; }
+.hc-medium { font: 400 14px/20px var(--hc-font); margin: 0; }
+.hc-small { font: 400 12px/18px var(--hc-font); margin: 0; }
+.hc-muted { color: var(--hc-text-muted); }
+.hc-link { color: var(--hc-link); font-weight: 600; text-decoration: none; cursor: pointer; }
+.hc-link:hover { text-decoration: underline; }

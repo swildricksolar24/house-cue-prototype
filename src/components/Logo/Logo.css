@@ -1,0 +1,26 @@
+/* HC/Logo — Figma 145:472. Artwork insets match the component frame (half the clear space is built in). */
+.hc-logo {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.hc-logo__art {
+  position: absolute;
+  display: block;
+  width: auto;
+  height: auto;
+}
+
+.hc-logo--horizontal .hc-logo__art { inset: 8.75% 2.14% 8.75% 0; width: 97.86%; height: 82.5%; }
+.hc-logo--symbol .hc-logo__art { inset: 3.13% 4.56% 3.13% 4.69%; width: 90.75%; height: 93.74%; }
+
+.hc-logo__mono {
+  background: var(--hc-text);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+.hc-logo__auto-dark { display: none; }
+[data-theme='dark'] .hc-logo__auto-light { display: none; }
+[data-theme='dark'] .hc-logo__auto-dark { display: block; }

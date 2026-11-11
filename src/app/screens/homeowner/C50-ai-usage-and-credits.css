@@ -1,0 +1,97 @@
+/* C50 AI usage & credits */
+.hc-c50-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+.hc-c50-row {
+  display: flex;
+  align-items: stretch;
+  gap: var(--hc-space-3);
+}
+.hc-c50-row > * { flex: 1 1 0; min-width: 0; }
+
+.hc-c50-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  padding: 15px; /* 16 with the 1px stroke */
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  text-align: left;
+}
+.hc-c50-card--gap { gap: var(--hc-space-2); }
+
+/* Mobile credit pack cards are tap targets */
+button.hc-c50-card { font: inherit; cursor: pointer; }
+button.hc-c50-card[aria-checked='true'] {
+  padding: 14px;
+  border: 2px solid var(--hc-link);
+  background: var(--hc-selected);
+}
+button.hc-c50-card:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+/* Usage chart: 12 monthly bars, bottom aligned */
+.hc-c50-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 56px;
+}
+.hc-c50-chart--web { height: 72px; }
+.hc-c50-chart__bar {
+  flex: 1 1 0;
+  border-radius: var(--hc-radius-sm) var(--hc-radius-sm) 0 0;
+  background: var(--hc-primary);
+}
+
+/* Web pack rows (radio-like) */
+.hc-c50-pack {
+  display: flex;
+  gap: var(--hc-space-3);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-text-muted);
+  font: 400 14px/20px var(--hc-font);
+  text-align: left;
+  cursor: pointer;
+}
+.hc-c50-pack > :first-child { flex: 1; }
+.hc-c50-pack > :last-child { font-weight: 600; color: var(--hc-text); }
+.hc-c50-pack[aria-checked='true'] > :first-child { color: var(--hc-text); font-weight: 600; }
+.hc-c50-pack:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+.hc-c50-link {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c50-link:hover { text-decoration: underline; }
+
+.hc-c50-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c50-web__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c50-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c50-web__cols > :first-child { flex: 0 0 420px; }
+.hc-c50-web__cols > :last-child { flex: 1 1 0; min-width: 0; }
+.hc-c50-start { align-self: flex-start; }
+.hc-c50-stack--tight { gap: var(--hc-space-2); }

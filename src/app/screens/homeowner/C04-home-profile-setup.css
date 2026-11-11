@@ -1,0 +1,13 @@
+/* Inline edit of a Detail Row: same 12px vertical rhythm and divider as the row it replaces */
+.hc-c04-edit {
+  padding: var(--hc-space-3) 0;
+  border-bottom: 1px solid var(--hc-border);
+}
+.hc-c04-done {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}

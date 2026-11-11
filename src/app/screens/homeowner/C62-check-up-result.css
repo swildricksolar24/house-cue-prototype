@@ -1,0 +1,77 @@
+/* Mobile content: 12px gap (Figma "content") */
+.hc-c62-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+/* Before / after photos side by side */
+.hc-c62-compare {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-3);
+}
+.hc-c62-compare > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.hc-c62-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+}
+
+.hc-c62-link {
+  align-self: stretch;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-sm);
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+.hc-c62-link:hover { text-decoration: underline; }
+.hc-c62-link:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+/* Web 1440: header, banner, then photos + 360px "What to do" card */
+.hc-c62-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c62-web__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c62-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c62-web__photos {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.hc-c62-web__photos .hc-c62-compare { gap: var(--hc-space-5); }
+
+.hc-c62-card {
+  width: 360px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c62-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2) var(--hc-space-3);
+}

@@ -1,0 +1,93 @@
+/* Shared screen pieces for the J1 maintenance screens (C10–C12, C23, C25) are prefixed per screen. */
+
+/* List / Month chips (Figma "chips": pill, 12/16 padding, selected = selected fill + link border) */
+.hc-c11-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}
+.hc-c11-chip {
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c11-chip[aria-pressed='true'] {
+  border-color: var(--hc-link);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+.hc-c11-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+/* Month view: 7-column grid of the month with task dots (no Figma frame; built from the list data) */
+.hc-c11-month {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--hc-space-1);
+}
+.hc-c11-month__dow,
+.hc-c11-month__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font: 400 12px/18px var(--hc-font);
+}
+.hc-c11-month__dow { color: var(--hc-text-muted); font-weight: 600; }
+.hc-c11-month__day {
+  min-height: 44px;
+  padding: var(--hc-space-1) 0;
+  border-radius: var(--hc-radius-md);
+  color: var(--hc-text);
+}
+.hc-c11-month__day--task { background: var(--hc-selected); font-weight: 600; }
+.hc-c11-month__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-link);
+}
+
+/* Web: header row (title + chips), then list card + 360px side column */
+.hc-c11-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c11-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-5);
+}
+.hc-c11-web__head > * { flex: 1; min-width: 0; }
+.hc-c11-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c11-web__main { flex: 1; min-width: 0; }
+.hc-c11-web__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 360px;
+  flex-shrink: 0;
+}
+
+.hc-c11-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c11-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}

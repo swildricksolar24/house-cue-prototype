@@ -1,0 +1,77 @@
+/* Figma chips row does not wrap; it scrolls sideways when it overflows */
+.hc-c24-chips {
+  display: flex;
+  gap: var(--hc-space-2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.hc-c24-chips::-webkit-scrollbar { display: none; }
+.hc-c24-chip { flex-shrink: 0; white-space: nowrap; }
+.hc-c24-chip {
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c24-chip--selected {
+  border-color: var(--hc-link);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+.hc-c24-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+/* Workaround: HC/Task Row has no Neutral tag tone (Figma uses HC/Status Pill Tone=Neutral for "Permit") */
+.hc-c24 .hc-task-row__tag--neutral {
+  border: 1px solid var(--hc-border);
+  background: var(--hc-tint);
+  color: var(--hc-text);
+}
+
+/* Web */
+.hc-c24-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c24-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c24-web__head > h1 { flex: 1; min-width: 0; }
+.hc-c24-web__filters {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-4);
+}
+.hc-c24-web__search { flex: 1; min-width: 0; }
+.hc-c24-web__filters > .hc-c24-chips { flex-wrap: nowrap; flex-shrink: 0; }
+.hc-c24-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c24-web__side {
+  width: 360px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+.hc-c24-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c24-card--list {
+  flex: 1 1 0;
+  min-width: 0;
+  gap: var(--hc-space-1);
+}

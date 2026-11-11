@@ -1,0 +1,16 @@
+/* HC/Stat Tile — Figma 261:1038 */
+.hc-stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  width: 100%;
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  overflow-wrap: break-word;
+}
+
+.hc-stat-tile__label { font: 600 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+.hc-stat-tile__value { font: 800 24px/32px var(--hc-font); letter-spacing: -0.01em; color: var(--hc-text); }
+.hc-stat-tile__meta { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); }

@@ -1,0 +1,42 @@
+/* HC/Web Top Bar — Figma 5:214 */
+.hc-web-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hc-space-5);
+  width: 100%;
+  height: 72px;
+  padding: 0 var(--hc-space-7);
+  background: var(--hc-card);
+  border-bottom: 1px solid var(--hc-border);
+}
+
+.hc-web-top-bar__logo {
+  display: inline-flex;
+  flex-shrink: 0;
+  border-radius: var(--hc-radius-sm);
+  outline: none;
+}
+.hc-web-top-bar__logo:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+.hc-web-top-bar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-5);
+  min-width: 0;
+}
+
+.hc-web-top-bar__link {
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-sm);
+  background: transparent;
+  font: 600 14px/20px var(--hc-font);
+  color: var(--hc-text);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+}
+.hc-web-top-bar__link:hover { text-decoration: underline; }
+.hc-web-top-bar__link:focus-visible { box-shadow: var(--hc-focus-ring); }

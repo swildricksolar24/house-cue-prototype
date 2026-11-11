@@ -1,0 +1,85 @@
+/* Member row: HC/Task Row layout with an HC/Status Pill (neutral tones the TaskRow tag lacks) */
+.hc-c35-members { display: flex; flex-direction: column; }
+
+.hc-c35-member {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-3) 0;
+  border: 0;
+  border-bottom: 1px solid var(--hc-border);
+  background: none;
+  color: var(--hc-text);
+  font: inherit;
+  text-align: left;
+}
+.hc-c35-member--button { cursor: pointer; outline: none; }
+.hc-c35-member--button:hover .hc-medium-semibold { text-decoration: underline; }
+.hc-c35-member--button:focus-visible { box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-sm); }
+
+.hc-c35-member__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-selected);
+}
+.hc-c35-member__text {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  min-width: 0;
+}
+.hc-c35-member > .hc-status-pill { flex-shrink: 0; }
+
+.hc-c35-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+
+.hc-c35-remove {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-danger);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c35-remove:hover { text-decoration: underline; }
+
+/* Web 1440: title row, then people card + 440px permissions card */
+.hc-c35-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c35-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c35-web__head > h1 { flex: 1; }
+.hc-c35-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c35-web__main { flex: 1; min-width: 0; }
+.hc-c35-web__side { width: 440px; flex-shrink: 0; }
+
+.hc-c35-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}

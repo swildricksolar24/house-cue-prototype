@@ -1,0 +1,90 @@
+/* HC/Quote Row — Figma 99:370 (In network 29:72, Out of network 99:352) */
+.hc-quote-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  width: 100%;
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  overflow-wrap: break-word;
+}
+
+.hc-quote-row p { margin: 0; }
+
+.hc-quote-row__top {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+
+.hc-quote-row__vendor { flex: 1 1 0; min-width: 0; font: 600 14px/20px var(--hc-font); color: var(--hc-text); }
+.hc-quote-row__price { flex-shrink: 0; font: 700 16px/24px var(--hc-font); color: var(--hc-text); white-space: nowrap; }
+
+.hc-quote-row__updated {
+  flex-shrink: 0;
+  padding: 2px var(--hc-space-2);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-info-bg);
+  color: var(--hc-info);
+  font: 600 12px/18px var(--hc-font);
+  white-space: nowrap;
+}
+
+.hc-quote-row__oon {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-2) var(--hc-space-3);
+  border: 1px solid var(--hc-danger);
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-danger-bg);
+  color: var(--hc-danger);
+  font: 700 12px/18px var(--hc-font);
+}
+
+.hc-quote-row__oon .hc-icon { color: var(--hc-text); }
+
+.hc-quote-row__trust {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+
+/* Local stand-in for HC/Status Pill, tone Info */
+.hc-quote-row__pill {
+  flex-shrink: 0;
+  padding: var(--hc-space-1) var(--hc-space-2);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-info-bg);
+  color: var(--hc-info);
+  font: 600 12px/18px var(--hc-font);
+  white-space: nowrap;
+}
+
+.hc-quote-row__muted { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+.hc-quote-row__trust .hc-quote-row__muted { flex: 1 1 0; min-width: 0; }
+
+.hc-quote-row__nearby {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-sm);
+  background: none;
+  color: var(--hc-link);
+  font: 600 12px/18px var(--hc-font);
+  text-align: left;
+  outline: none;
+}
+
+button.hc-quote-row__nearby { cursor: pointer; }
+button.hc-quote-row__nearby:hover { text-decoration: underline; }
+button.hc-quote-row__nearby:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+.hc-quote-row__actions {
+  display: flex;
+  gap: var(--hc-space-2);
+}
+
+.hc-quote-row__button { flex: 1 1 0; min-width: 0; }

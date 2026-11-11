@@ -1,0 +1,100 @@
+.hc-c89-label {
+  margin: 0;
+  font: 700 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+
+.hc-c89-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+
+.hc-c89-email {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-3) 0;
+}
+.hc-c89-email > :first-child { flex: 1; }
+
+/* Web 1440: header, 4 stat tiles, then 600px + 472px columns */
+.hc-c89-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c89-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c89-web__title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c89-web__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--hc-space-3);
+  margin-bottom: calc(var(--hc-space-2) * -1);
+}
+.hc-c89-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c89-web__main {
+  flex: 0 1 600px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+.hc-c89-web__side {
+  flex: 0 0 472px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+
+.hc-c89-table {
+  display: flex;
+  flex-direction: column;
+  padding: var(--hc-space-1) 0;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  overflow: hidden;
+}
+.hc-c89-table__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 70px 100px 110px;
+  gap: var(--hc-space-3);
+  align-items: center;
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border-top: 1px solid var(--hc-border);
+  font: 400 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+.hc-c89-table__row > span:last-child { display: flex; }
+.hc-c89-table__row--head {
+  padding-block: 10px;
+  border-top: 0;
+  font: 600 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+}
+
+.hc-c89-fab {
+  position: fixed;
+  right: var(--hc-space-5);
+  bottom: var(--hc-space-5);
+  z-index: 10;
+}

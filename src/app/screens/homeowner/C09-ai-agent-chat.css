@@ -1,0 +1,177 @@
+/* C09 AI agent chat */
+.hc-c09-mobile {
+  position: relative;
+  height: 100%;
+}
+
+.hc-c09-thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+/* Composer: pill input, voice button (mobile), Send */
+.hc-c09-composer {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+  background: var(--hc-card);
+}
+.hc-c09-mobile .hc-c09-composer {
+  padding: var(--hc-space-3) var(--hc-space-5);
+}
+.hc-c09-composer__input {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 44px;
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-tint);
+  color: var(--hc-text);
+  font: 400 14px/20px var(--hc-font);
+}
+.hc-c09-composer__input::placeholder { color: var(--hc-text-muted); }
+.hc-c09-composer__input:focus-visible {
+  outline: 2px solid var(--hc-focus-ring);
+  outline-offset: 2px;
+}
+.hc-c09-composer__mic {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-selected);
+  cursor: pointer;
+}
+.hc-c09-composer__mic:focus-visible {
+  outline: 2px solid var(--hc-focus-ring);
+  outline-offset: 2px;
+}
+/* HC/Icon/Mic (Figma 28:74) is not in the HC icon set; mask keeps it on the link token */
+.hc-c09-composer__mic-icon {
+  width: 24px;
+  height: 24px;
+  background: var(--hc-link);
+  -webkit-mask: url('./assets/c09-mic.svg') center / contain no-repeat;
+  mask: url('./assets/c09-mic.svg') center / contain no-repeat;
+}
+
+/* Landlord emergency: notification card inside the thread */
+.hc-c09-push {
+  border: 1px solid var(--hc-border);
+}
+
+/* "Booked" card — same anatomy as HC/Action Card with two actions */
+.hc-c09-booked {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-link);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c09-booked__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+.hc-c09-booked__actions {
+  display: flex;
+  gap: var(--hc-space-2);
+}
+.hc-c09-booked__actions > * { flex: 1 1 0; }
+
+/* Approval sheet (mobile bottom sheet / web dialog) */
+.hc-c09-scrim {
+  z-index: 20;
+  display: flex;
+  background: var(--hc-scrim);
+}
+.hc-c09-scrim--mobile {
+  position: absolute;
+  inset: 0;
+  align-items: flex-end;
+}
+.hc-c09-scrim--web {
+  position: fixed;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+}
+.hc-c09-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  background: var(--hc-card);
+  color: var(--hc-text);
+}
+.hc-c09-sheet--mobile {
+  width: 100%;
+  padding: var(--hc-space-3) var(--hc-space-5) var(--hc-space-6);
+  border-radius: var(--hc-radius-xl) var(--hc-radius-xl) 0 0;
+}
+.hc-c09-sheet--web {
+  width: 480px;
+  padding: var(--hc-space-5);
+  border-radius: var(--hc-radius-lg);
+}
+.hc-c09-sheet__handle {
+  align-self: center;
+  width: 36px;
+  height: 4px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-border-strong);
+}
+.hc-c09-sheet__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+.hc-c09-sheet--web .hc-c09-sheet__actions { flex-direction: row; }
+
+/* Web 1440: title row, chat card + 360px side column */
+.hc-c09-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c09-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-5);
+}
+.hc-c09-web__head > h1 { flex: 1; }
+.hc-c09-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c09-web__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 360px;
+  flex-shrink: 0;
+}
+.hc-c09-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c09-card--chat {
+  flex: 1;
+  min-width: 0;
+  gap: var(--hc-space-4);
+}
+.hc-c09-card--chat .hc-c09-thread { gap: var(--hc-space-4); }
+.hc-c09-card--side { gap: var(--hc-space-1); }

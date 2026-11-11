@@ -1,0 +1,50 @@
+/* HC/Push Card — Figma 6:140 */
+.hc-push-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-3);
+  width: 100%;
+  max-width: 358px;
+  padding: var(--hc-space-3);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-xl);
+  background: var(--hc-card);
+}
+
+.hc-push-card__avatar {
+  flex-shrink: 0;
+  display: flex;
+  width: 36px;
+  height: 36px;
+  overflow: hidden;
+  border-radius: var(--hc-radius-md);
+}
+
+.hc-push-card__text {
+  flex: 1 0 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--hc-space-1) / 2);
+  overflow: hidden;
+}
+
+.hc-push-card__text > p {
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.hc-push-card__meta {
+  font: 400 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+}
+
+.hc-push-card__title {
+  font: 600 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+
+.hc-push-card__body {
+  font: 400 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}

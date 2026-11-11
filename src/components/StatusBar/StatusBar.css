@@ -1,0 +1,22 @@
+/* HC/Status Bar — Figma 5:55 */
+.hc-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 390px;
+  height: 47px;
+  padding: 0 var(--hc-space-5);
+  color: var(--hc-text);
+  user-select: none;
+}
+
+.hc-status-bar__time {
+  font: 600 14px/20px var(--hc-font);
+  white-space: nowrap;
+}
+
+.hc-status-bar__status {
+  font: 600 12px/18px var(--hc-font);
+  white-space: pre;
+}

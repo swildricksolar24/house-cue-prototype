@@ -1,0 +1,55 @@
+/* Mobile: fills the 390×844 phone frame (DeviceFrame) */
+.hc-mobile-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  color: var(--hc-text);
+}
+.hc-mobile-shell--card { background: var(--hc-card); }
+.hc-mobile-shell--page { background: var(--hc-page); }
+.hc-mobile-shell > * { flex-shrink: 0; }
+
+.hc-mobile-shell__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.hc-mobile-shell__body::-webkit-scrollbar { display: none; }
+.hc-mobile-shell__body--default {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  padding: var(--hc-space-4) var(--hc-space-5) var(--hc-space-5);
+}
+/* Content scrolls instead of shrinking when it overflows */
+.hc-mobile-shell__body--default > * { flex-shrink: 0; }
+
+/* Web: 1440×900 design, fluid */
+.hc-web-shell {
+  min-height: 100vh;
+  color: var(--hc-text);
+}
+.hc-web-shell--page { background: var(--hc-page); }
+.hc-web-shell--card { background: var(--hc-card); }
+
+.hc-web-shell--app {
+  display: grid;
+  grid-template-columns: var(--hc-web-menu) minmax(0, 1fr);
+}
+.hc-web-shell__nav {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.hc-web-shell__main {
+  min-width: 0;
+  padding: var(--hc-space-7) var(--hc-space-8) var(--hc-space-9);
+}
+.hc-web-shell__main--narrow {
+  width: 100%;
+  max-width: calc(640px + 2 * var(--hc-space-8));
+  margin: 0 auto;
+}

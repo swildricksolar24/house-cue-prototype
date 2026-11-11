@@ -1,0 +1,87 @@
+/* Segmented control (no HC component yet): tint track, selected segment on card */
+.hc-c90-segmented {
+  display: flex;
+  gap: var(--hc-space-1);
+  padding: var(--hc-space-1);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-tint);
+}
+.hc-c90-segment {
+  flex: 1;
+  padding: var(--hc-space-2) var(--hc-space-4);
+  border: 1px solid transparent;
+  border-radius: var(--hc-radius-pill);
+  background: none;
+  color: var(--hc-text-muted);
+  font: 600 12px/18px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c90-segment--selected {
+  border-color: var(--hc-border);
+  background: var(--hc-card);
+  color: var(--hc-text);
+}
+.hc-c90-segment:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+.hc-c90-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+.hc-c90-options--web {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--hc-space-3);
+}
+.hc-c90-options--web > * { width: 300px; }
+/* Already recommended: Figma draws the card at 50% opacity */
+.hc-c90-option--disabled { opacity: 0.5; }
+
+/* Web 1440 */
+.hc-c90-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c90-back {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c90-back:hover { text-decoration: underline; }
+.hc-c90-web__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+}
+.hc-c90-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c90-web__side {
+  flex: 0 0 380px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+
+.hc-c90-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c90-card--main { flex: 1; min-width: 0; gap: var(--hc-space-4); }
+.hc-c90-card--side { gap: var(--hc-space-3); }
+
+.hc-c90-actions {
+  display: flex;
+  gap: var(--hc-space-3);
+}

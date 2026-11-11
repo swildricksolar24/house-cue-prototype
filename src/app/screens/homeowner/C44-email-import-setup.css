@@ -1,0 +1,53 @@
+.hc-c44-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+/* Web */
+.hc-c44-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c44-web__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c44-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c44-card {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c44-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+}
+.hc-c44-soon {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+
+.hc-c44-kv {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  margin: 0;
+}
+.hc-c44-kv > div { display: flex; gap: var(--hc-space-3); }
+.hc-c44-kv dt { flex: 1; min-width: 0; }
+.hc-c44-kv dd { margin: 0; text-align: right; }

@@ -1,0 +1,94 @@
+.hc-c38-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+
+.hc-c38-group-head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+.hc-c38-group-head > h2 { flex: 1; min-width: 0; }
+.hc-c38-group-title { margin: 0; font: 700 14px/20px var(--hc-font); color: var(--hc-text); }
+
+.hc-c38-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.hc-c38-link:hover { text-decoration: underline; }
+
+/* HC/Agent FAB (landlord): mobile 16 from the right and 16 above the tab bar; web 24 from the bottom-right corner */
+.hc-c38-fab {
+  position: fixed;
+  right: var(--hc-space-4);
+  bottom: calc(99px + var(--hc-space-4)); /* tab bar = 8 + 48 + 8 + 1 border + 34 home indicator */
+  z-index: 10;
+}
+.hc-web-shell .hc-c38-fab {
+  right: var(--hc-space-5);
+  bottom: var(--hc-space-5);
+}
+/* Keep the last card clear of the FAB when scrolled to the end */
+.hc-c38-portfolio .hc-mobile-shell__body { padding-bottom: var(--hc-space-9); }
+
+/* Web 1440 */
+.hc-c38-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c38-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c38-web__head > h1 { flex: 1; }
+.hc-c38-web__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+.hc-c38-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c38-web__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  flex: 1;
+  min-width: 0;
+}
+.hc-c38-web__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 400px;
+  flex-shrink: 0;
+}
+.hc-c38-web__portfolio {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 540px;
+  flex-shrink: 0;
+}
+
+.hc-c38-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c38-card--list { gap: var(--hc-space-3); }
+.hc-c38-card--list .hc-c38-list { gap: var(--hc-space-3); }

@@ -1,0 +1,8 @@
+.hc-c02-social {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+.hc-c02-social img { display: block; object-fit: contain; }
+/* The Apple mark is black artwork; flip it so it stays visible on the dark card */
+[data-theme='dark'] .hc-c02-social__apple { filter: invert(1); }

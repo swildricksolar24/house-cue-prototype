@@ -1,0 +1,34 @@
+/* HC/Agent FAB — Figma 278:3570 */
+.hc-agent-fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hc-space-3);
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-primary);
+  color: var(--hc-on-primary);
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  /* Figma: drop shadow 0 4 6 rgba(0,0,0,.18); no shadow token yet, closest is --hc-scrim (.25) */
+  filter: drop-shadow(0 4px 6px var(--hc-scrim));
+}
+.hc-agent-fab:hover { background: var(--hc-primary-hover); }
+.hc-agent-fab:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+.hc-agent-fab--compact {
+  width: 56px;
+  height: 56px;
+}
+
+.hc-agent-fab--extended {
+  height: 48px;
+  min-width: 120px;
+  padding: 0 var(--hc-space-5) 0 var(--hc-space-4);
+}
+
+.hc-agent-fab__label {
+  font: 600 14px/20px var(--hc-font);
+  white-space: nowrap;
+}

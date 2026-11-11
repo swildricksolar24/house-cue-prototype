@@ -1,0 +1,39 @@
+/* HC/Hold Explainer — Figma 29:123 */
+.hc-hold-explainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  width: 100%;
+  padding: var(--hc-space-4);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-selected);
+  color: var(--hc-text);
+  overflow-wrap: break-word;
+}
+
+.hc-hold-explainer__header {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+
+.hc-hold-explainer__title { flex: 1 1 0; min-width: 0; margin: 0; font: 600 14px/20px var(--hc-font); color: var(--hc-text); }
+
+.hc-hold-explainer__steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: hc-hold-step;
+}
+
+/* Number sits inline (wrapped lines return to the left edge, as in Figma) */
+.hc-hold-explainer__step {
+  font: 400 12px/18px var(--hc-font);
+  color: var(--hc-text);
+  counter-increment: hc-hold-step;
+}
+
+.hc-hold-explainer__step::before { content: counter(hc-hold-step) '. '; }

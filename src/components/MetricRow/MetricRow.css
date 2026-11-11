@@ -1,0 +1,11 @@
+/* HC/Metric Row — Figma 191:789 */
+.hc-metric-row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-3);
+  width: 100%;
+  font: 400 14px/20px var(--hc-font);
+}
+
+.hc-metric-row__label { flex: 1 1 0; color: var(--hc-text-muted); }
+.hc-metric-row__value { flex: 0 1 auto; font-weight: 600; color: var(--hc-text); text-align: right; }

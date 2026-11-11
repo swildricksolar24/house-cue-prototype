@@ -1,0 +1,17 @@
+/* HC/Status Pill — Figma 261:1037 */
+.hc-status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px; /* 4px 10px with Figma's inside 1px stroke */
+  border: 1px solid transparent;
+  border-radius: var(--hc-radius-pill);
+  font: 600 12px/18px var(--hc-font);
+  white-space: nowrap;
+}
+
+/* Only Neutral draws its border; the transparent one keeps every tone 26px tall */
+.hc-status-pill--neutral { background: var(--hc-tint); border-color: var(--hc-border); color: var(--hc-text-muted); }
+.hc-status-pill--info { background: var(--hc-info-bg); color: var(--hc-info); }
+.hc-status-pill--success { background: var(--hc-success-bg); color: var(--hc-success); }
+.hc-status-pill--warning { background: var(--hc-warning-bg); color: var(--hc-warning); }
+.hc-status-pill--danger { background: var(--hc-danger-bg); color: var(--hc-danger); }

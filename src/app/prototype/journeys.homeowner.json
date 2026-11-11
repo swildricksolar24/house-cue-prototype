@@ -1,0 +1,750 @@
+[
+  {
+    "slug": "onboarding",
+    "name": "Onboarding",
+    "workflows": "W1, W2 (2a–2h), W3–W6, W40",
+    "figma": "215:11267",
+    "steps": [
+      {
+        "code": "C39",
+        "label": "Marketing landing page (web)",
+        "mobile": "215:11454",
+        "web": "215:13872"
+      },
+      {
+        "code": "C01",
+        "label": "Splash and welcome",
+        "mobile": "215:11499",
+        "web": "215:13938"
+      },
+      {
+        "code": "C02",
+        "label": "Sign up / sign in",
+        "mobile": "215:11597",
+        "web": "215:14016"
+      },
+      {
+        "code": "C03",
+        "label": "Language choice",
+        "mobile": "215:11673",
+        "web": "215:14096"
+      },
+      {
+        "code": "C41",
+        "label": "Consents",
+        "mobile": "215:11846",
+        "web": "215:14269"
+      },
+      {
+        "code": "X08",
+        "label": "Legal pages",
+        "mobile": "215:11885",
+        "web": "215:14402"
+      },
+      {
+        "code": "C04",
+        "label": "Home profile setup",
+        "mobile": "215:11979",
+        "web": "215:14548"
+      },
+      {
+        "code": "C06",
+        "label": "Agent intro and permissions",
+        "mobile": "215:12102",
+        "web": "215:14669"
+      },
+      {
+        "code": "X05",
+        "label": "Permission prompts",
+        "mobile": "215:12135",
+        "web": "215:14716"
+      },
+      {
+        "code": "C07",
+        "label": "Agent spend and approval rules",
+        "mobile": "215:12232",
+        "web": "215:14876"
+      },
+      {
+        "code": "C08",
+        "label": "Home dashboard",
+        "mobile": "215:12420",
+        "web": "215:15150"
+      },
+      {
+        "code": "C05",
+        "label": "Add systems and label scan",
+        "mobile": "215:12472",
+        "web": "215:15334"
+      },
+      {
+        "code": "C63",
+        "label": "Rooms and materials (list)",
+        "mobile": "215:12617",
+        "web": "215:15484"
+      },
+      {
+        "code": "C64",
+        "label": "Room detail",
+        "mobile": "215:12712",
+        "web": "215:15651"
+      },
+      {
+        "code": "C24",
+        "label": "Document vault",
+        "mobile": "215:12885",
+        "web": "215:15893"
+      },
+      {
+        "code": "C46",
+        "label": "Connected devices",
+        "mobile": "215:12990",
+        "web": "215:16056"
+      },
+      {
+        "code": "C47",
+        "label": "Connected devices, map devices",
+        "mobile": "215:13067",
+        "web": "215:16189"
+      },
+      {
+        "code": "C42",
+        "label": "Agent preferences",
+        "mobile": "215:13230",
+        "web": "215:16463"
+      },
+      {
+        "code": "C43",
+        "label": "Calendar connect",
+        "mobile": "215:13305",
+        "web": "215:16607"
+      },
+      {
+        "code": "C44",
+        "label": "Email import setup",
+        "mobile": "215:13400",
+        "web": "215:16751"
+      },
+      {
+        "code": "C45",
+        "label": "Email import review",
+        "mobile": "215:13499",
+        "web": "215:16954"
+      },
+      {
+        "code": "C59",
+        "label": "Partner welcome",
+        "mobile": "215:13557",
+        "web": "215:17011"
+      },
+      {
+        "code": "C60",
+        "label": "Inspection import review",
+        "mobile": "215:13645",
+        "web": "215:17184"
+      }
+    ]
+  },
+  {
+    "slug": "home-record-and-maintenance",
+    "name": "Home record & maintenance",
+    "workflows": "W7–W12",
+    "figma": "216:14802",
+    "steps": [
+      {
+        "code": "C11",
+        "label": "Maintenance calendar",
+        "mobile": "216:14971",
+        "web": "216:16496"
+      },
+      {
+        "code": "C12",
+        "label": "Task detail",
+        "mobile": "216:15078",
+        "web": "216:16677"
+      },
+      {
+        "code": "C23",
+        "label": "System detail",
+        "mobile": "216:15205",
+        "web": "216:16933"
+      },
+      {
+        "code": "C25",
+        "label": "Warranties and claims",
+        "mobile": "216:15351",
+        "web": "216:17150"
+      },
+      {
+        "code": "C10",
+        "label": "Agent memory and activity log",
+        "mobile": "216:15466",
+        "web": "216:17367"
+      },
+      {
+        "code": "C61",
+        "label": "Photo check-up capture",
+        "mobile": "216:15513",
+        "web": "216:17465"
+      },
+      {
+        "code": "C62",
+        "label": "Check-up result",
+        "mobile": "216:15580",
+        "web": "216:17592"
+      },
+      {
+        "code": "C26",
+        "label": "DIY video coach",
+        "mobile": "216:15719",
+        "web": "216:17766"
+      },
+      {
+        "code": "C65",
+        "label": "Shutoff map",
+        "mobile": "216:15844",
+        "web": "216:17919"
+      },
+      {
+        "code": "C71",
+        "label": "Replacement budget",
+        "mobile": "216:15974",
+        "web": "216:18076"
+      },
+      {
+        "code": "C66",
+        "label": "Improvement cost log",
+        "mobile": "216:16130",
+        "web": "216:18227"
+      },
+      {
+        "code": "C72",
+        "label": "Home Health certificate",
+        "mobile": "216:16239",
+        "web": "216:18386"
+      }
+    ]
+  },
+  {
+    "slug": "request-quotes",
+    "name": "Request quotes",
+    "workflows": "W13–W15, W36",
+    "figma": "216:18387",
+    "steps": [
+      {
+        "code": "C09",
+        "label": "AI agent chat",
+        "mobile": "216:18549",
+        "web": "216:19664"
+      },
+      {
+        "code": "C13",
+        "label": "Request a service",
+        "mobile": "216:18644",
+        "web": "216:19860"
+      },
+      {
+        "code": "C48",
+        "label": "Outreach progress",
+        "mobile": "216:18793",
+        "web": "216:20099"
+      },
+      {
+        "code": "C74",
+        "label": "Request thread (homeowner)",
+        "mobile": "216:18941",
+        "web": "216:20307"
+      },
+      {
+        "code": "C49",
+        "label": "Estimate appointments",
+        "mobile": "216:19074",
+        "web": "216:20478"
+      },
+      {
+        "code": "C55",
+        "label": "Booking waitlist",
+        "mobile": "216:19140",
+        "web": "216:20542"
+      },
+      {
+        "code": "C56",
+        "label": "Find a pro (coming soon)",
+        "mobile": "216:19249",
+        "web": "216:20663"
+      },
+      {
+        "code": "C57",
+        "label": "Shareable job brief",
+        "mobile": "216:19305",
+        "web": "216:20788"
+      },
+      {
+        "code": "C58",
+        "label": "Log an outside job",
+        "mobile": "216:19440",
+        "web": "216:20970"
+      }
+    ]
+  },
+  {
+    "slug": "review-and-book",
+    "name": "Review & book",
+    "workflows": "W16, W17",
+    "figma": "217:28928",
+    "steps": [
+      {
+        "code": "C14",
+        "label": "Quote comparison",
+        "mobile": "217:29138",
+        "web": "217:29928"
+      },
+      {
+        "code": "C15",
+        "label": "Vendor profile",
+        "mobile": "217:29236",
+        "web": "217:30149"
+      },
+      {
+        "code": "C16",
+        "label": "Book and schedule",
+        "mobile": "217:29332",
+        "web": "217:30324"
+      },
+      {
+        "code": "C17",
+        "label": "Checkout and payment hold",
+        "mobile": "217:29415",
+        "web": "217:30491"
+      },
+      {
+        "code": "C40",
+        "label": "My jobs",
+        "mobile": "217:29558",
+        "web": "217:30693"
+      }
+    ]
+  },
+  {
+    "slug": "job-in-progress",
+    "name": "Job in progress",
+    "workflows": "W19, W43, W45",
+    "figma": "217:30694",
+    "steps": [
+      {
+        "code": "C40",
+        "label": "My jobs",
+        "mobile": "217:30780",
+        "web": "217:31378"
+      },
+      {
+        "code": "C18",
+        "label": "Job tracker",
+        "mobile": "217:30955",
+        "web": "217:31621"
+      },
+      {
+        "code": "C19",
+        "label": "Messages with vendor",
+        "mobile": "217:31111",
+        "web": "217:31819"
+      },
+      {
+        "code": "C77",
+        "label": "Permit tracking",
+        "mobile": "217:31259",
+        "web": "217:31994"
+      }
+    ]
+  },
+  {
+    "slug": "payment-and-review",
+    "name": "Payment & review",
+    "workflows": "W25, W26, W46, W42",
+    "figma": "217:31995",
+    "steps": [
+      {
+        "code": "C20",
+        "label": "Job completion and sign-off",
+        "mobile": "217:32080",
+        "web": "217:32589"
+      },
+      {
+        "code": "C30",
+        "label": "Payment methods and history",
+        "mobile": "217:32220",
+        "web": "217:32814"
+      },
+      {
+        "code": "C21",
+        "label": "Rate and review",
+        "mobile": "217:32310",
+        "web": "217:32969"
+      },
+      {
+        "code": "C78",
+        "label": "Your customer score",
+        "mobile": "217:32429",
+        "web": "217:33118"
+      }
+    ]
+  },
+  {
+    "slug": "emergency",
+    "name": "Emergency",
+    "workflows": "W18",
+    "figma": "218:15891",
+    "steps": [
+      {
+        "code": "C22",
+        "label": "Emergency request",
+        "mobile": "218:15991",
+        "web": "218:16363"
+      },
+      {
+        "code": "C18",
+        "label": "Job tracker",
+        "mobile": "218:16083",
+        "web": "218:16498"
+      },
+      {
+        "code": "C19",
+        "label": "Messages with vendor",
+        "mobile": "218:16170",
+        "web": "218:16609"
+      }
+    ]
+  },
+  {
+    "slug": "warranty-dispute",
+    "name": "Warranty / dispute",
+    "workflows": "W21, W27, W22, W34",
+    "figma": "218:16610",
+    "steps": [
+      {
+        "code": "C25",
+        "label": "Warranties and claims",
+        "mobile": "218:16697",
+        "web": "218:17274"
+      },
+      {
+        "code": "C31",
+        "label": "Issues and disputes",
+        "mobile": "218:16840",
+        "web": "218:17471"
+      },
+      {
+        "code": "C32",
+        "label": "Help and contact support",
+        "mobile": "218:16979",
+        "web": "218:17679"
+      },
+      {
+        "code": "C73",
+        "label": "Insurance claim",
+        "mobile": "218:17147",
+        "web": "218:17910"
+      }
+    ]
+  },
+  {
+    "slug": "household-and-access",
+    "name": "Household & access",
+    "workflows": "W29, W30, W35, W32",
+    "figma": "218:17911",
+    "steps": [
+      {
+        "code": "C35",
+        "label": "Household and caregiver access",
+        "mobile": "218:18093",
+        "web": "218:18710"
+      },
+      {
+        "code": "C53",
+        "label": "Accept home ownership",
+        "mobile": "218:18169",
+        "web": "218:18791"
+      },
+      {
+        "code": "C38",
+        "label": "Multi-home switcher",
+        "mobile": "218:18308",
+        "web": "218:18990"
+      },
+      {
+        "code": "C67",
+        "label": "Transfer home",
+        "mobile": "218:18460",
+        "web": "218:19206"
+      }
+    ]
+  },
+  {
+    "slug": "membership-and-credits",
+    "name": "Membership & credits",
+    "workflows": "W23, W24, W28, W39, W37, W38",
+    "figma": "218:19207",
+    "steps": [
+      {
+        "code": "C28",
+        "label": "Membership plans",
+        "mobile": "218:19286",
+        "web": "218:20393"
+      },
+      {
+        "code": "C29",
+        "label": "Subscription management",
+        "mobile": "218:19402",
+        "web": "218:20578"
+      },
+      {
+        "code": "C54",
+        "label": "Choose active items",
+        "mobile": "218:19504",
+        "web": "218:20814"
+      },
+      {
+        "code": "C50",
+        "label": "AI usage & credits",
+        "mobile": "218:19641",
+        "web": "218:20976"
+      },
+      {
+        "code": "C51",
+        "label": "Money saved",
+        "mobile": "218:19730",
+        "web": "218:21096"
+      },
+      {
+        "code": "C27",
+        "label": "Savings center",
+        "mobile": "218:19856",
+        "web": "218:21231"
+      },
+      {
+        "code": "C68",
+        "label": "Rebate claim",
+        "mobile": "218:19987",
+        "web": "218:21431"
+      },
+      {
+        "code": "C69",
+        "label": "Service plan offer",
+        "mobile": "218:20139",
+        "web": "218:21609"
+      },
+      {
+        "code": "C70",
+        "label": "My service plans",
+        "mobile": "218:20250",
+        "web": "218:21760"
+      }
+    ]
+  },
+  {
+    "slug": "settings-and-account",
+    "name": "Settings & account",
+    "workflows": "W31, W41, W33, W20",
+    "figma": "218:21761",
+    "steps": [
+      {
+        "code": "C34",
+        "label": "Settings, privacy, data export",
+        "mobile": "218:21899",
+        "web": "218:22717"
+      },
+      {
+        "code": "C33",
+        "label": "Notification center",
+        "mobile": "218:22046",
+        "web": "218:22964"
+      },
+      {
+        "code": "C52",
+        "label": "Account recovery request",
+        "mobile": "218:22171",
+        "web": "218:23087"
+      },
+      {
+        "code": "C75",
+        "label": "Account standing",
+        "mobile": "218:22269",
+        "web": "218:23223"
+      },
+      {
+        "code": "C76",
+        "label": "Delete account",
+        "mobile": "218:22351",
+        "web": "218:23367"
+      },
+      {
+        "code": "X10",
+        "label": "Account deletion request (web)",
+        "mobile": "218:22410",
+        "web": "218:23470"
+      },
+      {
+        "code": "X09",
+        "label": "Suspended or deleted account",
+        "mobile": "218:22453",
+        "web": "218:23556"
+      }
+    ]
+  },
+  {
+    "slug": "landlord-portfolio",
+    "name": "Landlord portfolio",
+    "workflows": "W47–W49, W52, W55–W59",
+    "figma": "272:31774",
+    "steps": [
+      {
+        "code": "C04",
+        "label": "Home profile setup (rental owner)",
+        "mobile": "272:31781",
+        "web": "272:32376"
+      },
+      {
+        "code": "C80",
+        "label": "Add properties",
+        "mobile": "272:31845",
+        "web": "272:32449"
+      },
+      {
+        "code": "C81",
+        "label": "Property rules",
+        "mobile": "272:31914",
+        "web": "272:32602"
+      },
+      {
+        "code": "C79",
+        "label": "Portfolio dashboard",
+        "mobile": "272:31993",
+        "web": "272:32756"
+      },
+      {
+        "code": "C82",
+        "label": "Tenants & access (invite)",
+        "mobile": "272:32085",
+        "web": "272:32952"
+      },
+      {
+        "code": "C86",
+        "label": "Approval queue",
+        "mobile": "272:32136",
+        "web": "272:33084"
+      },
+      {
+        "code": "C20",
+        "label": "Landlord sign-off + damage flag",
+        "mobile": "272:32205",
+        "web": "272:33211"
+      },
+      {
+        "code": "C89",
+        "label": "Portfolio billing",
+        "mobile": "272:32256",
+        "web": "272:33291"
+      },
+      {
+        "code": "C87",
+        "label": "Move-out and turnover",
+        "mobile": "272:32315",
+        "web": "272:33422"
+      }
+    ]
+  },
+  {
+    "slug": "tenant",
+    "name": "Tenant",
+    "workflows": "W50, W51, W53, W54",
+    "figma": "272:33811",
+    "steps": [
+      {
+        "code": "C83",
+        "label": "Tenant invite accept and welcome",
+        "mobile": "272:33818",
+        "web": "272:34637"
+      },
+      {
+        "code": "C41",
+        "label": "Consents (tenant)",
+        "mobile": "272:33916",
+        "web": "272:34801"
+      },
+      {
+        "code": "C84",
+        "label": "Tenant home",
+        "mobile": "272:34071",
+        "web": "272:34961"
+      },
+      {
+        "code": "C13",
+        "label": "Report an issue (tenant mode)",
+        "mobile": "272:34220",
+        "web": "272:35171"
+      },
+      {
+        "code": "C85",
+        "label": "Access windows and entry notice",
+        "mobile": "272:34311",
+        "web": "272:35329"
+      },
+      {
+        "code": "C18",
+        "label": "Job tracker (tenant, status only)",
+        "mobile": "272:34412",
+        "web": "272:35524"
+      },
+      {
+        "code": "C20",
+        "label": "Confirm completion (tenant)",
+        "mobile": "272:34551",
+        "web": "272:35731"
+      }
+    ]
+  },
+  {
+    "slug": "community-contributions",
+    "name": "Community contributions",
+    "workflows": "W60, W61",
+    "figma": "300:31936",
+    "steps": [
+      {
+        "code": "C15",
+        "label": "Vendor profile (recommendations)",
+        "mobile": "300:31943",
+        "web": "300:32528"
+      },
+      {
+        "code": "C90",
+        "label": "Recommend a vendor",
+        "mobile": "300:32033",
+        "web": "300:32750"
+      },
+      {
+        "code": "C91",
+        "label": "My contributions",
+        "mobile": "300:32137",
+        "web": "300:32932"
+      },
+      {
+        "code": "C12",
+        "label": "Guide step with footnote credit",
+        "mobile": "300:32261",
+        "web": "300:33124"
+      },
+      {
+        "code": "C12",
+        "label": "Suggest a change (sheet)",
+        "mobile": "300:32329",
+        "web": "300:33277"
+      },
+      {
+        "code": "C91",
+        "label": "My contributions (guide suggestions)",
+        "mobile": "300:32404",
+        "web": "300:33345"
+      }
+    ]
+  }
+]

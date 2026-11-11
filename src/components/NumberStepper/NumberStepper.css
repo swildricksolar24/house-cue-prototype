@@ -1,0 +1,60 @@
+/* HC/Number Stepper — Figma 101:356 */
+.hc-number-stepper {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-3) 0;
+  border-bottom: 1px solid var(--hc-fill-weak);
+}
+
+.hc-number-stepper__text {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.hc-number-stepper__title { font: 600 14px/20px var(--hc-font); color: var(--hc-text); }
+.hc-number-stepper__helper { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+
+.hc-number-stepper__controls {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--hc-space-1);
+}
+
+.hc-number-stepper__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-tint);
+  color: var(--hc-text);
+  font: 700 16px/24px var(--hc-font);
+  cursor: pointer;
+}
+.hc-number-stepper__button:hover { background: linear-gradient(var(--hc-fill-10), var(--hc-fill-10)), var(--hc-tint); }
+.hc-number-stepper__button:active { background: linear-gradient(var(--hc-fill-20), var(--hc-fill-20)), var(--hc-tint); }
+.hc-number-stepper__button:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-number-stepper__button:disabled {
+  background: var(--hc-fill-10);
+  color: var(--hc-text-muted);
+  cursor: not-allowed;
+}
+
+.hc-number-stepper__value {
+  width: 32px;
+  font: 700 16px/24px var(--hc-font);
+  color: var(--hc-text);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.hc-number-stepper--disabled .hc-number-stepper__title,
+.hc-number-stepper--disabled .hc-number-stepper__value { color: var(--hc-text-muted); }

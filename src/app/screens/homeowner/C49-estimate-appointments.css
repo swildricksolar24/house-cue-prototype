@@ -1,0 +1,80 @@
+/* C49 Estimate appointments */
+.hc-c49-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c49-card--web {
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-5);
+}
+.hc-c49-card--confirmed { gap: var(--hc-space-1); }
+
+.hc-c49-request {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c49-confirmed-title { margin-top: var(--hc-space-2); }
+
+/* Time slots: single-choice pills */
+.hc-c49-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}
+.hc-c49-slot {
+  min-height: 44px;
+  padding: var(--hc-space-2) var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c49-slot--selected {
+  border-color: var(--hc-link);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+.hc-c49-slot:focus-visible {
+  outline: 2px solid var(--hc-focus-ring);
+  outline-offset: 2px;
+}
+
+.hc-c49-times {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+}
+
+.hc-c49-actions {
+  display: flex;
+  gap: var(--hc-space-2);
+}
+.hc-c49-actions--fill > * { flex: 1 1 0; }
+
+/* Web 1440: request card + 420px side column */
+.hc-c49-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c49-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c49-web__main { flex: 1; min-width: 0; }
+.hc-c49-web__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 420px;
+  flex-shrink: 0;
+}

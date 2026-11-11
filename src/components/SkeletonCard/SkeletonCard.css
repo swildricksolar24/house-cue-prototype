@@ -1,0 +1,56 @@
+/* HC/Skeleton Card — Figma 6:147 */
+.hc-skeleton-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-3);
+  padding: 15px; /* 16px with Figma's inside 1px stroke */
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+
+.hc-skeleton-card__shape {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--hc-fill-weak);
+}
+
+/* Shimmer: a band of the card colour sweeps left to right */
+.hc-skeleton-card__shape::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--hc-card), transparent);
+  opacity: 0.35;
+  transform: translateX(-100%);
+  animation: hc-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.hc-skeleton-card__avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--hc-radius-pill);
+}
+
+.hc-skeleton-card__lines {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  min-width: 0;
+}
+
+.hc-skeleton-card__line {
+  height: 12px;
+  border-radius: 6px;
+}
+
+@keyframes hc-skeleton-shimmer {
+  to { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-skeleton-card__shape::after { display: none; }
+}

@@ -1,0 +1,96 @@
+/* HC/Switch — Figma 203:928. 52×32 track, 26px knob, 64×44 hit area. */
+.hc-switch {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.hc-switch--label {
+  display: flex;
+  gap: var(--hc-space-3);
+  min-height: 44px;
+  font: 400 16px/24px var(--hc-font);
+  color: var(--hc-text);
+  cursor: pointer;
+}
+
+.hc-switch__label { flex: 1 1 0; min-width: 0; }
+
+.hc-switch__control {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 52px;
+  height: 32px;
+}
+
+/* Invisible input over a 64×44 hit area */
+.hc-switch__input {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  z-index: 1;
+  width: 64px;
+  height: 44px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Off = tint track with 1px border-strong + text-muted knob */
+.hc-switch__track {
+  position: relative;
+  display: block;
+  width: 52px;
+  height: 32px;
+  border: 1px solid var(--hc-border-strong);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-tint);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.hc-switch__knob {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-text-muted);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+/* On = primary track + on-primary knob */
+.hc-switch__input:checked + .hc-switch__track {
+  border-color: var(--hc-primary);
+  background: var(--hc-primary);
+}
+.hc-switch__input:checked + .hc-switch__track .hc-switch__knob {
+  transform: translateX(19px);
+  background: var(--hc-on-primary);
+}
+
+.hc-switch__input:not(:disabled):hover + .hc-switch__track .hc-switch__knob {
+  box-shadow: 0 0 0 6px var(--hc-fill-10);
+}
+
+.hc-switch__input:focus-visible + .hc-switch__track { box-shadow: var(--hc-focus-ring); }
+
+/* Disabled = fill-disabled track, card knob with a border hairline */
+.hc-switch--disabled { color: var(--hc-text-muted); cursor: not-allowed; }
+.hc-switch__input:disabled { cursor: not-allowed; }
+.hc-switch__input:disabled + .hc-switch__track,
+.hc-switch__input:disabled:checked + .hc-switch__track {
+  border-color: transparent;
+  background: var(--hc-fill-10);
+}
+.hc-switch__input:disabled + .hc-switch__track .hc-switch__knob,
+.hc-switch__input:disabled:checked + .hc-switch__track .hc-switch__knob {
+  background: var(--hc-card);
+  border: 1px solid var(--hc-border);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-switch__track,
+  .hc-switch__knob { transition: none; }
+}

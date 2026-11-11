@@ -1,0 +1,117 @@
+.hc-c86-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+/* Figma C86 card has two actions (Approve & get quotes, Decline): hide the Action Card's third button */
+.hc-c86-action .hc-action-card__button:nth-child(3) { display: none; }
+
+.hc-c86-row {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.hc-c86-row:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-md); }
+
+.hc-c86-fab {
+  position: fixed;
+  right: var(--hc-space-5);
+  bottom: var(--hc-space-5);
+  z-index: 10;
+}
+/* Mobile: 16pt from the right, 16pt above the 99pt tab bar */
+.hc-c86-fab--mobile {
+  right: var(--hc-space-4);
+  bottom: calc(99px + var(--hc-space-4));
+}
+
+/* Web 1440: header, chips, then 620px table + 452px detail card */
+.hc-c86-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+.hc-c86-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  margin-bottom: var(--hc-space-2);
+}
+.hc-c86-web__title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c86-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}
+.hc-c86-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c86-web__main {
+  flex: 0 1 620px;
+  min-width: 0;
+}
+.hc-c86-web__side {
+  flex: 0 0 452px;
+}
+
+.hc-c86-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c86-buttons {
+  display: flex;
+  gap: var(--hc-space-3);
+}
+.hc-c86-buttons > * { flex: 1; }
+
+.hc-c86-table {
+  display: flex;
+  flex-direction: column;
+  padding: var(--hc-space-1) 0;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  overflow: hidden;
+}
+.hc-c86-table__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px 110px 70px;
+  gap: var(--hc-space-3);
+  align-items: center;
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border-top: 1px solid var(--hc-border);
+  font: 400 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+.hc-c86-table__row--head {
+  padding-block: 10px;
+  border-top: 0;
+  font: 600 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+}
+.hc-c86-table__row--link { cursor: pointer; }
+.hc-c86-table__row--link:hover { background: var(--hc-page); }
+.hc-c86-table__row--selected,
+.hc-c86-table__row--selected:hover { background: var(--hc-selected); }
+.hc-c86-table__row--link:focus-visible { outline: 2px solid var(--hc-info); outline-offset: -2px; }
+/* "Approve & get quotes" is longer than the equal-width Action Card buttons allow */
+.hc-c86-action .hc-action-card__button { flex: 1 0 auto; }

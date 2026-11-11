@@ -1,0 +1,131 @@
+/* Shared by the J1 onboarding screens. Add `hc-onb-mobile` / `hc-onb-web` to the shell className. */
+
+/* MobileShell body is a flex column: keep children from shrinking when the page scrolls */
+.hc-onb-mobile .hc-mobile-shell__body > * { flex-shrink: 0; }
+.hc-onb-mobile .hc-onb-spacer { flex: 1 1 auto; flex-shrink: 1; }
+
+/* Web onboarding body: centred column, 56 from the top bar, 24 gap */
+.hc-onb-web .hc-web-shell__main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--hc-space-5);
+  padding: 56px var(--hc-space-5) var(--hc-space-7);
+}
+
+.hc-onb-card {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  padding: var(--hc-space-7);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-xl);
+  background: var(--hc-card);
+}
+
+.hc-onb-progress {
+  height: 4px;
+  overflow: hidden;
+  background: var(--hc-fill-weak);
+}
+.hc-onb-progress__fill {
+  height: 100%;
+  background: var(--hc-primary);
+}
+
+.hc-onb-text-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-onb-text-link--center { align-self: center; text-align: center; }
+.hc-onb-text-link--left { align-self: flex-start; text-align: left; }
+.hc-onb-text-link--underline { text-decoration: underline; }
+.hc-onb-text-link:hover { text-decoration: underline; }
+.hc-onb-text-link:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-sm); }
+
+.hc-onb-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding-top: var(--hc-space-2);
+}
+
+/* Dialog over a scrim */
+.hc-onb-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--hc-space-5);
+}
+.hc-onb-dialog__scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--hc-scrim);
+}
+.hc-onb-dialog__panel {
+  position: relative;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-5);
+  border-radius: 20px;
+  background: var(--hc-card);
+  color: var(--hc-text);
+}
+.hc-onb-dialog__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+/* Vertical stack with 12 gap (option cards, consent rows) */
+.hc-onb-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+.hc-onb-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-onb-divider::before,
+.hc-onb-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--hc-border);
+}
+
+/* Pill chips (single choice): X08 language, C07 amounts. No HC/Chip component yet. */
+.hc-onb-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}
+.hc-onb-chip {
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-onb-chip--selected {
+  border-color: var(--hc-link);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+.hc-onb-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+

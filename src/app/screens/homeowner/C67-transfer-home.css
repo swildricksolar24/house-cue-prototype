@@ -1,0 +1,53 @@
+/* Mobile content gap is 12 (Figma "content") */
+.hc-c67-mobile .hc-mobile-shell__body { gap: var(--hc-space-3); }
+
+/* Toggle row: semibold title, optional muted line, switch at the end (no divider) */
+.hc-c67-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c67-toggle__text {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* Web 1440: header, form column + 440px side column */
+.hc-c67-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c67-web__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c67-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c67-web__main,
+.hc-c67-web__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+.hc-c67-web__main { flex: 1; min-width: 0; }
+.hc-c67-web__side { width: 440px; flex-shrink: 0; }
+
+.hc-c67-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c67-steps { margin: 0; padding: 0; list-style: none; }
+.hc-c67-cta { align-self: flex-start; }

@@ -1,0 +1,83 @@
+/* Filter chips (no HC chip component yet) */
+.hc-c33-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}
+.hc-c33-chip {
+  padding: 11px 15px; /* 12px 16px with the 1px border */
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.hc-c33-chip:hover { background: var(--hc-selected); }
+.hc-c33-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-c33-chip--selected {
+  border-color: var(--hc-link);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+
+/* Neutral pill on a Task Row (TaskRow has no neutral tone; matches HC/Status Pill Neutral) */
+.hc-c33-row--neutral .hc-task-row__tag {
+  padding: 3px 9px;
+  border: 1px solid var(--hc-border);
+  background: var(--hc-tint);
+  color: var(--hc-text-muted);
+}
+
+.hc-c33-skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+
+.hc-c33-link {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  text-align: left;
+  cursor: pointer;
+}
+.hc-c33-link:hover { text-decoration: underline; }
+.hc-c33-link:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-sm); }
+
+/* Web 1440: header row (title, chips, Mark all as read), then list card + 380px settings card */
+.hc-c33-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c33-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c33-web__head > h1,
+.hc-c33-web__head > .hc-c33-chips { flex: 1 1 0; min-width: 0; }
+.hc-c33-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c33-web__main { flex: 1 1 0; min-width: 0; }
+.hc-c33-web__side { width: 380px; flex-shrink: 0; }
+
+.hc-c33-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c33-card .hc-state-block,
+.hc-c33-card .hc-c33-skeletons { margin-top: var(--hc-space-1); }

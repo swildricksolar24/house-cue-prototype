@@ -1,0 +1,40 @@
+/* C57 Shareable job brief */
+.hc-c57-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+
+.hc-c57-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c57-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c57-web__head > div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c57-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c57-web__main { flex: 1; min-width: 0; }
+.hc-c57-web__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 420px;
+  flex-shrink: 0;
+}

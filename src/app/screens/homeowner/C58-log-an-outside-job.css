@@ -1,0 +1,29 @@
+/* C58 Log an outside job */
+.hc-c58-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+.hc-c58-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c58-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c58-web__head > div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c58-web__cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: var(--hc-space-5);
+}

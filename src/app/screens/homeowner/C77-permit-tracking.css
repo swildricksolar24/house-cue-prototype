@@ -1,0 +1,82 @@
+/* C77 Permit tracking */
+.hc-c77-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c77-pill { align-self: flex-start; }
+
+.hc-c77-timeline {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Web 1440: header, permit table + 440px detail column */
+.hc-c77-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c77-web__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c77-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c77-web__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  min-width: 0;
+}
+.hc-c77-web__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 440px;
+  flex-shrink: 0;
+}
+
+.hc-c77-table {
+  width: 100%;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-md);
+  border-spacing: 0;
+  overflow: hidden;
+  background: var(--hc-card);
+  color: var(--hc-text);
+  text-align: left;
+}
+.hc-c77-table thead th {
+  padding: 10px var(--hc-space-2);
+  background: var(--hc-tint);
+  color: var(--hc-text-muted);
+  font: 700 12px/18px var(--hc-font);
+}
+.hc-c77-table tbody th,
+.hc-c77-table tbody td {
+  padding: var(--hc-space-3) var(--hc-space-2);
+  border-top: 1px solid var(--hc-border);
+  font: 400 14px/20px var(--hc-font);
+}
+.hc-c77-table tbody th { font-weight: 600; }
+.hc-c77-table__permit { width: 100px; }
+.hc-c77-table__by { width: 110px; }
+.hc-c77-table__status { width: 130px; }
+/* Figma: 16px row padding, 16px column gap */
+.hc-c77-table tr > th:first-child { padding-left: var(--hc-space-4); }
+.hc-c77-table tr > td:last-child,
+.hc-c77-table thead th:last-child { padding-right: var(--hc-space-4); }
+.hc-c77-table td { white-space: nowrap; }

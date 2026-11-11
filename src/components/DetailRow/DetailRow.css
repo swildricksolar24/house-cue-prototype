@@ -1,0 +1,38 @@
+/* HC/Detail Row — Figma 6:128 */
+.hc-detail-row {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-3) 0;
+  border-bottom: 1px solid var(--hc-border);
+}
+
+.hc-detail-row__text {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.hc-detail-row__label { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+.hc-detail-row__value { font: 400 14px/20px var(--hc-font); color: var(--hc-text); }
+
+.hc-detail-row__action {
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-sm);
+  background: none;
+  color: var(--hc-link);
+  font: 600 14px/20px var(--hc-font);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.hc-detail-row__action:hover { text-decoration: underline; }
+.hc-detail-row__action:focus-visible { box-shadow: var(--hc-focus-ring); }

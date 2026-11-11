@@ -1,0 +1,99 @@
+/* C40 My jobs — filter chips (Figma "chips": 12/16 padding, pill, selected = selected fill + link stroke) */
+.hc-c40-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}
+.hc-c40-chip {
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-c40-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-c40-chip--selected {
+  border-color: var(--hc-link);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+
+/* HC/Task Row has no Neutral tag tone; Figma uses the Neutral HC/Status Pill (Estimate, Cancelled) */
+.hc-c40-row--neutral .hc-task-row__tag {
+  border: 1px solid var(--hc-border);
+  background: var(--hc-tint);
+  color: var(--hc-text-muted);
+}
+
+.hc-c40-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}
+
+.hc-c40-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  padding-top: var(--hc-space-2);
+}
+
+/* Web 1440: title · chips · New request, then Jobs card + 400px side card */
+.hc-c40-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c40-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c40-web__head > h1,
+.hc-c40-web__chips { flex: 1 1 0; min-width: 0; }
+.hc-c40-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c40-web__main { flex: 1 1 0; min-width: 0; }
+.hc-c40-web__side { width: 400px; flex-shrink: 0; }
+
+.hc-c40-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+
+/* Tenant web: status-only table */
+.hc-c40-table-wrap {
+  overflow: hidden;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c40-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.hc-c40-table th,
+.hc-c40-table td {
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border-bottom: 1px solid var(--hc-border);
+  color: var(--hc-text);
+  font: 400 14px/20px var(--hc-font);
+  text-align: left;
+}
+.hc-c40-table thead th {
+  font: 400 12px/18px var(--hc-font);
+  color: var(--hc-text);
+}
+.hc-c40-table tbody th { font-weight: 600; }
+.hc-c40-table tbody tr:last-child > * { border-bottom: 0; }
+.hc-c40-table th:first-child { width: 45%; }

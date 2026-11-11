@@ -1,0 +1,63 @@
+/* C48 Outreach progress */
+.hc-c48-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+
+.hc-c48-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+  min-height: 24px;
+}
+.hc-c48-heading > h2 { flex: 1; }
+.hc-c48-heading > button { margin-block: calc(-1 * var(--hc-space-3)); }
+
+/* Workaround: HC/Task Row has no Neutral tag tone ("No reply" uses HC/Status Pill Tone=Neutral in Figma) */
+.hc-c48-list .hc-task-row__tag--neutral {
+  border: 1px solid var(--hc-border);
+  background: var(--hc-tint);
+  color: var(--hc-text-muted);
+}
+
+/* Web 1440: header, list column + 380px action column */
+.hc-c48-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c48-web__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c48-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c48-web__main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  min-width: 0;
+}
+.hc-c48-web__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 380px;
+  flex-shrink: 0;
+}
+.hc-c48-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c48-card--list { gap: var(--hc-space-1); }
+.hc-c48-card--actions { gap: var(--hc-space-3); }

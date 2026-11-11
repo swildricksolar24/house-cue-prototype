@@ -1,0 +1,80 @@
+/* C17 Checkout and payment hold */
+.hc-c17-mobile { position: relative; }
+
+/* Web 1440: booking + payment column, 400px side column */
+.hc-c17-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c17-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-4);
+}
+.hc-c17-web__main {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+.hc-c17-web__side {
+  width: 420px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+.hc-c17-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c17-methods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+}
+
+/* Over-cap approval: bottom sheet on mobile, centred dialog on web (no Sheet/Dialog component yet) */
+.hc-c17-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  background: var(--hc-scrim);
+}
+.hc-web-shell .hc-c17-overlay { position: fixed; }
+.hc-c17-overlay--bottom { align-items: flex-end; }
+.hc-c17-overlay--center {
+  align-items: center;
+  justify-content: center;
+  padding: var(--hc-space-5);
+}
+.hc-c17-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-3) var(--hc-space-5) 34px;
+  border-radius: var(--hc-space-5) var(--hc-space-5) 0 0;
+  background: var(--hc-card);
+  color: var(--hc-text);
+}
+.hc-c17-overlay--center .hc-c17-sheet {
+  max-width: 480px;
+  padding: var(--hc-space-5);
+  border-radius: var(--hc-radius-xl);
+}
+.hc-c17-sheet__grabber {
+  align-self: center;
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--hc-border-strong);
+}

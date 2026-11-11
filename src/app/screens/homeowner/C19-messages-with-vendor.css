@@ -1,0 +1,103 @@
+/* C19 Messages with vendor */
+.hc-c19-thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+
+/* Mobile: thread scrolls, composer stays above the tab bar */
+.hc-c19-mobile {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+.hc-c19-mobile > .hc-c19-thread {
+  flex: 1 0 auto;
+  padding: var(--hc-space-4) var(--hc-space-5) var(--hc-space-5);
+}
+.hc-c19-mobile__composer {
+  position: sticky;
+  bottom: 0;
+  padding: var(--hc-space-3) var(--hc-space-5);
+  background: var(--hc-card);
+}
+
+.hc-c19-composer {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+  margin: 0;
+}
+.hc-c19-composer__input {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 44px;
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-tint);
+  color: var(--hc-text);
+  font: 400 14px/20px var(--hc-font);
+}
+.hc-c19-composer__input::placeholder { color: var(--hc-text-muted); }
+.hc-c19-composer__input:focus-visible { outline: 2px solid var(--hc-info); outline-offset: 2px; }
+
+.hc-c19-composer__voice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-selected);
+  cursor: pointer;
+}
+.hc-c19-composer__voice:focus-visible { outline: 2px solid var(--hc-info); outline-offset: 2px; }
+/* HC/Icon/Mic (Figma 28:74), used as a mask so it follows the link colour in both themes */
+.hc-c19-composer__mic {
+  width: 24px;
+  height: 24px;
+  background: var(--hc-link);
+  -webkit-mask: url('./assets/c19-mic.svg') center / 24px 24px no-repeat;
+  mask: url('./assets/c19-mic.svg') center / 24px 24px no-repeat;
+}
+
+/* Web 1440: title, chat card + 380px side column */
+.hc-c19-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c19-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c19-web__chat { flex: 1; min-width: 0; }
+.hc-c19-web__side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 380px;
+  flex-shrink: 0;
+}
+
+.hc-c19-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-c19-card--side { gap: var(--hc-space-1); }
+
+.hc-c19-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

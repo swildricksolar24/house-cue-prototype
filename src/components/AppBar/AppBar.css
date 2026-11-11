@@ -1,0 +1,80 @@
+/* HC/App Bar — Figma 5:58 */
+.hc-app-bar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 390px;
+  color: var(--hc-text);
+}
+
+.hc-app-bar__row {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 var(--hc-space-2);
+}
+
+.hc-app-bar__slot,
+.hc-app-bar__back {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+}
+
+.hc-app-bar__back {
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-lg);
+  background: transparent;
+  color: var(--hc-text);
+  cursor: pointer;
+  outline: none;
+}
+.hc-app-bar__back:hover { background: var(--hc-fill-10); }
+.hc-app-bar__back:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+/* Chevron asset (assets/back.svg) used as a mask so it follows the text colour in both themes */
+.hc-app-bar__back-icon {
+  width: 24px;
+  height: 24px;
+  background: currentColor;
+  -webkit-mask: url('./assets/back.svg') center / 24px 24px no-repeat;
+  mask: url('./assets/back.svg') center / 24px 24px no-repeat;
+}
+
+.hc-app-bar__title {
+  flex: 1 0 0;
+  min-width: 0;
+  margin: 0;
+  font: 700 16px/24px var(--hc-font);
+  color: var(--hc-text);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hc-app-bar__trailing { justify-content: flex-end; width: auto; min-width: 44px; }
+
+.hc-app-bar__step {
+  font: 400 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.hc-app-bar__progress {
+  position: relative;
+  height: 4px;
+  overflow: hidden;
+  background: var(--hc-fill-weak);
+}
+
+.hc-app-bar__progress-fill {
+  height: 100%;
+  background: var(--hc-primary);
+  transition: width 0.2s ease;
+}

@@ -1,0 +1,44 @@
+/* Mobile: dimmed screen behind + bottom sheet (no HC/Sheet component yet) */
+.hc-x05-behind {
+  position: relative;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  padding: var(--hc-space-4) var(--hc-space-5);
+}
+.hc-x05-behind > * { flex-shrink: 0; }
+.hc-x05-scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--hc-scrim);
+}
+
+.hc-x05-sheet {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--hc-space-4);
+  padding: var(--hc-space-4) var(--hc-space-5) 0;
+  background: var(--hc-card);
+  text-align: center;
+}
+.hc-x05-grabber {
+  align-self: center;
+  width: 40px;
+  height: 4px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-border-strong);
+}
+.hc-x05-home-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 34px;
+}
+.hc-x05-home-indicator span {
+  width: 134px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--hc-text);
+}

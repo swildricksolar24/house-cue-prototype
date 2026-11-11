@@ -1,0 +1,16 @@
+/* HC/User Bubble — Figma 19:119. Bubble is 260 wide in Figma; here it hugs short messages and wraps at 260. */
+.hc-user-bubble {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.hc-user-bubble__bubble {
+  max-width: min(260px, 85%);
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-primary);
+  color: var(--hc-on-primary);
+  font: 400 14px/20px var(--hc-font);
+  overflow-wrap: break-word;
+}

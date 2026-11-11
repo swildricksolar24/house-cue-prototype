@@ -1,0 +1,75 @@
+/* NumberStepper has no value formatter: prefix the ceiling values with $ */
+.hc-c81-money .hc-number-stepper__value::before { content: '$'; }
+
+.hc-c81-label {
+  margin: 0;
+  font: 700 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+
+.hc-c81-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}
+.hc-c81-chip {
+  display: inline-flex;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: none;
+  cursor: pointer;
+}
+.hc-c81-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+/* Web 1440: header with actions, then 560px + 512px columns */
+.hc-c81-web {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-c81-web__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+}
+.hc-c81-web__title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c81-web__cols {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hc-space-5);
+}
+.hc-c81-web__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  min-width: 0;
+}
+.hc-c81-web__col--left { flex: 0 1 560px; }
+.hc-c81-web__col--right { flex: 0 1 512px; }
+
+.hc-c81-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+
+.hc-c81-fab {
+  position: fixed;
+  right: var(--hc-space-5);
+  bottom: var(--hc-space-5);
+  z-index: 10;
+}
+
+/* NumberStepper value is a fixed 32px; "$150" / "$600" need more room */
+.hc-c81-money .hc-number-stepper__value { width: auto; min-width: 32px; }
