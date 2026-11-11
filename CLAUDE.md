@@ -7,7 +7,7 @@ This file guides Claude Code (claude.ai/code) when working in this repository.
 House Cue is a clickable design prototype built from Figma designs, with a Storybook that documents its components. It follows the same setup as the sibling `hub360` project.
 
 - Figma source: _not linked yet_ (add the file URL and file key here once known)
-- Git remote: _none yet_
+- Git remote: `origin` → https://github.com/swildricksolar24/house-cue-prototype (private), branch `main`
 
 ## Commands
 
