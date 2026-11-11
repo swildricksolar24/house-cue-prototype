@@ -1,18 +1,36 @@
 import { useState } from 'react';
+import { Button } from '../../../components/Button/Button';
 import { DetailRow } from '../../../components/DetailRow/DetailRow';
 import { SettingRow } from '../../../components/SettingRow/SettingRow';
-import { currentHome, homeowner } from '../../data/sample';
+import { currentHome, demoAccount, homeowner } from '../../data/sample';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
+import { EditableRow, isEmail, isPhone, maskEmail, maskPhone } from './_editable-row';
 import './C34-settings.css';
+
+type ThemePref = 'device' | 'light' | 'dark';
+const themeLabels: Record<ThemePref, string> = { device: 'Match my device', light: 'Light', dark: 'Dark' };
 
 /** C34 Settings, privacy, data export (Account tab) — Figma mobile 218:21899, web 218:22717 (J1 Settings & account step 1) */
 export default function Settings(_: ScreenProps) {
-  const { device } = usePrototype();
+  const { device, setTheme } = usePrototype();
   const flow = useFlow();
+  // Editable profile (prototype state only)
+  const [name, setName] = useState(homeowner.firstName);
+  const [email, setEmail] = useState(homeowner.email);
+  const [phone, setPhone] = useState(demoAccount.phone);
+  const [language, setLanguage] = useState('English');
+  const [valuables, setValuables] = useState('Owners only');
+  const [themePref, setThemePref] = useState<ThemePref>('device');
+  // Theme actually switches the prototype; "Match my device" follows the OS setting
+  const applyTheme = (pref: ThemePref) => {
+    setThemePref(pref);
+    if (pref === 'device') setTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    else setTheme(pref);
+  };
   const [outreach, setOutreach] = useState(true);
   const [shareData, setShareData] = useState(false);
   const [recordCalls, setRecordCalls] = useState(false);
@@ -52,6 +70,12 @@ export default function Settings(_: ScreenProps) {
       Delete account
     </button>
   );
+  // Review change: Log out at the bottom of the Account stack; returns to the landing page (C39)
+  const logOut = (
+    <Button variant="secondary" fullWidth onClick={() => flow.go('C39')}>
+      Log out
+    </Button>
+  );
 
   if (device === 'mobile') {
     return (
@@ -62,6 +86,7 @@ export default function Settings(_: ScreenProps) {
         {exportRow}
         {deactivateHomeRow}
         {deleteLink}
+        {logOut}
       </MobileShell>
     );
   }
@@ -74,11 +99,29 @@ export default function Settings(_: ScreenProps) {
           <div className="hc-c34-web__col">
             <section className="hc-c34-card">
               <h2 className="hc-large-bold">Profile</h2>
-              <DetailRow label="Name" value={homeowner.firstName} onAction={() => undefined} />
-              <DetailRow label="Email" value="j•••@example.com" actionLabel="Change" onAction={() => undefined} />
-              <DetailRow label="Phone" value="(602) •••-0142" actionLabel="Change" onAction={() => undefined} />
-              <DetailRow label="Language" value="English" actionLabel="Change" onAction={() => undefined} />
-              <DetailRow label="Theme" value="Match my device" actionLabel="Change" onAction={() => undefined} />
+              {/* Review change: every Edit opens an inline editor (prototype only; nothing is sent) */}
+              <EditableRow kind="text" label="Name" display={name} value={name} onSave={setName} />
+              <EditableRow kind="email" label="Email" display={maskEmail(email)} value={email} validate={isEmail} onSave={setEmail} />
+              <EditableRow kind="phone" label="Phone" display={maskPhone(phone)} value={phone} validate={isPhone} onSave={setPhone} />
+              <EditableRow
+                kind="select"
+                label="Language"
+                display={language}
+                value={language}
+                options={[
+                  { value: 'English', label: 'English' },
+                  { value: 'Español', label: 'Español' },
+                ]}
+                onSave={setLanguage}
+              />
+              <EditableRow
+                kind="select"
+                label="Theme"
+                display={themeLabels[themePref]}
+                value={themePref}
+                options={Object.entries(themeLabels).map(([v, l]) => ({ value: v, label: l }))}
+                onSave={(v) => applyTheme(v as ThemePref)}
+              />
             </section>
             <section className="hc-c34-card">
               <h2 className="hc-large-bold">Sign-in</h2>
@@ -90,7 +133,14 @@ export default function Settings(_: ScreenProps) {
             <section className="hc-c34-card">
               <h2 className="hc-large-bold">Privacy</h2>
               {privacyRows}
-              <DetailRow label="Who can see valuables" value="Owners only" actionLabel="Change" onAction={() => undefined} />
+              <EditableRow
+                kind="select"
+                label="Who can see valuables"
+                display={valuables}
+                value={valuables}
+                options={['Owners only', 'Owners and household', 'Everyone with access to the home'].map((v) => ({ value: v, label: v }))}
+                onSave={setValuables}
+              />
             </section>
             <section className="hc-c34-card">
               <h2 className="hc-large-bold">Connected accounts</h2>
@@ -117,6 +167,7 @@ export default function Settings(_: ScreenProps) {
             </section>
           </div>
         </div>
+        {logOut}
       </div>
     </WebShell>
   );

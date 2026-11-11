@@ -11,6 +11,16 @@ export const homeowner = {
   plan: 'Member' as 'Member' | 'Free',
 };
 
+/**
+ * Demo account for walking through sign in (prototype only, not in Figma), filled in by the
+ * "Use demo account" / "Use demo code" buttons on C02. The code step only accepts this code.
+ */
+export const demoAccount = {
+  email: homeowner.email,
+  phone: '(602) 555-0142',
+  code: '123456',
+};
+
 export type Home = { id: string; address: string; city: string; label: string; role: 'owner' | 'landlord' | 'tenant' };
 
 export const homes: Home[] = [
@@ -20,6 +30,15 @@ export const homes: Home[] = [
 ];
 
 export const currentHome = homes[0];
+
+/** The homes on Jordan's account, as in C38 Multi-home switcher (Figma 26:3187 … 26:3220). Picked from the header / side nav home picker. */
+export type AccountHome = { id: string; address: string; city: string; meta: string; label: string };
+export const accountHomes: AccountHome[] = [
+  { id: 'palm', address: '2218 W Palm Ln', city: 'Phoenix', meta: 'Owner · Member · 14 items', label: 'Member home' },
+  { id: 'saguaro', address: '5530 E Saguaro Dr', city: 'Tucson', meta: 'Owner · Free plan · 6 of 10 items', label: 'Free plan' },
+  { id: 'mesa-vista', address: '81 N Mesa Vista', city: 'Tucson', meta: 'Caregiver · Member', label: 'Caregiver' },
+  { id: 'pine-ridge', address: '4410 Pine Ridge Rd', city: 'Flagstaff', meta: 'Owner · Free plan · Booking not available here yet', label: 'Free plan' },
+];
 
 export type HomeSystem = { id: string; name: string; model: string; age: string };
 

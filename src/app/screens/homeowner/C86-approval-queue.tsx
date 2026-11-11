@@ -126,7 +126,6 @@ export default function ApprovalQueue(_: ScreenProps) {
           title="Could not load approvals"
           body="Check your connection and try again. Your data is safe."
           actionLabel="Try again"
-          onAction={() => undefined}
         />
       );
     }

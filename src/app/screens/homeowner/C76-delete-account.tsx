@@ -63,7 +63,7 @@ export default function DeleteAccount(_: ScreenProps) {
   const [code, setCode] = useState('');
 
   if (view === 'deactivated') {
-    return <DeactivatedAccount onReactivate={() => setView('default')} onLogOut={() => flow.go('C01')} />;
+    return <DeactivatedAccount onReactivate={() => setView('default')} onLogOut={() => flow.go('C39')} />;
   }
 
   const confirm = () => setView('confirm');

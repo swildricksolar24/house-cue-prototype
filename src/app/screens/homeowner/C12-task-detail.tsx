@@ -94,7 +94,7 @@ function Task() {
         <DetailRow label="Item" value="AC / heat pump · Trane XR14" />
         <DetailRow label="Time" value="About 15 minutes" />
         <DetailRow label="Cost" value="$12–$25 for the filter" />
-        <DetailRow label="Part" value={`${PART} · about $14`} actionLabel="Buy from partner ↗" onAction={() => {}} />
+        <DetailRow label="Part" value={`${PART} · about $14`} actionLabel="Buy from partner ↗" actionDisabled />
         {safety}
         <div className="hc-c12-pair">
           <Button variant="secondary" onClick={doItMyself}>

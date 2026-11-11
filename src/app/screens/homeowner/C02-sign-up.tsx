@@ -3,6 +3,8 @@ import { Banner } from '../../../components/Banner/Banner';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
 import { Button } from '../../../components/Button/Button';
 import { Input } from '../../../components/Input/Input';
+import { demoAccount } from '../../data/sample';
+import { useDemoActions } from '../../prototype/DemoTools';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
@@ -17,17 +19,47 @@ type Stage = 'email' | 'code';
 
 /**
  * C02 Sign up / sign in — Figma mobile 215:11597 (email step), web 215:14016 (code step with a wrong-code error).
- * Both steps exist on both layouts: Send code → code step; Verify → next journey step.
+ * Both steps exist on both layouts and both start on the email step: Send code → code step; Verify → next journey step.
  */
 export default function SignUp(_: ScreenProps) {
-  const { device } = usePrototype();
+  const { device, screenState } = usePrototype();
   const flow = useFlow();
-  // Mobile frame draws the email step, web frame the code step
-  const [stage, setStage] = useState<Stage>(device === 'mobile' ? 'email' : 'code');
+  // Both layouts start on the email step (review decision). The Figma web frame's
+  // "That code didn't match" state is the Error state (?state=error): code step, wrong code entered.
+  const wrongCode = screenState === 'error';
+  const [stage, setStage] = useState<Stage>(wrongCode ? 'code' : 'email');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('(602) 555-0100');
-  const [code, setCode] = useState('482913');
-  const [codeError, setCodeError] = useState(true);
+  const [phone, setPhone] = useState('');
+  const [code, setCode] = useState(wrongCode ? '482913' : '');
+  const [codeError, setCodeError] = useState(wrongCode);
+
+  // Review decision: Send code stays disabled until both required fields are filled in
+  const canSend = /^\S+@\S+\.\S+$/.test(email.trim()) && phone.replace(/\D/g, '').length >= 10;
+
+  // Prototype shortcuts (not in Figma), like hub360: fill in the demo account / demo code.
+  // Only the demo code verifies; any other 6 digits show "That code didn't match".
+  const verify = () => (code === demoAccount.code ? flow.goNext() : setCodeError(true));
+  useDemoActions(
+    stage === 'email'
+      ? [
+          {
+            label: 'Use Demo Account',
+            onClick: () => {
+              setEmail(demoAccount.email);
+              setPhone(demoAccount.phone);
+            },
+          },
+        ]
+      : [
+          {
+            label: 'Use Demo Account',
+            onClick: () => {
+              setCode(demoAccount.code);
+              setCodeError(false);
+            },
+          },
+        ],
+  );
 
   const social = (
     <>
@@ -95,9 +127,15 @@ export default function SignUp(_: ScreenProps) {
         }}
         bottom={
           stage === 'email' ? (
-            <BottomActions primaryLabel="Send code" onPrimary={() => setStage('code')} secondaryLabel="I have an account" onSecondary={() => setStage('code')} />
+            <BottomActions
+              primaryLabel="Send code"
+              onPrimary={() => setStage('code')}
+              primaryDisabled={!canSend}
+              secondaryLabel="I have an account"
+              onSecondary={() => setStage('code')}
+            />
           ) : (
-            <BottomActions primaryLabel="Verify" onPrimary={flow.goNext} primaryDisabled={code.length < 6} />
+            <BottomActions primaryLabel="Verify" onPrimary={verify} primaryDisabled={code.length < 6} />
           )
         }
       >
@@ -134,7 +172,7 @@ export default function SignUp(_: ScreenProps) {
             <p className="hc-small hc-muted hc-onb-divider">or</p>
             {emailFields}
             <div className="hc-onb-actions">
-              <Button fullWidth onClick={() => setStage('code')}>
+              <Button fullWidth onClick={() => setStage('code')} disabled={!canSend}>
                 Send code
               </Button>
               <TextLink underline={false}>Can’t sign in?</TextLink>
@@ -146,7 +184,7 @@ export default function SignUp(_: ScreenProps) {
             <p className="hc-large hc-muted">We sent it to {masked}. It expires in 10 minutes.</p>
             {codeBlock}
             <div className="hc-onb-actions">
-              <Button fullWidth onClick={flow.goNext} disabled={code.length < 6}>
+              <Button fullWidth onClick={verify} disabled={code.length < 6}>
                 Verify
               </Button>
               <TextLink underline={false}>Can’t sign in?</TextLink>

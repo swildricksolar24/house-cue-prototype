@@ -27,9 +27,9 @@ export default function SubscriptionManagement(_: ScreenProps) {
     return (
       <MobileShell header={{ title: 'Subscription' }} tab="account">
         <DetailRow label="Home" value={currentHome.address} />
-        <DetailRow label="Plan" value="Member · annual · $49" actionLabel="Change" onAction={() => flow.go('C28')} />
+        <DetailRow label="Plan" value="Member · annual · $49" actionLabel="Edit" onAction={() => flow.go('C28')} />
         <DetailRow label="Renews" value="Mar 15, 2027" />
-        <DetailRow label="Billed to" value="Visa •• 4242 (web checkout)" actionLabel="Change" onAction={() => flow.go('C30')} />
+        <DetailRow label="Billed to" value="Visa •• 4242 (web checkout)" actionLabel="Edit" onAction={() => flow.go('C30')} />
         <CreditsMeter size="compact" balance="180 · usage and packs in C50" onAction={() => flow.go('C50')} />
         <section className="hc-c29-card hc-c29-card--saved">
           <p className="hc-medium-semibold">Saved this year: $86</p>
@@ -52,7 +52,7 @@ export default function SubscriptionManagement(_: ScreenProps) {
               <h2 className="hc-large-bold">Your plan</h2>
               <DetailRow label="Plan" value="Member · annual · $49" actionLabel="Switch to monthly" onAction={() => flow.go('C28')} />
               <DetailRow label="Renews" value="Mar 15, 2027" />
-              <DetailRow label="Billed to" value="Visa •• 4242 (web checkout)" actionLabel="Change" onAction={() => flow.go('C30')} />
+              <DetailRow label="Billed to" value="Visa •• 4242 (web checkout)" actionLabel="Edit" onAction={() => flow.go('C30')} />
               <CreditsMeter balance="180 credits" level={0.34} onAction={() => flow.go('C50')} />
             </section>
             <section className="hc-c29-card hc-c29-card--web hc-c29-card--saved">

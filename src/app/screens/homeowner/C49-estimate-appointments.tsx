@@ -45,7 +45,7 @@ export default function EstimateAppointments(_: ScreenProps) {
   );
 
   const whoRow = (
-    <DetailRow label="Who will be home" value={WHO[who]} actionLabel="Change" onAction={() => setWho((i) => (i + 1) % WHO.length)} />
+    <DetailRow label="Who will be home" value={WHO[who]} actionLabel="Edit" onAction={() => setWho((i) => (i + 1) % WHO.length)} />
   );
 
   const outcomeBanner =
@@ -110,7 +110,7 @@ export default function EstimateAppointments(_: ScreenProps) {
             <div>
               <DetailRow label="Estimate visit fee" value="$45, set by the pro · you accept it before the visit" />
               {whoRow}
-              <DetailRow label="Access" value="Side gate code shared after you confirm" actionLabel="Edit" onAction={() => {}} />
+              <DetailRow label="Access" value="Side gate code shared after you confirm" actionLabel="Edit" actionDisabled />
             </div>
             {outcomeBanner ?? (
               <div className="hc-c49-actions">

@@ -150,7 +150,7 @@ export default function AiUsageAndCredits(_: ScreenProps) {
                 : '240 included / yr, rolls over to 300 · quote search 10 credits, voice 1 a minute, video coach 3 a minute, chat 1 per ~5 messages'}
             </p>
             <div>{activity(true)}</div>
-            <button type="button" className="hc-c50-link">
+            <button type="button" className="hc-c50-link" disabled>
               See all activity
             </button>
           </section>

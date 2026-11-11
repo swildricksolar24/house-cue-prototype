@@ -23,32 +23,64 @@
 .hc-c11-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
 
 /* Month view: 7-column grid of the month with task dots (no Figma frame; built from the list data) */
+/* Month view (review change): compact calendars, side by side when there's room (web), stacked on mobile */
+.hc-c11-months {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--hc-space-4);
+}
+/* Each month is its own card inside the task card (review change) */
+.hc-c11-months__month {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+
 .hc-c11-month {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: var(--hc-space-1);
+  grid-template-columns: repeat(7, 40px);
+  justify-content: space-between;
+  row-gap: var(--hc-space-1);
 }
 .hc-c11-month__dow,
 .hc-c11-month__day {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  justify-content: center;
+  width: 40px;
   font: 400 12px/18px var(--hc-font);
 }
-.hc-c11-month__dow { color: var(--hc-text-muted); font-weight: 600; }
+.hc-c11-month__dow { height: 24px; color: var(--hc-text-muted); font-weight: 600; }
 .hc-c11-month__day {
-  min-height: 44px;
-  padding: var(--hc-space-1) 0;
-  border-radius: var(--hc-radius-md);
+  position: relative;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: none;
   color: var(--hc-text);
 }
-.hc-c11-month__day--task { background: var(--hc-selected); font-weight: 600; }
+.hc-c11-month__day--task {
+  background: var(--hc-selected);
+  color: var(--hc-link);
+  font-weight: 700;
+  cursor: pointer;
+}
+.hc-c11-month__day--task:hover { background: var(--hc-info-bg); }
+.hc-c11-month__day--task:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-c11-month__day--overdue { background: var(--hc-danger-bg); color: var(--hc-danger); }
 .hc-c11-month__dot {
-  width: 6px;
-  height: 6px;
+  position: absolute;
+  bottom: 5px;
+  width: 4px;
+  height: 4px;
   border-radius: var(--hc-radius-pill);
-  background: var(--hc-link);
+  background: currentColor;
 }
 
 /* Web: header row (title + chips), then list card + 360px side column */
@@ -57,12 +89,15 @@
   flex-direction: column;
   gap: var(--hc-space-5);
 }
+/* Header spans the content column: "Plan" on the left, List / Month on the right edge (review change) */
 .hc-c11-web__head {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--hc-space-5);
+  width: 100%;
 }
-.hc-c11-web__head > * { flex: 1; min-width: 0; }
+.hc-c11-web__head > * { flex: 0 1 auto; min-width: 0; }
 .hc-c11-web__cols {
   display: flex;
   align-items: flex-start;
@@ -91,3 +126,18 @@
   flex-direction: column;
   gap: var(--hc-space-4);
 }
+
+/* "This year": three stat tiles stretched across the column (review change) */
+.hc-c11-year { display: flex; flex-direction: column; gap: var(--hc-space-3); }
+.hc-c11-year__tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--hc-space-4);
+}
+/* Emphasised numbers (review change): Heading 1 size, ExtraBold */
+.hc-c11-year .hc-stat-tile__value {
+  font: 800 40px/48px var(--hc-font);
+  letter-spacing: -0.01em;
+  color: var(--hc-text);
+}
+.hc-c11-year .hc-stat-tile__meta { margin-top: calc(-1 * var(--hc-space-1)); }

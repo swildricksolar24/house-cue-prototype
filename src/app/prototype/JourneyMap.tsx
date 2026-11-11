@@ -16,15 +16,10 @@ export function JourneyMap() {
     <main className="hc-proto-map">
       <header className="hc-proto-map__header">
         <Logo />
-        <div>
-          <h1 className="hc-h2">Prototype</h1>
-          <p className="hc-medium hc-muted">
-            Pick a journey step. Use the bar at the bottom to step through, switch mobile/web, light/dark and screen state.
-          </p>
-        </div>
       </header>
       <section>
-        <h2 className="hc-h3">Who uses HouseCue</h2>
+        {/* The page's main heading now that the "Prototype" title is gone */}
+        <h1 className="hc-h3">Who uses HouseCue</h1>
         <p className="hc-medium hc-muted">Six kinds of user across the mobile app, the web app and two staff consoles.</p>
         <div className="hc-proto-map__users">
           {userTypes.map((u) => (
@@ -59,7 +54,7 @@ export function JourneyMap() {
               return (
                 <article key={j.slug} className="hc-proto-map__card">
                   <h3 className="hc-large-bold">
-                    <Link to={stepPath(role, j.slug, 1)}>{j.name}</Link>
+                    <Link to={stepPath(j.slug, 1)}>{j.name}</Link>
                   </h3>
                   <p className="hc-small hc-muted">
                     {j.workflows} · {built}/{j.steps.length} built
@@ -67,7 +62,7 @@ export function JourneyMap() {
                   <ol>
                     {j.steps.map((s, i) => (
                       <li key={i} className={getScreen(role, s.code) ? '' : 'is-todo'}>
-                        <Link to={stepPath(role, j.slug, i + 1)}>
+                        <Link to={stepPath(j.slug, i + 1)}>
                           <b>{s.code}</b> {s.label}
                         </Link>
                       </li>

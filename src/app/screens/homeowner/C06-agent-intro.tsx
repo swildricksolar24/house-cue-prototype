@@ -1,14 +1,14 @@
 import { AgentCard } from '../../../components/AgentCard/AgentCard';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
 import { Button } from '../../../components/Button/Button';
-import type { IconName } from '../../../components/Icon/Icon';
-import { ListRow } from '../../../components/ListRow/ListRow';
+import { Icon, type IconName } from '../../../components/Icon/Icon';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import { WebCard, WebStepHeader } from './_onboarding';
+import './C06-agent-intro.css';
 
 const GREETING = 'Hi, I’m your HouseCue agent. I keep track of your home and handle the legwork with pros.';
 
@@ -29,12 +29,21 @@ export default function AgentIntro(_: ScreenProps) {
   const flow = useFlow();
   const mobile = device === 'mobile';
 
+  // Review change: the four abilities are cards (Figma draws them as list rows) — stacked on mobile, 2×2 on web
   const list = (
-    <div>
+    <ul className={`hc-c06-cards hc-c06-cards--${mobile ? 'stack' : 'grid'}`}>
       {abilities(mobile).map((a) => (
-        <ListRow key={a.title} title={a.title} description={a.description} icon={a.icon} />
+        <li key={a.title} className="hc-c06-card">
+          <span className="hc-c06-card__icon">
+            <Icon name={a.icon} size={24} />
+          </span>
+          <span className="hc-c06-card__text">
+            <span className="hc-medium-semibold">{a.title}</span>
+            <span className="hc-small hc-muted">{a.description}</span>
+          </span>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 
   if (mobile) {

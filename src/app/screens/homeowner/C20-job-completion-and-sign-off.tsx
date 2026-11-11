@@ -82,7 +82,7 @@ function HomeownerSignOff() {
               <h2 className="hc-large-bold">Invoice</h2>
               <DetailRow label="Quoted price" value="$189" />
               <DetailRow label="Approved change order" value="+$185 run capacitor" />
-              <DetailRow label="Final price" value="$374" actionLabel="View invoice" onAction={() => {}} />
+              <DetailRow label="Final price" value="$374" actionLabel="View invoice" actionDisabled />
             </section>
           </div>
           <aside className="hc-c20-web__side">
@@ -152,7 +152,7 @@ function LandlordSignOff() {
           Vendor note: P-trap cracked by impact; photos show a dent. Keep or clear before sign-off.
         </Banner>
         <FlagButtons flag={flag} setFlag={setFlag} fill />
-        <Button variant="link" fullWidth onClick={() => {}}>
+        <Button variant="link" fullWidth>
           Download damage record
         </Button>
       </MobileShell>
@@ -182,7 +182,7 @@ function LandlordSignOff() {
                 Vendor note: P-trap cracked by impact. Photos show a dent in the trap and a dropped pan nearby.
               </p>
               <FlagButtons flag={flag} setFlag={setFlag} />
-              <Button variant="link" fullWidth onClick={() => {}}>
+              <Button variant="link" fullWidth>
                 Download damage record (PDF)
               </Button>
               <p className="hc-small hc-muted">Only you and managers see this. HouseCue does not bill or contact the tenant.</p>

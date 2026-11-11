@@ -59,6 +59,8 @@ export type SideNavShellProps<K extends string> = {
   onSwitcherClick?: () => void;
   /** Route of the logo link. Default "/" */
   logoTo?: string;
+  /** Row(s) above the first item (e.g. Emergency) */
+  lead?: ReactNode;
   footer?: ReactNode;
   className?: string;
   'aria-label'?: string;
@@ -72,6 +74,7 @@ export function SideNavShell<K extends string>({
   switcherValue,
   onSwitcherClick,
   logoTo = '/',
+  lead,
   footer,
   className,
   'aria-label': ariaLabel = 'Main',
@@ -87,6 +90,7 @@ export function SideNavShell<K extends string>({
           {switcherValue} <span aria-hidden>▾</span>
         </span>
       </button>
+      {lead}
       <ul className="hc-side-nav__items">
         {withPaths(items, paths).map((item) => {
           const isActive = item.key === active;
@@ -129,7 +133,7 @@ export type WebSideNavProps<R extends AppRole = AppRole> = {
   switcherLabel?: string;
   switcherValue?: string;
   onSwitcherClick?: () => void;
-  /** Emergency row (pinned bottom). Default route "/emergency" */
+  /** Emergency row (above the first item). Default route "/emergency" */
   emergencyTo?: string;
   onEmergency?: () => void;
   logoTo?: string;
@@ -152,7 +156,8 @@ export function WebSideNav<R extends AppRole = 'homeowner'>({
       items={items}
       switcherLabel={switcherLabel ?? defaultSwitcher[r].label}
       switcherValue={switcherValue ?? defaultSwitcher[r].value}
-      footer={<SideNavFooterItem label="Emergency" icon="caution" tone="emergency" to={emergencyTo} onClick={onEmergency} />}
+      /* Review change: Emergency sits above Home (Figma pins it to the bottom) */
+      lead={<SideNavFooterItem label="Emergency" icon="caution" tone="emergency" to={emergencyTo} onClick={onEmergency} />}
       {...props}
     />
   );

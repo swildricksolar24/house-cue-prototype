@@ -27,8 +27,8 @@ export default function HelpAndContactSupport(_: ScreenProps) {
   const contact = (
     <>
       <DetailRow label="Chat" value="Usually replies in 5 minutes" actionLabel="Start" onAction={() => flow.go('C09')} />
-      <DetailRow label="Email" value="Within 1 business day" actionLabel="Write" onAction={() => {}} />
-      <DetailRow label="Call me back" value="Pick a time" actionLabel="Schedule" onAction={() => {}} />
+      <DetailRow label="Email" value="Within 1 business day" actionLabel="Write" actionDisabled />
+      <DetailRow label="Call me back" value="Pick a time" actionLabel="Schedule" actionDisabled />
     </>
   );
 

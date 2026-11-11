@@ -110,7 +110,6 @@ export default function TenantsAccess(_: ScreenProps) {
           title="Could not load tenants"
           body="Check your connection and try again. Your data is safe."
           actionLabel="Try again"
-          onAction={() => undefined}
         />
       );
     }

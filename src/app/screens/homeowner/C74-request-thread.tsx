@@ -84,7 +84,7 @@ export default function RequestThread(_: ScreenProps) {
         onChange={(e) => setDraft(e.target.value)}
       />
       {device === 'mobile' && (
-        <button type="button" className="hc-c74-composer__mic" aria-label="Record a voice message">
+        <button type="button" className="hc-c74-composer__mic" aria-label="Record a voice message" disabled>
           <span className="hc-c74-composer__mic-icon" aria-hidden />
         </button>
       )}

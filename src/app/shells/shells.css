@@ -1,5 +1,6 @@
 /* Mobile: fills the 390×844 phone frame (DeviceFrame) */
 .hc-mobile-shell {
+  position: relative; /* anchors the home picker sheet */
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -52,4 +53,27 @@
   width: 100%;
   max-width: calc(640px + 2 * var(--hc-space-8));
   margin: 0 auto;
+}
+
+/* Signed-in web (side menu): content sits in one centred column, max 800px (review decision). Big side-by-side
+   columns are stacked by each screen; small cards may still sit side by side. */
+.hc-web-shell--app > .hc-web-shell__main {
+  width: 100%;
+  max-width: calc(800px + 2 * var(--hc-space-8));
+  justify-self: center;
+}
+/* Every screen's main/side column wrapper is named "hc-<code>-web__cols": stack its columns in reading order and let
+   each take the full width (side panels lose their fixed widths). Card grids inside the columns are left alone. */
+.hc-web-shell--app [class*='-web__cols'] {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  grid-template-columns: none !important;
+}
+.hc-web-shell--app [class*='-web__cols'] > * {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  position: static !important; /* side panels were sticky beside the main column */
 }

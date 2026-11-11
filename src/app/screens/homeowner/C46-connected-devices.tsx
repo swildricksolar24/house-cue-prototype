@@ -43,7 +43,7 @@ export default function ConnectedDevices(_: ScreenProps) {
     screenState === 'empty' ? (
       <StateBlock title="No devices connected" body="Connect a thermostat, leak sensor or other device." actionLabel="Connect a device" onAction={open} />
     ) : screenState === 'error' ? (
-      <StateBlock kind="error" title="Couldn’t load your devices" body="Check your connection and try again. Nothing was lost." actionLabel="Try again" onAction={() => {}} />
+      <StateBlock kind="error" title="Couldn’t load your devices" body="Check your connection and try again. Nothing was lost." actionLabel="Try again" />
     ) : screenState === 'loading' ? (
       <>
         <SkeletonCard label="Loading devices" />

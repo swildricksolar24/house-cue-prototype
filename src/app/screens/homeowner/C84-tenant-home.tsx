@@ -46,7 +46,7 @@ export default function TenantHome(_: ScreenProps) {
   /** Jump to a later step of this (tenant) journey, so C18/C85 open in their tenant variants */
   const goInJourney = (code: string) => {
     const i = flow.journey.steps.findIndex((s) => s.code === code);
-    if (i >= 0) navigate(stepPath(flow.role, flow.journey.slug, i + 1));
+    if (i >= 0) navigate(stepPath(flow.journey.slug, i + 1));
     else flow.go(code);
   };
   const openRequest = () => goInJourney('C18');

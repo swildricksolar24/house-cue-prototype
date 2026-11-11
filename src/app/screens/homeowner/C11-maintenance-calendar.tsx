@@ -1,6 +1,6 @@
 import { Fragment, useState, type ReactNode } from 'react';
 import { Banner } from '../../../components/Banner/Banner';
-import { DetailRow } from '../../../components/DetailRow/DetailRow';
+import { StatTile } from '../../../components/StatTile/StatTile';
 import { SkeletonCard } from '../../../components/SkeletonCard/SkeletonCard';
 import { StateBlock } from '../../../components/StateBlock/StateBlock';
 import { TaskRow, type TaskRowTagTone } from '../../../components/TaskRow/TaskRow';
@@ -86,8 +86,7 @@ export default function MaintenanceCalendar(_: ScreenProps) {
             <button
               key={day}
               type="button"
-              className="hc-c11-month__day hc-c11-month__day--task"
-              style={{ border: 0, cursor: 'pointer' }}
+              className={`hc-c11-month__day hc-c11-month__day--task${task.tone === 'danger' ? ' hc-c11-month__day--overdue' : ''}`}
               aria-label={`${month} ${day}: ${task.title}`}
               onClick={() => open(task)}
             >
@@ -139,10 +138,23 @@ export default function MaintenanceCalendar(_: ScreenProps) {
         </>
       );
     }
+    // Month view (review change): the two months sit side by side as compact calendars, one under the other on mobile
+    if (view === 'month') {
+      return (
+        <div className="hc-c11-months">
+          {(['November', 'December'] as const).map((m) => (
+            <section key={m} className="hc-c11-months__month">
+              <h2 className="hc-large-bold">{m}</h2>
+              {monthView(m)}
+            </section>
+          ))}
+        </div>
+      );
+    }
     return (['November', 'December'] as const).map((m) => (
       <Fragment key={m}>
         <h2 className="hc-large-bold">{m}</h2>
-        {view === 'list' ? rows(m) : monthView(m)}
+        {rows(m)}
       </Fragment>
     ));
   };
@@ -163,18 +175,23 @@ export default function MaintenanceCalendar(_: ScreenProps) {
           <h1 className="hc-h2">Plan</h1>
           {chips}
         </header>
+        {/* Review change: "This year" sits at the top as three stat tiles across the column */}
+        <section className="hc-c11-year" aria-labelledby="hc-c11-year-title">
+          <h2 id="hc-c11-year-title" className="hc-large-bold">
+            This year
+          </h2>
+          <div className="hc-c11-year__tiles">
+            <StatTile label="Done" value="12" meta="tasks" />
+            <StatTile label="Due this month" value="4" meta="tasks" />
+            <StatTile label="Skipped" value="1" meta="task" />
+          </div>
+        </section>
         <div className="hc-c11-web__cols">
           <section className="hc-c11-web__main hc-c11-card">{sections()}</section>
           <aside className="hc-c11-web__side">
             <Banner title="Bundle 2 HVAC tasks?">
               Coil cleaning and the next filter change are both due in December. I can ask one pro to do both.
             </Banner>
-            <section className="hc-c11-card">
-              <h2 className="hc-large-bold">This year</h2>
-              <DetailRow label="Done" value="12 tasks" />
-              <DetailRow label="Due this month" value="4 tasks" />
-              <DetailRow label="Skipped" value="1 task" />
-            </section>
           </aside>
         </div>
       </div>

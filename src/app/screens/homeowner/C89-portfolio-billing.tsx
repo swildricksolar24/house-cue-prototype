@@ -67,7 +67,7 @@ export default function PortfolioBilling(_: ScreenProps) {
             </p>
           </div>
           <Button variant="secondary" onClick={flow.goNext}>
-            Change payment method
+            Edit payment method
           </Button>
         </header>
         <div className="hc-c89-web__stats">
@@ -118,7 +118,7 @@ export default function PortfolioBilling(_: ScreenProps) {
             </section>
             <section className="hc-c89-card">
               <h2 className="hc-large-bold">Payment</h2>
-              <DetailRow label="Payment method" value="Visa ending 4242" actionLabel="Change" onAction={flow.goNext} />
+              <DetailRow label="Payment method" value="Visa ending 4242" actionLabel="Edit" onAction={flow.goNext} />
               {editingEmail ? (
                 <div className="hc-c89-email">
                   <Input label="Billing email" type="email" value={email} onValueChange={setEmail} />

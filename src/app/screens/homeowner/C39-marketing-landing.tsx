@@ -1,6 +1,6 @@
 import { Banner } from '../../../components/Banner/Banner';
 import { Button } from '../../../components/Button/Button';
-import type { IconName } from '../../../components/Icon/Icon';
+import { Icon, type IconName } from '../../../components/Icon/Icon';
 import { ListRow } from '../../../components/ListRow/ListRow';
 import { Logo } from '../../../components/Logo/Logo';
 import { useFlow } from '../../prototype/flow';
@@ -8,27 +8,35 @@ import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
-import heroScreen from './assets/c39-hero-c08-screen.png';
-import heroPhoto from './assets/c39-hero-tucson-foothills.jpg';
+import { HeroImage } from './_hero';
 import './C39-marketing-landing.css';
 
-/**
- * Hero (Figma placeholder: "phone showing the HouseCue home dashboard over a Tucson home").
- * Photo: homes in the Tucson foothills by JC Cervantes on Unsplash (free licence),
- * https://unsplash.com/photos/a-house-on-a-hill-with-a-view-of-the-city-g7MszM0Pff4
- * Phone screen: screenshot of this prototype's C08 Home dashboard (mobile, light).
- */
-function HeroImage({ height, className }: { height: number; className?: string }) {
+const LEDE = 'HouseCue keeps your home’s record, plans its upkeep and gets trusted pros booked, always with your OK.';
+
+/** C01 Welcome's three panels, merged into this page's hero (review change: onboarding steps 1 and 2 are one page) */
+const welcomePoints: { icon: IconName; title: string; body: string }[] = [
+  { icon: 'home', title: 'Know your home', body: 'Systems, documents, invoices and history in one place.' },
+  { icon: 'calendar', title: 'Never miss upkeep', body: 'A maintenance plan for your climate and your systems.' },
+  { icon: 'service', title: 'Pros, booked for you', body: 'Quotes compared and jobs booked, with your approval.' },
+];
+
+function WelcomePoints() {
   return (
-    <div className={['hc-c39-photo', className].filter(Boolean).join(' ')} style={{ height }}>
-      <img className="hc-c39-photo__bg" src={heroPhoto} alt="" />
-      <div className="hc-c39-photo__phone">
-        <img src={heroScreen} alt="The HouseCue home dashboard on a phone, over homes in the Tucson foothills" />
-      </div>
-    </div>
+    <ul className="hc-c39-points">
+      {welcomePoints.map((p) => (
+        <li key={p.title}>
+          <span className="hc-c39-points__icon">
+            <Icon name={p.icon} size={24} />
+          </span>
+          <span>
+            <span className="hc-large-bold">{p.title}</span>
+            <span className="hc-medium hc-muted">{p.body}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
   );
 }
-const LEDE = 'HouseCue keeps your home’s record, plans its upkeep and gets trusted pros booked, always with your OK.';
 
 type Row = { title: string; description?: string; icon: IconName };
 
@@ -105,16 +113,20 @@ export default function MarketingLanding(_: ScreenProps) {
     return (
       <MobileShell className="hc-c39-mobile">
         <Logo />
-        <HeroImage height={260} className="hc-c39-photo--compact" />
+        <HeroImage height={260} className="hc-hero-photo--compact" />
         <p className="hc-medium-semibold hc-c39-eyebrow">Now booking in Phoenix and Tucson</p>
         <h1 className="hc-h2">Your home, handled.</h1>
         <p className="hc-large hc-muted">{LEDE}</p>
+        <WelcomePoints />
         <Button fullWidth onClick={flow.goNext}>
           Get started free
         </Button>
         <Button variant="secondary" fullWidth onClick={flow.goNext}>
           Download the app
         </Button>
+        <button type="button" className="hc-medium-semibold hc-link hc-c39-text-btn" onClick={flow.goNext}>
+          I have an account
+        </button>
         <h2 className="hc-h4">How it works</h2>
         {rows(stepsMobile)}
         <h2 className="hc-h4">Plans</h2>
@@ -135,6 +147,7 @@ export default function MarketingLanding(_: ScreenProps) {
           <p className="hc-medium-semibold hc-c39-eyebrow">Now booking in Phoenix and Tucson</p>
           <h1 className="hc-h1">Your home, handled.</h1>
           <p className="hc-large hc-muted">{LEDE}</p>
+          <WelcomePoints />
           <div className="hc-c39-cols hc-c39-cols--tight">
             <Button fullWidth onClick={flow.goNext}>
               Get started free
@@ -143,9 +156,14 @@ export default function MarketingLanding(_: ScreenProps) {
               Download the app
             </Button>
           </div>
-          <p className="hc-small hc-muted">Free to start. Members $4.99/mo or $49/yr per home.</p>
+          <p className="hc-small hc-muted">
+            Free to start. Members $4.99/mo or $49/yr per home. Already a member?{' '}
+            <button type="button" className="hc-medium-semibold hc-link hc-c39-text-btn" onClick={flow.goNext}>
+              I have an account
+            </button>
+          </p>
         </div>
-        <HeroImage height={440} className="hc-c39-hero__image" />
+        <HeroImage height={560} className="hc-c39-hero__image" />
       </div>
       <h2 className="hc-h2">How it works</h2>
       <div className="hc-c39-cols hc-c39-cols--equal">

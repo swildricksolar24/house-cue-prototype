@@ -210,7 +210,7 @@ function HomeownerJobTracker() {
               <DetailRow label="Pro" value="Zephyrline HVAC" />
               <DetailRow label="When" value="Thu, Nov 13, 8–10 AM" />
               <DetailRow label="Held on your card" value={held} />
-              <DetailRow label="Who’s home" value="You" actionLabel="Change" onAction={() => undefined} />
+              <DetailRow label="Who’s home" value="You" actionLabel="Edit" actionDisabled />
             </section>
             <Button variant="secondary" fullWidth onClick={flow.goNext}>
               Message the pro

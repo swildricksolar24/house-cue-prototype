@@ -144,7 +144,7 @@ export default function HouseholdAndCaregiverAccess(_: ScreenProps) {
     );
   }
 
-  const spendRow = <DetailRow label="Spend limit" value="$0 · everything needs your OK" actionLabel="Change" onAction={() => undefined} />;
+  const spendRow = <DetailRow label="Spend limit" value="$0 · everything needs your OK" actionLabel="Edit" actionDisabled />;
 
   return (
     <WebShell nav="account">

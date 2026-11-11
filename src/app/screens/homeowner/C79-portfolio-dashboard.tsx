@@ -123,7 +123,6 @@ export default function PortfolioDashboard(_: ScreenProps) {
           title="Could not load your properties"
           body="Check your connection and try again. Your data is safe."
           actionLabel="Try again"
-          onAction={() => undefined}
         />
       );
     }
@@ -188,7 +187,7 @@ export default function PortfolioDashboard(_: ScreenProps) {
           <div className="hc-c79-web__main">
             <div className="hc-c79-section-head">
               <h2 className="hc-large-bold">Properties</h2>
-              <button type="button" className="hc-c79-link">
+              <button type="button" className="hc-c79-link" disabled>
                 Search
               </button>
             </div>

@@ -39,7 +39,7 @@ export default function EmailImportSetup(_: ScreenProps) {
           <div className="hc-c44-content" role="radiogroup" aria-label="Email provider">
             {card(PROVIDERS[0])}
             {card(PROVIDERS[1])}
-            <OptionCard title="Yahoo" description="Coming soon" aria-disabled />
+            <OptionCard title="Yahoo" description="Coming soon" disabled />
             {card(PROVIDERS[2])}
           </div>
         </div>

@@ -45,7 +45,7 @@ export type WebTopBarProps = {
 export function WebTopBar({ type = 'onboarding', paths, language = 'English', onLanguageClick, hideLogin = false, className }: WebTopBarProps) {
   const to = { ...webTopBarPaths, ...paths };
   const languagePicker = (
-    <button type="button" className="hc-web-top-bar__link" onClick={onLanguageClick} aria-haspopup="listbox">
+    <button type="button" className="hc-web-top-bar__link" onClick={onLanguageClick} disabled={!onLanguageClick} aria-haspopup="listbox">
       {language} <span aria-hidden>▾</span>
     </button>
   );

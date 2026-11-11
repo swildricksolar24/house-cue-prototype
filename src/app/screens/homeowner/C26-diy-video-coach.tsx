@@ -21,7 +21,6 @@ const STEPS: { state: TimelineStepState; title: string; meta: string }[] = [
 ];
 
 /** Opens the partner's store in the real product; nothing to do in the prototype */
-const buyFromPartner = () => {};
 
 /**
  * C26 DIY video coach — Figma mobile 216:15719, web 216:17766 (J1 Home record & maintenance step 8).
@@ -50,7 +49,7 @@ export default function DiyVideoCoach(_: ScreenProps) {
             Turn off the shutoff behind the toilet first.
           </Banner>
           {steps(3)}
-          <DetailRow label="Part 400H" value="Universal fill valve" actionLabel="Buy" onAction={buyFromPartner} />
+          <DetailRow label="Part 400H" value="Universal fill valve" actionLabel="Buy" actionDisabled />
           <Button variant="secondary" fullWidth onClick={() => flow.go('C13')}>
             Get a pro instead
           </Button>
@@ -84,7 +83,7 @@ export default function DiyVideoCoach(_: ScreenProps) {
                 label="Part 400H · fill valve"
                 value="Member discount at checkout"
                 actionLabel="Buy from partner"
-                onAction={buyFromPartner}
+                actionDisabled
               />
               <p className="hc-small hc-muted">You buy on the partner’s site. Returns are handled there.</p>
             </section>

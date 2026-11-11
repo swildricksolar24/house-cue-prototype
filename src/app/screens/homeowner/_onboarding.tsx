@@ -83,6 +83,7 @@ export function TextLink({
       type="button"
       className={`hc-onb-text-link hc-onb-text-link--${align}${underline ? ' hc-onb-text-link--underline' : ''}`}
       onClick={onClick}
+      disabled={!onClick}
     >
       {children}
     </button>

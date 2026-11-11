@@ -5,43 +5,52 @@ import { screenPath } from '../prototype/journeys';
  * Where each nav item goes in the prototype: the first journey step that shows its screen
  * (Screen Inventory: Home C08, Plan C11, Agent C09, Jobs C40, Account C34, Emergency C22, Notifications C33,
  * home switcher C38; landlord Portfolio C79; tenant Home C84).
+ * Getters, so each link is built when it's read and keeps the current user in the URL (/landlord/…, /tenant/…).
  */
-export const homeownerPaths: Record<HomeownerNavKey, string> = {
-  home: screenPath('C08'),
-  plan: screenPath('C11'),
-  agent: screenPath('C09'),
-  jobs: screenPath('C40'),
-  account: screenPath('C34'),
+const paths = <K extends string>(codes: Record<K, string>) => {
+  const out = {} as Record<K, string>;
+  for (const key of Object.keys(codes) as K[]) {
+    Object.defineProperty(out, key, { enumerable: true, get: () => screenPath(codes[key]) });
+  }
+  return out;
 };
 
-export const landlordPaths: Record<LandlordNavKey, string> = {
-  portfolio: screenPath('C79'),
-  home: screenPath('C08'),
-  plan: screenPath('C11'),
-  jobs: screenPath('C40'),
-  account: screenPath('C34'),
-};
+export const homeownerPaths: Record<HomeownerNavKey, string> = paths({
+  home: 'C08',
+  plan: 'C11',
+  agent: 'C09',
+  jobs: 'C40',
+  account: 'C34',
+});
 
-export const tenantPaths: Record<TenantNavKey, string> = {
-  home: screenPath('C84'),
-  agent: screenPath('C09'),
-  jobs: screenPath('C40'),
-  account: screenPath('C34'),
-};
+export const landlordPaths: Record<LandlordNavKey, string> = paths({
+  portfolio: 'C79',
+  home: 'C08',
+  plan: 'C11',
+  jobs: 'C40',
+  account: 'C34',
+});
+
+export const tenantPaths: Record<TenantNavKey, string> = paths({
+  home: 'C84',
+  agent: 'C09',
+  jobs: 'C40',
+  account: 'C34',
+});
 
 /** HC/Web Top Bar links (marketing + onboarding) */
-export const topBarPaths = {
-  home: screenPath('C39'),
-  howItWorks: screenPath('C39'),
-  membership: screenPath('C28'),
-  forPros: screenPath('C39'),
-  help: screenPath('C32'),
-  login: screenPath('C02'),
-  getStarted: screenPath('C02'),
-};
+export const topBarPaths = paths({
+  home: 'C39',
+  howItWorks: 'C39',
+  membership: 'C28',
+  forPros: 'C39',
+  help: 'C32',
+  login: 'C02',
+  getStarted: 'C02',
+});
 
-export const utilityPaths = {
-  emergency: screenPath('C22'),
-  notifications: screenPath('C33'),
-  homeSwitcher: screenPath('C38'),
-};
+export const utilityPaths = paths({
+  emergency: 'C22',
+  notifications: 'C33',
+  homeSwitcher: 'C38',
+});

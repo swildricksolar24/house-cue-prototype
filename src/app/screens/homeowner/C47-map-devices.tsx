@@ -55,7 +55,7 @@ export default function MapDevices(_: ScreenProps) {
                 key={l.id}
                 label={l.mobileLabel}
                 value={l.ignored ? 'Ignored' : l.item ? `Linked to ${inSentence(l.item)}` : 'Not linked'}
-                actionLabel={l.ignored ? 'Undo' : l.item ? 'Change' : 'Link'}
+                actionLabel={l.ignored ? 'Undo' : l.item ? 'Edit' : 'Link'}
                 onAction={() => toggle(l.id)}
               />
             ))}

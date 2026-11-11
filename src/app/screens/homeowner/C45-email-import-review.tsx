@@ -53,7 +53,7 @@ export default function EmailImportReview(_: ScreenProps) {
     screenState === 'empty' ? (
       <StateBlock title="Nothing to review" body="Documents found in your email show up here for you to keep or skip." />
     ) : screenState === 'error' ? (
-      <StateBlock kind="error" title="Couldn’t load documents to review" body="Check your connection and try again. Nothing was lost." actionLabel="Try again" onAction={() => {}} />
+      <StateBlock kind="error" title="Couldn’t load documents to review" body="Check your connection and try again. Nothing was lost." actionLabel="Try again" />
     ) : screenState === 'loading' ? (
       <>
         <SkeletonCard label="Loading documents" />

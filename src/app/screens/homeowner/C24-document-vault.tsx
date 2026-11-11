@@ -44,7 +44,7 @@ export default function DocumentVault(_: ScreenProps) {
     screenState === 'empty' ? (
       <StateBlock title="No documents yet" body="Add receipts, manuals and warranties, or import them from email." actionLabel="Add a document" onAction={flow.goNext} />
     ) : screenState === 'error' ? (
-      <StateBlock kind="error" title="Couldn’t load your documents" body="Check your connection and try again. Nothing was lost." actionLabel="Try again" onAction={() => {}} />
+      <StateBlock kind="error" title="Couldn’t load your documents" body="Check your connection and try again. Nothing was lost." actionLabel="Try again" />
     ) : screenState === 'loading' ? (
       <>
         <SkeletonCard label="Loading documents" />

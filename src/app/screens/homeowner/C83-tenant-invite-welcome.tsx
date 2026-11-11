@@ -14,8 +14,8 @@ import './C83-tenant-invite-welcome.css';
 export default function TenantInviteWelcome(_: ScreenProps) {
   const { device } = usePrototype();
   const flow = useFlow();
-  // Leaving the invite: back to the public splash (C01)
-  const notMine = () => flow.go('C01');
+  // Leaving the invite: back to the public landing page (C39, which now includes the C01 welcome)
+  const notMine = () => flow.go('C39');
 
   if (device === 'mobile') {
     return (

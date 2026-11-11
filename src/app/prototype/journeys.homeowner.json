@@ -12,12 +12,6 @@
         "web": "215:13872"
       },
       {
-        "code": "C01",
-        "label": "Splash and welcome",
-        "mobile": "215:11499",
-        "web": "215:13938"
-      },
-      {
         "code": "C02",
         "label": "Sign up / sign in",
         "mobile": "215:11597",
@@ -597,6 +591,30 @@
     "workflows": "W47–W49, W52, W55–W59",
     "figma": "272:31774",
     "steps": [
+      {
+        "code": "C39",
+        "label": "Marketing landing page (web)",
+        "mobile": "215:11454",
+        "web": "215:13872"
+      },
+      {
+        "code": "C02",
+        "label": "Sign up / sign in",
+        "mobile": "215:11597",
+        "web": "215:14016"
+      },
+      {
+        "code": "C03",
+        "label": "Language choice",
+        "mobile": "215:11673",
+        "web": "215:14096"
+      },
+      {
+        "code": "C41",
+        "label": "Consents",
+        "mobile": "215:11846",
+        "web": "215:14269"
+      },
       {
         "code": "C04",
         "label": "Home profile setup (rental owner)",

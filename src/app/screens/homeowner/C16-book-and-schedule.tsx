@@ -98,8 +98,8 @@ export default function BookAndSchedule(_: ScreenProps) {
         <h2 className="hc-medium-semibold">Pick a time</h2>
         {slots(mobileSlots)}
         <div>
-          <DetailRow label="Who will be home" value="You" actionLabel="Change" onAction={() => undefined} />
-          <DetailRow label="Access" value="Ring the doorbell" actionLabel="Edit" onAction={() => undefined} />
+          <DetailRow label="Who will be home" value="You" actionLabel="Edit" actionDisabled />
+          <DetailRow label="Access" value="Ring the doorbell" actionLabel="Edit" actionDisabled />
         </div>
         <Banner tone="info" title="Fees this pro sets">
           No-show trip fee $49 if nobody is home within 15 minutes.
@@ -131,8 +131,8 @@ export default function BookAndSchedule(_: ScreenProps) {
             <section className="hc-c16-card">
               <h2 className="hc-large-bold">On the day</h2>
               <div>
-                <DetailRow label="Who will be home" value="You" actionLabel="Change" onAction={() => undefined} />
-                <DetailRow label="Access" value="Ring the doorbell" actionLabel="Edit" onAction={() => undefined} />
+                <DetailRow label="Who will be home" value="You" actionLabel="Edit" actionDisabled />
+                <DetailRow label="Access" value="Ring the doorbell" actionLabel="Edit" actionDisabled />
               </div>
             </section>
           </div>

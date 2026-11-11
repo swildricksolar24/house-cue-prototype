@@ -15,7 +15,6 @@ import './C05-add-systems.css';
 
 const CATEGORIES = ['Water heater', 'AC / heat pump', 'Pool pump', 'Other'];
 const ROOMS = ['Garage', 'Kitchen', 'Living room', 'Primary bedroom', 'Hall bath'];
-const noop = () => {};
 const PLAN_NOTE = 'Free plan: 7 of 10 items used in this home.';
 
 const roomOptions = ROOMS.map((r) => ({ value: r, label: `Room: ${r}` }));
@@ -43,10 +42,10 @@ export default function AddSystems(_: ScreenProps) {
             Matched to a 50-gallon gas water heater in the Care Library.
           </Banner>
           <div>
-            <DetailRow label="Brand · high confidence" value="Northline" onAction={noop} />
-            <DetailRow label="Model · high confidence" value="NL-50G-T2" onAction={noop} />
-            <DetailRow label="Serial · please check" value="Q1018 4512 3" onAction={noop} />
-            <DetailRow label="Made · from serial" value="October 2018" onAction={noop} />
+            <DetailRow label="Brand · high confidence" value="Northline" actionDisabled />
+            <DetailRow label="Model · high confidence" value="NL-50G-T2" actionDisabled />
+            <DetailRow label="Serial · please check" value="Q1018 4512 3" actionDisabled />
+            <DetailRow label="Made · from serial" value="October 2018" actionDisabled />
           </div>
           <Select label="Room" hideLabel placeholder="" options={roomOptions} value={room} onValueChange={setRoom} />
           <p className="hc-small hc-muted">{PLAN_NOTE}</p>

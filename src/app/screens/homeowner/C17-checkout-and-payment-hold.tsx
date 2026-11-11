@@ -105,7 +105,7 @@ export default function CheckoutAndPaymentHold(_: ScreenProps) {
         <div>
           {!oon && <DetailRow label="Job" value={JOB} />}
           <DetailRow label="Quoted price" value={`${amount}.00`} />
-          <DetailRow label="Pay with" value="Visa •• 4242" actionLabel="Change" onAction={() => undefined} />
+          <DetailRow label="Pay with" value="Visa •• 4242" actionLabel="Edit" actionDisabled />
         </div>
         {explainer}
         {!oon && (

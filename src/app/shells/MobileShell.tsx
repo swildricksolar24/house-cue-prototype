@@ -1,11 +1,11 @@
-import type { ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, type ReactNode } from 'react';
 import { AppBar, type AppBarProps } from '../../components/AppBar/AppBar';
 import { HomeHeader } from '../../components/HomeHeader/HomeHeader';
 import { StatusBar } from '../../components/StatusBar/StatusBar';
 import { TabBar, type AppRole, type RoleNavKey } from '../../components/TabBar/TabBar';
-import { currentHome } from '../data/sample';
 import { useOptionalFlow } from '../prototype/flow';
+import { useCurrentHome } from '../prototype/HomeContext';
+import { HomePicker } from './HomePicker';
 import { homeownerPaths, landlordPaths, tenantPaths, utilityPaths } from './navPaths';
 import './shells.css';
 
@@ -50,17 +50,18 @@ export function MobileShell<R extends AppRole = 'homeowner'>({
   className,
 }: MobileShellProps<R>) {
   const flow = useOptionalFlow();
-  const navigate = useNavigate();
+  const { home } = useCurrentHome();
+  const [picking, setPicking] = useState(false);
   const r = (role ?? 'homeowner') as AppRole;
 
   let top: ReactNode = null;
   if (header === 'home') {
     top = (
       <HomeHeader
-        address={currentHome.address}
+        address={home.address}
         emergencyTo={utilityPaths.emergency}
         notificationsTo={utilityPaths.notifications}
-        onSwitchHome={() => navigate(utilityPaths.homeSwitcher)}
+        onSwitchHome={() => setPicking(true)}
       />
     );
   } else if (isAppBarProps(header)) {
@@ -80,6 +81,7 @@ export function MobileShell<R extends AppRole = 'homeowner'>({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         <TabBar role={r as any} active={tab as any} paths={rolePaths[r] as any} />
       )}
+      {picking && <HomePicker variant="sheet" onClose={() => setPicking(false)} />}
     </div>
   );
 }

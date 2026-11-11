@@ -34,5 +34,6 @@
   outline: none;
 }
 
-.hc-detail-row__action:hover { text-decoration: underline; }
+.hc-detail-row__action:hover:not(:disabled) { text-decoration: underline; }
+.hc-detail-row__action:disabled { color: var(--hc-text-muted); opacity: 0.6; cursor: not-allowed; }
 .hc-detail-row__action:focus-visible { box-shadow: var(--hc-focus-ring); }

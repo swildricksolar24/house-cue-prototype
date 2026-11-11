@@ -190,7 +190,7 @@ export default function AiAgentChat(_: ScreenProps) {
         onChange={(e) => setDraft(e.target.value)}
       />
       {device === 'mobile' && (
-        <button type="button" className="hc-c09-composer__mic" aria-label="Talk to your agent">
+        <button type="button" className="hc-c09-composer__mic" aria-label="Talk to your agent" disabled>
           <span className="hc-c09-composer__mic-icon" aria-hidden />
         </button>
       )}
@@ -281,7 +281,7 @@ export default function AiAgentChat(_: ScreenProps) {
                   <DetailRow
                     label="Booking cap"
                     value="$0 · every booking needs your OK"
-                    actionLabel="Change"
+                    actionLabel="Edit"
                     onAction={() => flow.go('C07')}
                   />
                 </section>

@@ -124,6 +124,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Text-style buttons (links, "Change", "See all") with nothing to do are disabled (review decision): muted and inert.
+   HC/Button has its own disabled style. */
+button:disabled:not(.hc-button) {
+  color: var(--hc-text-muted) !important;
+  text-decoration: none !important;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* HouseCue/* text styles */
 .hc-h1 { font: 800 40px/48px var(--hc-font); letter-spacing: -0.01em; margin: 0; }
 .hc-h2 { font: 800 32px/40px var(--hc-font); letter-spacing: -0.01em; margin: 0; }

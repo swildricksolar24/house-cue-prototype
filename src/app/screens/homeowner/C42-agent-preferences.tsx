@@ -28,7 +28,7 @@ const URGENCY = [
 
 /**
  * C42 Agent preferences — Figma mobile 215:13230 (batch 211:6306), web 215:16463 (batch 211:6307). J1 Onboarding step 18.
- * Estimate times → Change goes to C43 Calendar connect (the next step).
+ * Estimate times → Edit goes to C43 Calendar connect (the next step).
  */
 export default function AgentPreferences(_: ScreenProps) {
   const { device } = usePrototype();
@@ -63,7 +63,7 @@ export default function AgentPreferences(_: ScreenProps) {
           </button>
         ))}
       </div>
-      <DetailRow label="Estimate times" value="Weekdays 8–11 AM" actionLabel="Change" onAction={flow.goNext} />
+      <DetailRow label="Estimate times" value="Weekdays 8–11 AM" actionLabel="Edit" onAction={flow.goNext} />
       <SettingRow title="Include pros I’ve used" description={web ? 'Ask them for quotes too' : 'Ask them too'} defaultChecked />
       <SettingRow
         title="Price negotiation"
@@ -99,21 +99,21 @@ export default function AgentPreferences(_: ScreenProps) {
         <div className="hc-c42-web__cols">
           <section className="hc-c42-card hc-c42-card--main">
             {general}
-            <DetailRow label="Monthly budget (optional)" value="$150" actionLabel="Change" onAction={() => {}} />
+            <DetailRow label="Monthly budget (optional)" value="$150" actionLabel="Edit" actionDisabled />
           </section>
           <section className="hc-c42-card hc-c42-card--list">
             <h2 className="hc-large-bold">By category</h2>
             {CATEGORIES.map((c) => (
               <ListRow key={c.title} title={c.title} description={c.description} />
             ))}
-            <button type="button" className="hc-c42-link">
+            <button type="button" className="hc-c42-link" disabled>
               + Add a category
             </button>
           </section>
           <section className="hc-c42-card hc-c42-card--list hc-c42-card--side">
             <h2 className="hc-large-bold">Urgency rules</h2>
             {URGENCY.map((u) => (
-              <DetailRow key={u.label} label={u.label} value={u.value} actionLabel="Change" onAction={() => {}} />
+              <DetailRow key={u.label} label={u.label} value={u.value} actionLabel="Edit" actionDisabled />
             ))}
             <p className="hc-small hc-muted">Anything not listed: This week.</p>
           </section>

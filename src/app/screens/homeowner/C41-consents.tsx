@@ -3,6 +3,7 @@ import { Banner } from '../../../components/Banner/Banner';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
 import { Button } from '../../../components/Button/Button';
 import { ConsentRow } from '../../../components/ConsentRow/ConsentRow';
+import { useDemoActions } from '../../prototype/DemoTools';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
@@ -42,7 +43,8 @@ const TENANT_INTRO = 'Mesa Verde Holdings invited you as the tenant of 1418 E Ro
 
 /**
  * C41 Consents — Figma onboarding mobile 215:11846 / web 215:14269; tenant mobile 272:33916 / web 272:34801.
- * States: web default = 2 required items unchecked with the error banner (as drawn); "Branch: Consent declined
+ * States: opens with nothing ticked and no error (review change); the error banner shows after a failed submit (the
+ * web frame draws it on load); "Branch: Consent declined
  * (blocked)" 231:23637 = the required-agreements dialog, opened by "Agree and continue" with a required item
  * unchecked, or directly with ?state=error.
  */
@@ -54,18 +56,29 @@ export default function Consents({ variant }: ScreenProps) {
   const items = tenant ? tenantConsents : homeownerConsents;
   const blocked = !tenant && screenState === 'error';
 
-  // Mobile frame: every required item ticked. Web frame (and the blocked branch): Terms + disputes unticked.
-  const [checked, setChecked] = useState<Record<string, boolean>>(() => {
-    const startUnchecked = !tenant && (!mobile || blocked) ? ['terms', 'disputes'] : [];
-    return Object.fromEntries(items.map((c) => [c.id, c.required && !startUnchecked.includes(c.id)]));
-  });
-  const [attempted, setAttempted] = useState(!tenant && (!mobile || blocked));
+  // Review decision: nothing is ticked and no error shows when the step opens (Figma draws some items ticked and the
+  // web frame with the error). The error banner appears only after "Agree and continue" with a required item
+  // unticked. The blocked branch (?state=error) still opens straight on the required-agreements dialog.
+  const [checked, setChecked] = useState<Record<string, boolean>>(() => Object.fromEntries(items.map((c) => [c.id, false])));
+  const [attempted, setAttempted] = useState(blocked);
   const [dialog, setDialog] = useState(blocked);
 
   const missing = items.filter((c) => c.required && !checked[c.id]).length;
 
+  // Demo card shortcut (prototype only): tick every required agreement, clear the error and dialog
+  useDemoActions([
+    {
+      label: 'Use Demo Account',
+      onClick: () => {
+        setChecked((s) => ({ ...s, ...Object.fromEntries(items.filter((c) => c.required).map((c) => [c.id, true])) }));
+        setDialog(false);
+      },
+    },
+  ]);
+
   const submit = () => {
-    if (missing === 0) return flow.goNext();
+    // Homeowner: skip the journey's X08 Terms step (reached from the "Read" links; it has no forward button)
+    if (missing === 0) return tenant ? flow.goNext() : flow.go('C04');
     setAttempted(true);
     if (!tenant) setDialog(true);
   };
@@ -123,7 +136,7 @@ export default function Consents({ variant }: ScreenProps) {
       <MobileShell
         className="hc-onb-mobile"
         header={{ title: 'Agreements', step: '3 of 6', progress: 3 / 6 }}
-        bottom={<BottomActions primaryLabel="Agree and continue" onPrimary={submit} primaryDisabled={dialog || (tenant && missing > 0)} />}
+        bottom={<BottomActions primaryLabel="Agree and continue" onPrimary={submit} primaryDisabled={dialog || missing > 0} />}
       >
         {tenant ? (
           <p className="hc-medium hc-muted">{TENANT_INTRO}</p>
@@ -151,7 +164,7 @@ export default function Consents({ variant }: ScreenProps) {
         {rows}
         {tenantNote}
         <div className="hc-onb-actions">
-          <Button fullWidth onClick={submit} disabled={dialog || (tenant && missing > 0)}>
+          <Button fullWidth onClick={submit} disabled={dialog || missing > 0}>
             Agree and continue
           </Button>
         </div>

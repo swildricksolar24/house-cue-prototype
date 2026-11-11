@@ -57,7 +57,7 @@ export default function MessagesWithVendor(_: ScreenProps) {
         onChange={(e) => setDraft(e.target.value)}
       />
       {device === 'mobile' && (
-        <button type="button" className="hc-c19-composer__voice" aria-label="Voice message">
+        <button type="button" className="hc-c19-composer__voice" aria-label="Voice message" disabled>
           <span className="hc-c19-composer__mic" aria-hidden />
         </button>
       )}

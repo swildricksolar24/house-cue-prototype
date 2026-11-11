@@ -21,16 +21,17 @@ export type Flow = {
 const FlowCtx = createContext<Flow | null>(null);
 
 /** Where a finished journey lands: landlord → Portfolio (C79), tenant → Tenant home (C84), otherwise Home (C08) */
-function endPath(role: RoleKey, journey: Journey) {
-  if (journey.slug === 'landlord-portfolio') return screenPath('C79', role);
-  if (journey.slug === 'tenant') return screenPath('C84', role);
-  return screenPath('C08', role);
+function endPath(journey: Journey) {
+  if (journey.slug === 'landlord-portfolio') return screenPath('C79');
+  if (journey.slug === 'tenant') return screenPath('C84');
+  return screenPath('C08');
 }
 
 export function FlowProvider({ role, journey, index, children }: { role: RoleKey; journey: Journey; index: number; children: ReactNode }) {
   const navigate = useNavigate();
-  const nextPath = index + 1 < journey.steps.length ? stepPath(role, journey.slug, index + 2) : undefined;
-  const backPath = index > 0 ? stepPath(role, journey.slug, index) : undefined;
+  // Paths keep the current user (/landlord/…, /tenant/…); see stepPath / screenPath
+  const nextPath = index + 1 < journey.steps.length ? stepPath(journey.slug, index + 2) : undefined;
+  const backPath = index > 0 ? stepPath(journey.slug, index) : undefined;
   const flow: Flow = {
     role,
     journey,
@@ -39,9 +40,9 @@ export function FlowProvider({ role, journey, index, children }: { role: RoleKey
     nextPath,
     backPath,
     // At the end of a journey the primary CTA returns to the role's home screen
-    goNext: () => navigate({ pathname: nextPath ?? endPath(role, journey), search: '' }),
+    goNext: () => navigate({ pathname: nextPath ?? endPath(journey), search: '' }),
     goBack: () => (backPath ? navigate(backPath) : navigate(-1)),
-    go: (code) => navigate(screenPath(code, role)),
+    go: (code) => navigate(screenPath(code)),
   };
   return <FlowCtx.Provider value={flow}>{children}</FlowCtx.Provider>;
 }

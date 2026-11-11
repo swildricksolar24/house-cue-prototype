@@ -1,9 +1,10 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { AppRole, RoleNavKey } from '../../components/TabBar/TabBar';
 import { WebSideNav } from '../../components/WebSideNav/WebSideNav';
 import { WebTopBar, type WebTopBarType } from '../../components/WebTopBar/WebTopBar';
-import { currentHome } from '../data/sample';
+import { useCurrentHome } from '../prototype/HomeContext';
+import { HomePicker } from './HomePicker';
 import { homeownerPaths, landlordPaths, tenantPaths, topBarPaths, utilityPaths } from './navPaths';
 import './shells.css';
 
@@ -37,6 +38,8 @@ export function WebShell<R extends AppRole = 'homeowner'>({
   className,
 }: WebShellProps<R>) {
   const navigate = useNavigate();
+  const { home } = useCurrentHome();
+  const [picking, setPicking] = useState(false);
   const r = (role ?? 'homeowner') as AppRole;
   const classes = ['hc-web-shell', `hc-web-shell--${layout}`, `hc-web-shell--${background}`, className].filter(Boolean).join(' ');
   const content = <main className={`hc-web-shell__main hc-web-shell__main--${width}`}>{children}</main>;
@@ -59,13 +62,15 @@ export function WebShell<R extends AppRole = 'homeowner'>({
         active={nav as any}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         paths={rolePaths[r] as any}
-        switcherValue={r === 'homeowner' ? `${currentHome.address}, ${currentHome.city}` : undefined}
-        onSwitcherClick={() => navigate(utilityPaths.homeSwitcher)}
+        switcherValue={r === 'homeowner' ? `${home.address}, ${home.city}` : undefined}
+        // Homeowner: pick from the account's homes; landlord / tenant switchers still open C38
+        onSwitcherClick={() => (r === 'homeowner' ? setPicking(true) : navigate(utilityPaths.homeSwitcher))}
         emergencyTo={utilityPaths.emergency}
         logoTo={rolePaths[r].home}
         className="hc-web-shell__nav"
       />
       {content}
+      {picking && <HomePicker variant="popover" onClose={() => setPicking(false)} />}
     </div>
   );
 }

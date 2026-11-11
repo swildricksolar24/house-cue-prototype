@@ -183,7 +183,6 @@ export default function MyContributions({ variant }: ScreenProps) {
           title="Couldn’t load your contributions"
           body="Check your connection and try again."
           actionLabel="Try again"
-          onAction={() => undefined}
         />
       );
     }

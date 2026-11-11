@@ -77,7 +77,7 @@ export default function ImprovementCostLog(_: ScreenProps) {
           {IMPROVEMENTS.filter((i) => i.mobileMeta).map((i) => (
             <TaskRow key={i.id} title={`${i.name} · ${i.date}`} meta={i.mobileMeta} tag="DIY" />
           ))}
-          <button type="button" className="hc-c66-link">
+          <button type="button" className="hc-c66-link" disabled>
             Export PDF or CSV
           </button>
         </div>

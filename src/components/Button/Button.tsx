@@ -81,8 +81,12 @@ export function Button({
     );
   }
 
+  // A button with nothing to do (no click handler, no link, not submitting a form) shows as disabled, so the prototype
+  // never offers a control that silently does nothing (review decision).
+  const inert = !props.onClick && type === 'button';
+
   return (
-    <button type={type} className={classes} disabled={disabled} aria-busy={loading || undefined} {...props}>
+    <button type={type} className={classes} disabled={disabled || inert} aria-busy={loading || undefined} {...props}>
       {content}
     </button>
   );

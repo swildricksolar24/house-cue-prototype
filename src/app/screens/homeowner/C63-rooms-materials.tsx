@@ -34,7 +34,7 @@ export default function RoomsMaterials(_: ScreenProps) {
     screenState === 'empty' ? (
       <StateBlock title="No rooms yet" body="Add rooms to track materials and finishes." actionLabel="Add a room" onAction={openRoom} />
     ) : screenState === 'error' ? (
-      <StateBlock kind="error" title="Couldn’t load rooms" body="Check your connection and try again. Nothing was lost." actionLabel="Try again" onAction={() => {}} />
+      <StateBlock kind="error" title="Couldn’t load rooms" body="Check your connection and try again. Nothing was lost." actionLabel="Try again" />
     ) : screenState === 'loading' ? (
       <div className="hc-c63-stack">
         <SkeletonCard label="Loading rooms" />
@@ -59,7 +59,7 @@ export default function RoomsMaterials(_: ScreenProps) {
             </Button>
           </div>
           {!state && (
-            <button type="button" className="hc-c63-link">
+            <button type="button" className="hc-c63-link" disabled>
               Record a video walkthrough
             </button>
           )}

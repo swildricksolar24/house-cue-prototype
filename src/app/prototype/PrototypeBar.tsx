@@ -5,6 +5,16 @@ import { branchStates } from './branchStates';
 import { useOptionalFlow } from './flow';
 import { usePrototype, type DeviceSetting } from './PrototypeContext';
 
+function barEnabled(param: string | null) {
+  try {
+    if (param === '1') sessionStorage.setItem('hc-proto-bar', '1');
+    if (param === '0') sessionStorage.removeItem('hc-proto-bar');
+    return sessionStorage.getItem('hc-proto-bar') === '1';
+  } catch {
+    return param === '1';
+  }
+}
+
 /**
  * Floating prototype controls (not part of the HouseCue design): step back/next, theme, device, screen state,
  * a link to the step's Figma frame and the journey map. Press "." to hide/show; ←/→ step through the journey.
@@ -28,8 +38,10 @@ export function PrototypeBar() {
     return () => window.removeEventListener('keydown', onKey);
   }, [flow, navigate]);
 
-  // ?bar=0 removes the bar entirely (clean screenshots and demos)
-  if (params.get('bar') === '0') return null;
+  // Hidden by default (review decision: theme lives on the demo card). Add ?bar=1 to the address to bring it back
+  // for checking device, screen states and the Figma link.
+  // ?bar=1 sticks for this browser tab; ?bar=0 turns it off again.
+  if (!barEnabled(params.get('bar'))) return null;
 
   if (hidden) {
     return (

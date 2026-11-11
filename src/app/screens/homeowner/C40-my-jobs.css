@@ -46,13 +46,14 @@
   flex-direction: column;
   gap: var(--hc-space-5);
 }
+/* Title takes the spare width; the filter chips sit right next to "New request" (review change: no gap after Past) */
 .hc-c40-web__head {
   display: flex;
   align-items: center;
-  gap: var(--hc-space-3);
+  gap: var(--hc-space-2);
 }
-.hc-c40-web__head > h1,
-.hc-c40-web__chips { flex: 1 1 0; min-width: 0; }
+.hc-c40-web__head > h1 { flex: 1 1 0; min-width: 0; }
+.hc-c40-web__chips { flex: 0 0 auto; }
 .hc-c40-web__cols {
   display: flex;
   align-items: flex-start;

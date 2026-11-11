@@ -134,7 +134,6 @@ export default function NotificationCenter(_: ScreenProps) {
           title="Couldn’t load notifications"
           body="Check your connection and try again. Nothing was lost."
           actionLabel="Try again"
-          onAction={() => undefined}
         />
       </>
     );

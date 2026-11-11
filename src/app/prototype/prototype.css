@@ -43,6 +43,102 @@
   margin: 0 auto;
 }
 
+/* Demo account card (DemoTools): slides out from the top-left corner */
+.hc-proto-demo {
+  --demo-card: 288px;
+  position: fixed;
+  left: 0;
+  z-index: 900;
+  display: flex;
+  align-items: flex-start;
+  transform: translateX(calc(-1 * var(--demo-card)));
+  transition: transform 0.25s ease;
+}
+.hc-proto-demo.is-open { transform: translateX(0); }
+.hc-proto-demo--mobile,
+.hc-proto-demo--web { top: var(--hc-space-3); }
+
+.hc-proto-demo__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: var(--demo-card);
+  padding: var(--hc-space-5);
+  border: 1px solid var(--hc-border);
+  border-left: 0;
+  border-radius: 0 var(--hc-radius-lg) var(--hc-radius-lg) 0;
+  background: var(--hc-card);
+  box-shadow: 0 8px 24px var(--hc-fill-10);
+}
+.hc-proto-demo__head { display: flex; align-items: center; gap: var(--hc-space-3); }
+.hc-proto-demo__icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+.hc-proto-demo__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+}
+/* Dark mode switch: moon tile, then the switch lined up with the "Demo" title above */
+.hc-proto-demo .hc-proto-demo__theme {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  gap: var(--hc-space-3);
+}
+/* Sun in light mode, moon in dark mode: the outgoing icon spins away and fades, the incoming one spins in */
+.hc-proto-demo__theme-icon { position: relative; overflow: hidden; }
+.hc-proto-demo__theme-icon svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -10px 0 0 -10px;
+  transition: transform 0.4s ease, opacity 0.3s ease;
+}
+.hc-proto-demo__sun { transform: rotate(0) scale(1); opacity: 1; }
+.hc-proto-demo__moon { transform: rotate(-90deg) scale(0.4); opacity: 0; }
+.hc-proto-demo__theme-icon.is-dark .hc-proto-demo__sun { transform: rotate(90deg) scale(0.4); opacity: 0; }
+.hc-proto-demo__theme-icon.is-dark .hc-proto-demo__moon { transform: rotate(0) scale(1); opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .hc-proto-demo__theme-icon svg { transition: opacity 0.2s ease; transform: none !important; }
+}
+
+/* The Switch stretches its label by default, which pushes the switch to the far edge */
+.hc-proto-demo__theme .hc-switch__label { flex: 0 0 auto; }
+
+/* Edge tab: shows "Demo" when closed, × when open */
+.hc-proto-demo__tab {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-1);
+  padding: var(--hc-space-2) 6px var(--hc-space-2) 6px;
+  border: 1px solid var(--hc-border);
+  border-left: 0;
+  border-radius: 0 var(--hc-radius-md) var(--hc-radius-md) 0;
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+  box-shadow: 0 4px 12px var(--hc-fill-10);
+}
+.hc-proto-demo__tab:hover { background: var(--hc-tint); }
+.hc-proto-demo__tab:focus-visible { outline: 2px solid var(--hc-info); outline-offset: 2px; }
+.hc-proto-demo.is-open .hc-proto-demo__tab { border-left: 1px solid var(--hc-border); margin-left: -1px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-proto-demo { transition: none; }
+}
+@media (max-width: 500px) {
+  /* On a real phone the frame is the screen: sit lower so it doesn't cover the header */
+  .hc-proto-demo--mobile { top: 120px; }
+}
+
 /* Toolbar */
 .hc-proto-bar {
   position: fixed;

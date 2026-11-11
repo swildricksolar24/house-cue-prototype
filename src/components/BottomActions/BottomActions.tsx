@@ -55,7 +55,7 @@ export function BottomActions({
             {secondaryLabel}
           </Link>
         ) : (
-          <button type="button" className="hc-bottom-actions__secondary" onClick={onSecondary}>
+          <button type="button" className="hc-bottom-actions__secondary" onClick={onSecondary} disabled={!onSecondary}>
             {secondaryLabel}
           </button>
         ))}

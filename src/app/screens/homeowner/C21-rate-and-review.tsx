@@ -94,7 +94,7 @@ export default function RateAndReview(_: ScreenProps) {
         <p className="hc-small hc-muted">{PUBLIC_NOTE}</p>
         {chips(MOBILE_TAGS)}
         {textArea}
-        <Button variant="secondary" fullWidth onClick={() => {}}>
+        <Button variant="secondary" fullWidth>
           Add photos
         </Button>
         {preferredRow}
@@ -113,7 +113,7 @@ export default function RateAndReview(_: ScreenProps) {
             <p className="hc-small hc-muted">{PUBLIC_NOTE}</p>
             {chips(WEB_TAGS)}
             {textArea}
-            <Button variant="secondary" className="hc-c21-start" onClick={() => {}}>
+            <Button variant="secondary" className="hc-c21-start">
               Add photos
             </Button>
             {preferredRow}

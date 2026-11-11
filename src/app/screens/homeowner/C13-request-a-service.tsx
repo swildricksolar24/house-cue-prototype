@@ -61,13 +61,13 @@ function HomeownerRequest() {
       <DetailRow
         label="Urgency"
         value={URGENCY[urgency]}
-        actionLabel="Change"
+        actionLabel="Edit"
         onAction={() => setUrgency((i) => (i + 1) % URGENCY.length)}
       />
       <DetailRow
         label="Quote window"
         value={WINDOWS[quoteWindow]}
-        actionLabel="Change"
+        actionLabel="Edit"
         onAction={() => setQuoteWindow((i) => (i + 1) % WINDOWS.length)}
       />
       <CreditsMeter className="hc-c13-credits" size="compact" balance="180 · this search uses 10 credits, only if a quote arrives" />
@@ -183,7 +183,7 @@ function TenantReport() {
     </div>
   );
 
-  const upload = <Upload state="done" fileName="sink-leak.jpg" meta="3 photos · 1 video" onReplace={() => {}} />;
+  const upload = <Upload state="done" fileName="sink-leak.jpg" meta="3 photos · 1 video" />;
 
   if (device === 'mobile') {
     return (

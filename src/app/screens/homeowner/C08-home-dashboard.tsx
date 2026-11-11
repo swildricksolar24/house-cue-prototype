@@ -4,7 +4,8 @@ import { DetailRow } from '../../../components/DetailRow/DetailRow';
 import { ListRow } from '../../../components/ListRow/ListRow';
 import { SetupChecklist } from '../../../components/SetupChecklist/SetupChecklist';
 import { TaskRow } from '../../../components/TaskRow/TaskRow';
-import { agent, currentHome, dueSoon, homeowner, money, setupChecklist, systems } from '../../data/sample';
+import { agent, dueSoon, homeowner, money, setupChecklist, systems } from '../../data/sample';
+import { useCurrentHome } from '../../prototype/HomeContext';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
@@ -17,6 +18,7 @@ const AGENT_TIP = 'Your AC is 14 years old. Want me to get tune-up quotes before
 /** C08 Home dashboard — Figma mobile 211:6284, web 211:6285 (J1 Onboarding step 11) */
 export default function HomeDashboard(_: ScreenProps) {
   const { device } = usePrototype();
+  const { home } = useCurrentHome();
   const flow = useFlow();
   const done = setupChecklist.filter((i) => i.done).length;
 
@@ -67,7 +69,7 @@ export default function HomeDashboard(_: ScreenProps) {
           <div>
             <h1 className="hc-h2">Good morning, {homeowner.firstName}</h1>
             <p className="hc-medium hc-muted">
-              {currentHome.address}, {currentHome.city} · {currentHome.label}
+              {home.address}, {home.city} · {home.label}
             </p>
           </div>
           <Button onClick={() => flow.go('C09')}>Ask the agent</Button>
@@ -97,7 +99,7 @@ export default function HomeDashboard(_: ScreenProps) {
               <DetailRow
                 label="Agent spending this month"
                 value={`${money(agent.spentThisMonth)} of ${money(agent.spendCap)} cap`}
-                actionLabel="Change"
+                actionLabel="Edit"
                 onAction={() => flow.go('C07')}
               />
             </section>

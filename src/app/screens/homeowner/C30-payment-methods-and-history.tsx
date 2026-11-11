@@ -84,7 +84,6 @@ export default function PaymentMethodsAndHistory(_: ScreenProps) {
       title="No payments yet"
       body="Holds, charges and receipts show up here after your first booking."
       actionLabel="Add a card"
-      onAction={() => {}}
     />
   );
   const errorBlock = (
@@ -100,7 +99,7 @@ export default function PaymentMethodsAndHistory(_: ScreenProps) {
   const stateContent = screenState === 'empty' ? emptyBlock : screenState === 'error' ? errorBlock : screenState === 'loading' ? loading : null;
 
   const addButton = (
-    <Button variant="secondary" fullWidth onClick={() => {}}>
+    <Button variant="secondary" fullWidth>
       Add a card or bank account
     </Button>
   );
@@ -150,7 +149,7 @@ export default function PaymentMethodsAndHistory(_: ScreenProps) {
           <section className="hc-c30-card hc-c30-card--history">
             <div className="hc-c30-card__head">
               <h2 className="hc-large-bold">History</h2>
-              <Button variant="secondary" onClick={() => {}}>
+              <Button variant="secondary">
                 Download receipts
               </Button>
             </div>
