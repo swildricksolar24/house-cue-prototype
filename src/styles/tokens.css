@@ -1,0 +1,37 @@
+/* Placeholder design tokens. Replace with the House Cue tokens once they are exported from Figma. */
+:root {
+  --font-family-base: 'Inter', system-ui, sans-serif;
+
+  --color-surface-base: #ffffff;
+  --color-surface-raised: #f5f7fa;
+  --color-text-strong: #111827;
+  --color-text-muted: #4b5563;
+  --color-border: #d1d5db;
+  --color-primary: #1f4e79;
+  --color-primary-hover: #173c5d;
+  --color-on-primary: #ffffff;
+
+  --radius-md: 8px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+}
+
+[data-theme='dark'] {
+  --color-surface-base: #0f172a;
+  --color-surface-raised: #1e293b;
+  --color-text-strong: #f1f5f9;
+  --color-text-muted: #94a3b8;
+  --color-border: #334155;
+  --color-primary: #60a5fa;
+  --color-primary-hover: #93c5fd;
+  --color-on-primary: #0f172a;
+}
+
+body {
+  margin: 0;
+  background: var(--color-surface-base);
+  color: var(--color-text-strong);
+  font-family: var(--font-family-base);
+}
