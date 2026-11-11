@@ -120,6 +120,47 @@
   gap: 16px;
   margin-top: 16px;
 }
+.hc-proto-map__users {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.hc-proto-map__user {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+/* Rollover: stronger outline, soft lift; also when a button inside has keyboard focus */
+.hc-proto-map__user:hover,
+.hc-proto-map__user:focus-within {
+  border-color: var(--hc-border-strong);
+  box-shadow: 0 6px 20px var(--hc-fill-10);
+  transform: translateY(-2px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc-proto-map__user { transition: none; }
+  .hc-proto-map__user:hover,
+  .hc-proto-map__user:focus-within { transform: none; }
+}
+.hc-proto-map__user-head { display: flex; align-items: center; gap: 12px; }
+.hc-proto-map__user-head h3 { flex: 1; }
+.hc-proto-map__user-icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+.hc-proto-map__user-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: auto; padding-top: 8px; }
+
 .hc-proto-map__card {
   padding: 20px;
   border: 1px solid var(--hc-border);

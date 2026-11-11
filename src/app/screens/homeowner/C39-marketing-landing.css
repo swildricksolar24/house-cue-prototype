@@ -33,6 +33,8 @@
 }
 .hc-c39-hero {
   display: flex;
+  /* Image on the left, "Your home, handled." on the right (review change; the text stays first for screen readers) */
+  flex-direction: row-reverse;
   align-items: flex-start;
   gap: var(--hc-space-9);
 }
@@ -45,6 +47,44 @@
 }
 .hc-c39-hero__image { flex: 1 1 0; min-width: 0; }
 
+/* Hero: Tucson foothills photo with the C08 dashboard on a phone */
+.hc-c39-photo {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-tint);
+}
+.hc-c39-photo__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hc-c39-photo__phone {
+  position: absolute;
+  top: 7%;
+  left: 50%;
+  height: 93%;
+  aspect-ratio: 390 / 844;
+  transform: translateX(-50%);
+  overflow: hidden;
+  /* Device bezel: 2px of mesquite around the screen, open at the bottom so the phone rises out of the frame */
+  padding: 6px 6px 0;
+  border-radius: 34px 34px 0 0;
+  background: var(--hc-brand-mesquite-900);
+  box-shadow: 0 16px 48px var(--hc-scrim);
+}
+.hc-c39-photo__phone img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 28px 28px 0 0;
+}
+.hc-c39-photo--compact .hc-c39-photo__phone { padding: 4px 4px 0; border-radius: 20px 20px 0 0; }
+.hc-c39-photo--compact .hc-c39-photo__phone img { border-radius: 16px 16px 0 0; }
+
 .hc-c39-cols {
   display: flex;
   align-items: flex-start;
@@ -52,3 +92,5 @@
 }
 .hc-c39-cols > * { flex: 1 1 0; min-width: 0; }
 .hc-c39-cols--tight { gap: var(--hc-space-4); }
+/* Cards in the row match the tallest one (How it works) */
+.hc-c39-cols--equal { align-items: stretch; }

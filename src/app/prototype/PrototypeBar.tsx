@@ -28,6 +28,9 @@ export function PrototypeBar() {
     return () => window.removeEventListener('keydown', onKey);
   }, [flow, navigate]);
 
+  // ?bar=0 removes the bar entirely (clean screenshots and demos)
+  if (params.get('bar') === '0') return null;
+
   if (hidden) {
     return (
       <button className="hc-proto-bar__reveal" onClick={() => setHidden(false)} aria-label="Show prototype controls">

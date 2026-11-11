@@ -22,6 +22,8 @@ export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'childre
   fullWidth?: boolean;
   /** Render as a router link (prototype navigation) */
   to?: string;
+  /** Render as an external link (opens in a new tab) */
+  href?: string;
 };
 
 /** HC/Button (Figma 176:2811) — Variant 5 × Size 3 × State 6 × Icon 4. Hover, pressed and focus come from CSS. */
@@ -35,6 +37,7 @@ export function Button({
   loading = false,
   fullWidth = false,
   to,
+  href,
   className,
   disabled,
   type = 'button',
@@ -61,6 +64,14 @@ export function Button({
       {loading && <span className="hc-button__spinner" aria-hidden />}
     </>
   );
+
+  if (href && !disabled) {
+    return (
+      <a href={href} target="_blank" rel="noreferrer" className={classes} aria-label={props['aria-label']}>
+        {content}
+      </a>
+    );
+  }
 
   if (to && !disabled) {
     return (

@@ -1,7 +1,6 @@
 import { Banner } from '../../../components/Banner/Banner';
 import { Button } from '../../../components/Button/Button';
 import type { IconName } from '../../../components/Icon/Icon';
-import { ImagePlaceholder } from '../../../components/ImagePlaceholder/ImagePlaceholder';
 import { ListRow } from '../../../components/ListRow/ListRow';
 import { Logo } from '../../../components/Logo/Logo';
 import { useFlow } from '../../prototype/flow';
@@ -9,9 +8,26 @@ import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
+import heroScreen from './assets/c39-hero-c08-screen.png';
+import heroPhoto from './assets/c39-hero-tucson-foothills.jpg';
 import './C39-marketing-landing.css';
 
-const HERO = 'Hero: phone showing the HouseCue home dashboard over a Tucson home';
+/**
+ * Hero (Figma placeholder: "phone showing the HouseCue home dashboard over a Tucson home").
+ * Photo: homes in the Tucson foothills by JC Cervantes on Unsplash (free licence),
+ * https://unsplash.com/photos/a-house-on-a-hill-with-a-view-of-the-city-g7MszM0Pff4
+ * Phone screen: screenshot of this prototype's C08 Home dashboard (mobile, light).
+ */
+function HeroImage({ height, className }: { height: number; className?: string }) {
+  return (
+    <div className={['hc-c39-photo', className].filter(Boolean).join(' ')} style={{ height }}>
+      <img className="hc-c39-photo__bg" src={heroPhoto} alt="" />
+      <div className="hc-c39-photo__phone">
+        <img src={heroScreen} alt="The HouseCue home dashboard on a phone, over homes in the Tucson foothills" />
+      </div>
+    </div>
+  );
+}
 const LEDE = 'HouseCue keeps your home’s record, plans its upkeep and gets trusted pros booked, always with your OK.';
 
 type Row = { title: string; description?: string; icon: IconName };
@@ -89,7 +105,7 @@ export default function MarketingLanding(_: ScreenProps) {
     return (
       <MobileShell className="hc-c39-mobile">
         <Logo />
-        <ImagePlaceholder label={HERO} height={260} />
+        <HeroImage height={260} className="hc-c39-photo--compact" />
         <p className="hc-medium-semibold hc-c39-eyebrow">Now booking in Phoenix and Tucson</p>
         <h1 className="hc-h2">Your home, handled.</h1>
         <p className="hc-large hc-muted">{LEDE}</p>
@@ -129,10 +145,10 @@ export default function MarketingLanding(_: ScreenProps) {
           </div>
           <p className="hc-small hc-muted">Free to start. Members $4.99/mo or $49/yr per home.</p>
         </div>
-        <ImagePlaceholder label={HERO} height={440} className="hc-c39-hero__image" />
+        <HeroImage height={440} className="hc-c39-hero__image" />
       </div>
       <h2 className="hc-h2">How it works</h2>
-      <div className="hc-c39-cols">
+      <div className="hc-c39-cols hc-c39-cols--equal">
         {stepsWeb.map((s) => (
           <section key={s.title} className="hc-c39-card">
             <h3 className="hc-large-bold">{s.title}</h3>
