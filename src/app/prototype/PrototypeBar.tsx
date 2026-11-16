@@ -75,7 +75,7 @@ export function PrototypeBar() {
 
   return (
     <div className="hc-proto-bar" role="toolbar" aria-label="Prototype controls">
-      <Link className="hc-proto-bar__btn" to="/" title="Journey map">
+      <Link className="hc-proto-bar__btn" to="/journeys" title="Journey map (who uses HouseCue)">
         ☰
       </Link>
       {flow && (

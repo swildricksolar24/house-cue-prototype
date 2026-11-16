@@ -142,3 +142,31 @@
 }
 .hc-c39-menu__links > button:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
 .hc-c39-menu__actions { display: flex; flex-direction: column; gap: var(--hc-space-3); margin-top: auto; }
+
+/* "Who uses HouseCue" (review change): six cards, 3 x 2 on web, stacked on mobile; button or note pinned to the bottom */
+.hc-c39-users { display: flex; flex-direction: column; gap: var(--hc-space-5); }
+.hc-c39-users__head { display: flex; flex-direction: column; gap: var(--hc-space-2); }
+.hc-c39-users__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--hc-space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hc-c39-mobile .hc-c39-users__grid { grid-template-columns: 1fr; gap: var(--hc-space-3); }
+.hc-c39-user__foot { margin-top: auto; padding-top: var(--hc-space-2); }
+
+/* Who uses HouseCue: every card but Homeowners is disabled (review change) */
+.hc-c39-user--disabled { opacity: 0.5; }
+
+
+/* Who uses HouseCue: the only hover is a darker brown background on active cards (review change). Dark mode: halfway
+   between the card and page browns; light mode: the tan tint. Disabled cards don't react. */
+.hc-c39-user { transition: background-color 0.5s ease; }
+/* The Go button's own hover tint fades at the same pace as the card (this section only) */
+.hc-c39-user .hc-button { transition: background-color 0.5s ease, border-color 0.5s ease; }
+.hc-c39-user:not(.hc-c39-user--disabled):hover { background: var(--hc-tint); }
+[data-theme='dark'] .hc-c39-user:not(.hc-c39-user--disabled):hover {
+  background: color-mix(in srgb, var(--hc-card) 55%, var(--hc-page));
+}

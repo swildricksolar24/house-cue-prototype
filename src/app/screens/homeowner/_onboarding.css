@@ -81,6 +81,26 @@
   background: var(--hc-card);
   color: var(--hc-text);
 }
+/* Optional × in the top-right corner (Dialog showClose) */
+.hc-onb-dialog__close {
+  position: absolute;
+  top: var(--hc-space-3);
+  right: var(--hc-space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: transparent;
+  color: var(--hc-text);
+  cursor: pointer;
+}
+.hc-onb-dialog__close:hover { background: var(--hc-fill-10); }
+.hc-onb-dialog__close:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-onb-dialog__title--with-close { padding-right: 40px; }
 .hc-onb-dialog__actions {
   display: flex;
   flex-direction: column;

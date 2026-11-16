@@ -11,6 +11,7 @@ import './_get-app.css';
  * - Web: a "Get the HouseCue app" pop-up with a QR code to scan, App Store / Google Play buttons and "Text me a link".
  * - Mobile: the live site would send the visitor straight to the right store (App Store on iPhone, Google Play on
  *   Android); the prototype says so in a small note.
+ * Both have a × close button in the top-right corner (review change), as well as Close / OK at the bottom.
  * Prototype placeholders: the QR code is a fake pattern, the store buttons go nowhere and no text is sent.
  * Not a screen: the registry only picks up files named <CODE>-<slug>.tsx.
  */
@@ -23,6 +24,7 @@ export function GetAppDialog({ mobile, onClose }: { mobile: boolean; onClose: ()
     return (
       <Dialog
         title="Get the HouseCue app"
+        showClose
         onClose={onClose}
         actions={
           <Button size="large" fullWidth onClick={onClose}>
@@ -41,6 +43,7 @@ export function GetAppDialog({ mobile, onClose }: { mobile: boolean; onClose: ()
   return (
     <Dialog
       title="Get the HouseCue app"
+        showClose
       width={480}
       onClose={onClose}
       actions={

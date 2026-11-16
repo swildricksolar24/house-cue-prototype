@@ -1,18 +1,27 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { HomeProvider } from './prototype/HomeContext';
 import { JourneyMap } from './prototype/JourneyMap';
 import { PrototypeBar } from './prototype/PrototypeBar';
 import { PrototypeProvider } from './prototype/PrototypeContext';
 import { StepPage } from './prototype/StepPage';
-import { userKeys } from './prototype/journeys';
+import { stepPath, userKeys } from './prototype/journeys';
+
+/** / → the landing page, keeping the query (?bar=1, ?theme=, ?device=) */
+function ToLanding() {
+  const { search } = useLocation();
+  return <Navigate to={{ pathname: stepPath('onboarding', 1, 'homeowner'), search }} replace />;
+}
 
 export function App() {
   return (
     <PrototypeProvider>
       <HomeProvider>
       <Routes>
+        {/* Review change: the site starts on the landing page (C39, homeowner onboarding step 1). The six-users page
+            ("Who uses HouseCue") moved to /journeys, reached from the prototype bar's ☰ button. */}
+        <Route path="/" element={<ToLanding />} />
         <Route
-          path="/"
+          path="/journeys"
           element={
             <>
               <JourneyMap />

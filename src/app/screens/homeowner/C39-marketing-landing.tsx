@@ -115,13 +115,92 @@ export default function MarketingLanding(_: ScreenProps) {
 
   // Review change: "Are you a pro?" section near the bottom of the landing page, linking to the For Pros page
   // (the same page as the top bar's "For Pros")
+  // Review change: "Who uses HouseCue" (the six users from the prototype's old home page) as a section after the hero.
+  // Customer cards link to their way in; tenants join by invite; support and admin are HouseCue staff (no button).
+  // Review change: only the Homeowners card is active; the other five are shown disabled (dimmed, not clickable).
+  const users: { icon: IconName; name: string; body: string; action?: { label: string; onClick: () => void }; note?: string; enabled?: boolean }[] = [
+    {
+      icon: 'home',
+      name: 'Homeowners',
+      body: 'Keep your home’s record and a maintenance plan, and let your agent get pros booked, always with your OK.',
+      action: { label: 'Go', onClick: flow.goNext },
+      enabled: true,
+    },
+    {
+      icon: 'dashboard',
+      name: 'Landlords',
+      body: 'Keep every rental maintained. Tenants report issues and you approve the work, across one home or a whole portfolio.',
+      action: { label: 'Go', onClick: landlordJourney ? flow.goNext : startLandlord },
+    },
+    {
+      icon: 'users',
+      name: 'Tenants',
+      body: 'Report an issue, choose when a pro can come in, and confirm when the job’s done.',
+      note: 'Your landlord sends you an invite.',
+    },
+    {
+      icon: 'service',
+      name: 'Pros',
+      body: 'Get job requests from homeowners’ agents, send quotes and get paid when the work is signed off.',
+      action: { label: 'Go', onClick: () => flow.go('C39', '?view=for-pros') },
+    },
+    {
+      icon: 'help',
+      name: 'Support team',
+      body: 'HouseCue’s support team helps homeowners, tenants and pros by chat, email and call-back.',
+      note: 'HouseCue staff',
+    },
+    {
+      icon: 'shield',
+      name: 'Admins',
+      body: 'Run the platform: approving pros, payments, disputes and the safety controls on every agent.',
+      note: 'HouseCue staff',
+    },
+  ];
+  const usersSection = (
+    <section className="hc-c39-users" aria-labelledby="hc-c39-users-title">
+      <div className="hc-c39-users__head">
+        <h2 id="hc-c39-users-title" className={device === 'mobile' ? 'hc-h4' : 'hc-h2'}>
+          Who uses HouseCue
+        </h2>
+        <p className="hc-medium hc-muted">One home record, shared with the people who look after it.</p>
+      </div>
+      <ul className="hc-c39-users__grid">
+        {users.map((u) => (
+          <li
+            key={u.name}
+            // Review change: every card button reads just "Go" (aria-label names where it goes)
+            className={`hc-c39-card hc-c39-user${u.enabled ? '' : ' hc-c39-user--disabled'}`}
+            aria-disabled={u.enabled ? undefined : true}
+          >
+            <span className="hc-c39-points__icon">
+              <Icon name={u.icon} size={24} />
+            </span>
+            <h3 className="hc-large-bold">{u.name}</h3>
+            <p className="hc-medium hc-muted">{u.body}</p>
+            <div className="hc-c39-user__foot">
+              {u.action ? (
+                <Button variant="secondary" size="small" onClick={u.action.onClick} disabled={!u.enabled} aria-label={`Go: ${u.name}`}>
+                  {u.action.label}
+                </Button>
+              ) : (
+                <p className="hc-small hc-muted">{u.note}</p>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+
   const proSection = (
     <section className="hc-c39-card hc-c39-pro">
       <div className="hc-c39-pro__text">
         <h2 className="hc-h4">Are you a pro?</h2>
         <p className="hc-medium hc-muted">Get jobs from homeowners in Phoenix and Tucson, sent to you by their HouseCue agent.</p>
       </div>
-      <Button variant="secondary" fullWidth={device === 'mobile'} onClick={() => flow.go('C39', '?view=for-pros')}>
+      {/* Review change: disabled, like the Pros card in Who uses HouseCue */}
+      <Button variant="secondary" fullWidth={device === 'mobile'} disabled>
         See HouseCue for Pros
       </Button>
     </section>
@@ -246,6 +325,7 @@ export default function MarketingLanding(_: ScreenProps) {
           I have an account
         </button>
         {landlordLink}
+        {usersSection}
         <h2 className="hc-h4">How it works</h2>
         {rows(stepsMobile)}
         <h2 className="hc-h4">Plans</h2>
@@ -287,6 +367,7 @@ export default function MarketingLanding(_: ScreenProps) {
         </div>
         <HeroImage height={560} className="hc-c39-hero__image" />
       </div>
+      {usersSection}
       <h2 className="hc-h2">How it works</h2>
       <div className="hc-c39-cols hc-c39-cols--equal">
         {stepsWeb.map((s) => (

@@ -47,18 +47,28 @@ export function Dialog({
   actions,
   onClose,
   width = 342,
+  showClose = false,
 }: {
   title: string;
   children?: ReactNode;
   actions: ReactNode;
   onClose?: () => void;
   width?: number;
+  /** Show a × close button in the top-right corner (needs onClose) */
+  showClose?: boolean;
 }) {
   return (
     <div className="hc-onb-dialog" onKeyDown={(e) => e.key === 'Escape' && onClose?.()}>
       <div className="hc-onb-dialog__scrim" onClick={onClose} aria-hidden />
       <div className="hc-onb-dialog__panel" role="dialog" aria-modal="true" aria-label={title} style={{ width }}>
-        <h2 className="hc-h4">{title}</h2>
+        {showClose && onClose && (
+          <button type="button" className="hc-onb-dialog__close" aria-label="Close" onClick={onClose} autoFocus>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        )}
+        <h2 className={`hc-h4${showClose && onClose ? ' hc-onb-dialog__title--with-close' : ''}`}>{title}</h2>
         {children}
         <div className="hc-onb-dialog__actions">{actions}</div>
       </div>

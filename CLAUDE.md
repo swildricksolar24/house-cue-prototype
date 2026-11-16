@@ -14,7 +14,7 @@ House Cue is a clickable design prototype of HouseCue.ai, built from the Figma f
 ## Commands
 
 ```bash
-npm run dev                # prototype app on http://localhost:5174 (journey map at /)
+npm run dev                # prototype app on http://localhost:5174 (opens the landing page; journey map at /journeys)
 npm run build              # type check + production build of the app to dist/
 npm run storybook          # Storybook on http://localhost:6008
 npm run build-storybook    # static build to storybook-static/
@@ -27,7 +27,7 @@ Ports 5174 / 6008 are chosen so House Cue can run next to hub360 (5173 / 6007). 
 
 - `src/styles/tokens.css` — HouseCue Brand v2 tokens as `--hc-*` CSS variables (names match the Figma variables' code syntax), light + dark (`data-theme="dark"` on `<html>`), and the `.hc-*` text style classes. Values marked `[P]` are proposed in the Brand v2 palette note, not bound variables.
 - `src/components/<Name>/` — one HC/* component each: `Name.tsx`, `Name.css`, `Name.stories.tsx`. Cheat sheet: `docs/components.md`.
-- `src/app/prototype/` — prototype framework: journeys (`journeys.homeowner.json`, from the J1 page), routing per step (`/<user>/<journey>/<step>`, user = homeowner, landlord or tenant; the landlord and tenant journeys live at `/landlord/portfolio/<n>` and `/tenant/home/<n>`, shared screens keep the current user in the URL, old `/homeowner/landlord-portfolio/…` links redirect), `PrototypeContext` (theme, device, screen state from `?theme= ?device= ?state=`), `flow.tsx` (`useFlow()`: goNext / goBack / go(code, search?), e.g. go('C02', '?state=signin')), `PrototypeBar` (floating controls), `branchStates.ts` (extra states per screen for the bar's menu), `JourneyMap` (home page).
+- `src/app/prototype/` — prototype framework: journeys (`journeys.homeowner.json`, from the J1 page), routing per step (`/<user>/<journey>/<step>`, user = homeowner, landlord or tenant; the landlord and tenant journeys live at `/landlord/portfolio/<n>` and `/tenant/home/<n>`, shared screens keep the current user in the URL, old `/homeowner/landlord-portfolio/…` links redirect), `PrototypeContext` (theme, device, screen state from `?theme= ?device= ?state=`), `flow.tsx` (`useFlow()`: goNext / goBack / go(code, search?), e.g. go('C02', '?state=signin')), `PrototypeBar` (floating controls), `branchStates.ts` (extra states per screen for the bar's menu), `JourneyMap` (the "Who uses HouseCue" page at /journeys, from the bar's ☰ button; / redirects to the landing page).
 - `src/app/shells/` — `MobileShell` (status bar, header/app bar, body, tab bar or bottom actions) and `WebShell` (side nav or top bar + content); `navPaths.ts` maps nav items to journey screens.
 - `src/app/screens/homeowner/<CODE>-<slug>.tsx` — one screen per Screen Inventory code, found by file name (no registry edits). Rules: `docs/screens.md`.
 - `src/app/data/sample.ts` — shared placeholder data (invented names, Phoenix/Tucson addresses).
