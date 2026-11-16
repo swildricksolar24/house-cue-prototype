@@ -51,3 +51,31 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* Address suggestions under the input (shorter onboarding): picking one confirms the address */
+.hc-c04-suggest {
+  margin: 0;
+  padding: var(--hc-space-1) 0;
+  list-style: none;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  box-shadow: 0 8px 24px var(--hc-scrim);
+}
+.hc-c04-suggest button {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: 10px var(--hc-space-4);
+  border: 0;
+  background: none;
+  color: var(--hc-text);
+  font: 400 14px/20px var(--hc-font);
+  text-align: left;
+  cursor: pointer;
+}
+.hc-c04-suggest button svg { flex-shrink: 0; color: var(--hc-text-muted); }
+.hc-c04-suggest button strong { font-weight: 600; }
+.hc-c04-suggest button:hover { background: var(--hc-tint); }
+.hc-c04-suggest button:focus-visible { outline: none; box-shadow: inset var(--hc-focus-ring); }

@@ -18,34 +18,10 @@
         "web": "215:14016"
       },
       {
-        "code": "C03",
-        "label": "Language choice",
-        "mobile": "215:11673",
-        "web": "215:14096"
-      },
-      {
-        "code": "C41",
-        "label": "Consents",
-        "mobile": "215:11846",
-        "web": "215:14269"
-      },
-      {
-        "code": "X08",
-        "label": "Legal pages",
-        "mobile": "215:11885",
-        "web": "215:14402"
-      },
-      {
         "code": "C04",
         "label": "Home profile setup",
         "mobile": "215:11979",
         "web": "215:14548"
-      },
-      {
-        "code": "C06",
-        "label": "Agent intro and permissions",
-        "mobile": "215:12102",
-        "web": "215:14669"
       },
       {
         "code": "X05",
@@ -54,10 +30,10 @@
         "web": "215:14716"
       },
       {
-        "code": "C07",
-        "label": "Agent spend and approval rules",
-        "mobile": "215:12232",
-        "web": "215:14876"
+        "code": "C06",
+        "label": "Agent intro and permissions",
+        "mobile": "215:12102",
+        "web": "215:14669"
       },
       {
         "code": "C08",
@@ -582,6 +558,30 @@
         "label": "Suspended or deleted account",
         "mobile": "218:22453",
         "web": "218:23556"
+      },
+      {
+        "code": "C07",
+        "label": "Agent spend and approval rules",
+        "mobile": "215:12232",
+        "web": "215:14876"
+      },
+      {
+        "code": "C03",
+        "label": "Language choice",
+        "mobile": "215:11673",
+        "web": "215:14096"
+      },
+      {
+        "code": "C41",
+        "label": "Consents",
+        "mobile": "215:11846",
+        "web": "215:14269"
+      },
+      {
+        "code": "X08",
+        "label": "Legal pages",
+        "mobile": "215:11885",
+        "web": "215:14402"
       }
     ]
   },

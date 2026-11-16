@@ -11,15 +11,17 @@ import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
-import { WebCard, WebStepHeader } from './_onboarding';
+import { WebCard } from './_onboarding';
+import { SpendLimit } from './_spend-limit';
 import './C07-agent-spend-rules.css';
-
-const PRESETS = [0, 150, 300, 500];
-const STEP = 50;
 
 /**
  * C07 Agent spend and approval rules — Figma mobile 215:12232 (+ "Scrolled" frame 101:7276), web 215:14876
  * (J1 Onboarding step 10). Mobile frame starts at $0 / auto-book off; web frame at $300 / auto-book on.
+ *
+ * Review change (shorter onboarding, Option A): no longer an onboarding step. The limit and auto-book moved into C06;
+ * this full set of rules now lives under Settings & account (reached from Home and Agent chat "spend rules" links),
+ * so it has no step counter and Save goes back.
  */
 export default function AgentSpendRules(_: ScreenProps) {
   const { device } = usePrototype();
@@ -32,37 +34,6 @@ export default function AgentSpendRules(_: ScreenProps) {
   const [negotiate, setNegotiate] = useState(true);
   const [autoAccept, setAutoAccept] = useState(false);
   const [onCancel, setOnCancel] = useState<'ask' | 'rebook'>('ask');
-
-  const amountStepper = (
-    <div className="hc-c07-amount" role="group" aria-label="Spending limit">
-      <button type="button" className="hc-c07-step" aria-label="Lower limit" onClick={() => setLimit((v) => Math.max(0, v - STEP))}>
-        −
-      </button>
-      <output className="hc-h1" aria-live="polite">
-        {money(limit)}
-      </output>
-      <button type="button" className="hc-c07-step" aria-label="Raise limit" onClick={() => setLimit((v) => v + STEP)}>
-        +
-      </button>
-    </div>
-  );
-
-  const chips = (
-    <div className="hc-onb-chips" role="radiogroup" aria-label="Quick amounts">
-      {PRESETS.map((p) => (
-        <button
-          key={p}
-          type="button"
-          role="radio"
-          aria-checked={limit === p}
-          className={`hc-onb-chip${limit === p ? ' hc-onb-chip--selected' : ''}`}
-          onClick={() => setLimit(p)}
-        >
-          {money(p)}
-        </button>
-      ))}
-    </div>
-  );
 
   const rules = (
     <>
@@ -121,26 +92,15 @@ export default function AgentSpendRules(_: ScreenProps) {
     return (
       <MobileShell
         className="hc-onb-mobile"
-        header={{ title: 'Spending', step: '6 of 6', progress: 1 }}
-        bottom={
-          <BottomActions
-            primaryLabel="Finish setup"
-            onPrimary={flow.goNext}
-            secondaryLabel="Keep $0 and finish"
-            onSecondary={() => {
-              setLimit(0);
-              flow.goNext();
-            }}
-          />
-        }
+        header={{ title: 'Spending' }}
+        bottom={<BottomActions primaryLabel="Save" onPrimary={flow.goBack} />}
       >
         <h1 className="hc-h3">{title}</h1>
-        {amountStepper}
+        <SpendLimit value={limit} onChange={setLimit} />
         <p className="hc-medium hc-muted">
           At $0, every booking waits for your approval. The limit covers your total out-of-pocket: job price plus surcharges, trip
           and estimate fees.
         </p>
-        {chips}
         {rules}
         {vendorCancels}
       </MobileShell>
@@ -150,10 +110,8 @@ export default function AgentSpendRules(_: ScreenProps) {
   return (
     <WebShell layout="onboarding" className="hc-onb-web">
       <WebCard>
-        <WebStepHeader step={6} />
         <h1 className="hc-h2">{title}</h1>
-        {amountStepper}
-        {chips}
+        <SpendLimit value={limit} onChange={setLimit} />
         {rules}
         <Banner>
           Your limit is a ceiling on total out-of-pocket, including surcharges, trip and estimate fees. Category preferences can only
@@ -161,8 +119,8 @@ export default function AgentSpendRules(_: ScreenProps) {
         </Banner>
         {vendorCancels}
         <div className="hc-onb-actions">
-          <Button fullWidth onClick={flow.goNext}>
-            Finish setup
+          <Button fullWidth onClick={flow.goBack}>
+            Save
           </Button>
         </div>
       </WebCard>

@@ -9,7 +9,9 @@ const s = (value: string, label: string): Branch => ({ param: 'state', value, la
 const v = (value: string, label: string): Branch => ({ param: 'view', value, label });
 
 export const branchStates: Record<string, Branch[]> = {
-  C04: [s('error', 'Address not found')],
+  C02: [s('signin', 'Sign in (returning user)'), s('no-account', 'Sign in: no account with that email'), s('email-taken', 'Sign up: email already registered')],
+  C04: [s('error', 'Address not found'), s('located', 'Address from my location')],
+  X05: [s('camera', 'Camera pre-prompt (mobile)')],
   C09: [s('over-cap', 'Over spend cap'), s('vendor-cancelled', 'Vendor cancelled'), s('tenant-report', 'Tenant report (landlord)'), s('rental-emergency', 'Rental emergency (landlord)')],
   C14: [s('negotiating', 'Negotiation'), s('oon', 'Out-of-network quote'), s('revised', 'Disclosure + quote revised'), s('declined', 'Quote declined by vendor')],
   C15: [s('pending', 'Pending verification')],
@@ -20,6 +22,7 @@ export const branchStates: Record<string, Branch[]> = {
   C28: [s('portfolio', 'Second rental → Portfolio plan')],
   C38: [v('portfolio', 'Roles and portfolio')],
   C40: [s('tenant', 'Tenant view')],
+  C39: [v('how-it-works', 'How it works page'), v('for-pros', 'For Pros page')],
   C41: [s('error', 'Consent declined (blocked)')],
   C48: [s('no-quotes', 'No quotes')],
   C50: [s('free', 'Free user')],

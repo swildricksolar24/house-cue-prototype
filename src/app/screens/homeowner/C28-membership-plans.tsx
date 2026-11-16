@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Banner } from '../../../components/Banner/Banner';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
 import { Button } from '../../../components/Button/Button';
@@ -7,10 +7,12 @@ import { MetricRow } from '../../../components/MetricRow/MetricRow';
 import { OptionCard } from '../../../components/OptionCard/OptionCard';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
 import { useFlow } from '../../prototype/flow';
+import { stepPath } from '../../prototype/journeys';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
+import { PublicCard, PublicPage } from './_public-page';
 import './C28-membership-plans.css';
 
 type Billing = 'monthly' | 'annual';
@@ -51,11 +53,16 @@ const BANNER_BODY =
 /**
  * C28 Membership plans — Figma mobile 218:19286, web 218:20393 (J1 Membership & credits step 1).
  * Branch "Second rental → Portfolio plan" (mobile 269:24003, web 269:24267) renders with ?state=portfolio.
+ *
+ * Review change: the signed-out top bar's "Membership" opens this page with ?visitor=1, on the shared layout of the four
+ * top-bar pages (Back, title, lede, stacked cards, footer): no account details (no home address, no credits banner),
+ * and the plan buttons start sign-up (C02).
  */
 export default function MembershipPlans(_: ScreenProps) {
   const { device } = usePrototype();
   const flow = useFlow();
   const [params] = useSearchParams();
+  const navigate = useNavigate();
   const [billing, setBilling] = useState<Billing>('monthly');
   const [choice, setChoice] = useState<PortfolioChoice>('portfolio');
 
@@ -87,6 +94,57 @@ export default function MembershipPlans(_: ScreenProps) {
   );
 
   const banner = <Banner title="You’ve used this month’s free credits">{BANNER_BODY}</Banner>;
+
+  if (params.get('visitor') === '1') {
+    const signUp = () => flow.go('C02');
+    return (
+      <PublicPage title="Membership" lede="Membership is per home. Start free and upgrade any time.">
+        <PublicCard>
+          <h2 className="hc-large-bold">Free</h2>
+          <p className="hc-h3">$0</p>
+          <p className="hc-small hc-muted">Always free</p>
+          {FREE_FEATURES.map((f) => (
+            <p key={f} className="hc-small">
+              {f}
+            </p>
+          ))}
+          <Button variant="secondary" fullWidth onClick={signUp}>
+            Get started free
+          </Button>
+        </PublicCard>
+        <PublicCard featured>
+          {memberHead}
+          {WEB_FEATURES.map((f) => (
+            <p key={f} className="hc-small">
+              {f}
+            </p>
+          ))}
+          {chips()}
+          <Button fullWidth onClick={signUp}>
+            Get started with {billing === 'monthly' ? 'Monthly · $4.99' : 'Annual · $49'}
+          </Button>
+        </PublicCard>
+        {/* Review change: landlords' way in from the signed-out Membership page (starts the landlord sign-up) */}
+        <PublicCard>
+          <h2 className="hc-large-bold">Own rental properties?</h2>
+          <p className="hc-small hc-muted">
+            Add one or several; tenants report issues to you. Two or more rentals use the Portfolio plan: $9.99 a month + $2
+            per door.
+          </p>
+          <Button variant="secondary" fullWidth onClick={() => navigate(stepPath('landlord-portfolio', 2))}>
+            Start as a landlord
+          </Button>
+        </PublicCard>
+        <PublicCard>
+          <h2 className="hc-large-bold">How you pay</h2>
+          <p className="hc-small hc-muted">
+            On the web you pay by card. In the app you can use Apple or Google, or open web checkout. Membership starts right away.
+          </p>
+          <p className="hc-small hc-muted">Cancel anytime in a few taps. You keep member features until the end of the period.</p>
+        </PublicCard>
+      </PublicPage>
+    );
+  }
 
   if (device === 'mobile') {
     return (

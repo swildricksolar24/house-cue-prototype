@@ -77,3 +77,7 @@
   min-width: 0 !important;
   position: static !important; /* side panels were sticky beside the main column */
 }
+
+/* Always reserve the scrollbar's space, so centred content and the top bar don't shift by a few pixels between short
+   pages (no scrollbar) and long ones (review change: one width on every top-bar page) */
+html { scrollbar-gutter: stable; }

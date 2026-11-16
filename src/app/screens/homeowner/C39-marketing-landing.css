@@ -14,16 +14,6 @@
   background: var(--hc-card);
 }
 
-.hc-c39-footer button {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-.hc-c39-footer button:hover { text-decoration: underline; }
-
 /* Web: 64 top / 40 bottom, 40 gap. Review change: content sits in a centred 1024px column (Figma: full 1440 with
    80 side margins); the top bar stays full width. Side padding keeps a gutter on narrower windows. */
 .hc-c39-web .hc-web-shell__main {
@@ -92,3 +82,63 @@
   cursor: pointer;
 }
 .hc-c39-mobile .hc-c39-text-btn { align-self: center; font: 600 14px/20px var(--hc-font); }
+
+/* "Are you a pro?" section near the bottom (review change): text left, button right on web; stacked on mobile */
+.hc-c39-pro { flex-direction: row; align-items: center; justify-content: space-between; gap: var(--hc-space-5); }
+.hc-c39-pro__text { display: flex; flex-direction: column; gap: var(--hc-space-1); min-width: 0; }
+.hc-c39-pro .hc-button { flex-shrink: 0; }
+.hc-c39-mobile .hc-c39-pro { flex-direction: column; align-items: stretch; }
+
+/* Review change: the top bar's content lines up with the page body (the centred 1024px column) instead of running
+   to 40px from the window edges; the bar's background still spans the full width */
+.hc-c39-web .hc-web-top-bar {
+  padding-left: max(var(--hc-space-5), calc((100% - 1024px) / 2));
+  padding-right: max(var(--hc-space-5), calc((100% - 1024px) / 2));
+}
+
+/* Mobile header (review change): logo + ☰ menu with the top bar's links, since mobile has no top bar */
+.hc-c39-mhead { display: flex; align-items: center; justify-content: space-between; }
+.hc-c39-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-right: calc(-1 * var(--hc-space-2));
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-lg);
+  background: transparent;
+  color: var(--hc-text);
+  cursor: pointer;
+}
+.hc-c39-menu-btn:hover { background: var(--hc-fill-10); }
+.hc-c39-menu-btn:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+/* Full-screen floating nav (review change): covers the whole phone screen, logo + × on top, big links, buttons at the
+   bottom. position: fixed pins it to the phone frame (DeviceFrame), not the browser window. */
+.hc-c39-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  padding: 56px var(--hc-space-5) var(--hc-space-7);
+  background: var(--hc-card);
+  animation: hc-c39-menu-in 0.18s ease-out;
+}
+@keyframes hc-c39-menu-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .hc-c39-menu { animation: none; } }
+.hc-c39-menu__head { display: flex; align-items: center; justify-content: space-between; }
+.hc-c39-menu__links { display: flex; flex-direction: column; padding-top: var(--hc-space-6); }
+.hc-c39-menu__links > button {
+  padding: var(--hc-space-4) 0;
+  border: 0;
+  border-bottom: 1px solid var(--hc-border);
+  background: none;
+  color: var(--hc-text);
+  font: 700 24px/32px var(--hc-font);
+  text-align: left;
+  cursor: pointer;
+}
+.hc-c39-menu__links > button:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-c39-menu__actions { display: flex; flex-direction: column; gap: var(--hc-space-3); margin-top: auto; }

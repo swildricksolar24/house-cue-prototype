@@ -1,0 +1,45 @@
+/* "Get the HouseCue app" pop-up (landing page "Download the app") */
+.hc-get-app {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-5);
+}
+.hc-get-app__qr {
+  flex-shrink: 0;
+  width: 144px;
+  height: 144px;
+  padding: var(--hc-space-2);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  color: var(--hc-text);
+}
+.hc-get-app__text { display: flex; flex-direction: column; gap: var(--hc-space-4); min-width: 0; }
+.hc-get-app__stores { display: flex; flex-direction: column; gap: var(--hc-space-2); align-items: flex-start; }
+
+/* Store buttons (drawn here; not the official badge artwork) */
+.hc-get-app__store {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+  min-width: 170px;
+  padding: 6px var(--hc-space-4) 6px var(--hc-space-3);
+  border: 1px solid var(--hc-border-strong);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-tint);
+  color: var(--hc-text);
+  font: 700 15px/18px var(--hc-font);
+  text-align: left;
+  cursor: pointer;
+}
+.hc-get-app__store > span { display: flex; flex-direction: column; }
+.hc-get-app__store-small { font: 400 10px/12px var(--hc-font); color: var(--hc-text-muted); }
+.hc-get-app__store img { display: block; object-fit: contain; }
+.hc-get-app__store:hover { background: var(--hc-fill-10); }
+.hc-get-app__store:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+/* The Apple mark is black artwork; flip it so it stays visible on the dark theme */
+[data-theme='dark'] .hc-get-app__apple { filter: invert(1); }
+
+/* "Or text me a link": phone field + Send link side by side */
+.hc-get-app__sms { display: flex; align-items: flex-end; gap: var(--hc-space-3); }
+.hc-get-app__sms > :first-child { flex: 1; min-width: 0; }

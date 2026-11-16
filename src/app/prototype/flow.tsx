@@ -14,8 +14,8 @@ export type Flow = {
   goNext: () => void;
   /** Go to the previous step (or browser back at the start) */
   goBack: () => void;
-  /** Jump to the first step showing a screen code, e.g. go('C14') */
-  go: (code: string) => void;
+  /** Jump to the first step showing a screen code, e.g. go('C14'); `search` opens a branch, e.g. go('C02', '?state=signin') */
+  go: (code: string, search?: string) => void;
 };
 
 const FlowCtx = createContext<Flow | null>(null);
@@ -42,7 +42,7 @@ export function FlowProvider({ role, journey, index, children }: { role: RoleKey
     // At the end of a journey the primary CTA returns to the role's home screen
     goNext: () => navigate({ pathname: nextPath ?? endPath(journey), search: '' }),
     goBack: () => (backPath ? navigate(backPath) : navigate(-1)),
-    go: (code) => navigate(screenPath(code)),
+    go: (code, search) => navigate({ pathname: screenPath(code), search: search ?? '' }),
   };
   return <FlowCtx.Provider value={flow}>{children}</FlowCtx.Provider>;
 }

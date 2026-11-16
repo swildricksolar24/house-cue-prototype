@@ -12,7 +12,7 @@ const docs: { title: string; meta?: string; icon: IconName }[] = [
   { title: 'Terms of Service', meta: 'Updated Mar 15, 2027', icon: 'document' },
   { title: 'Privacy Policy', icon: 'shield' },
   { title: 'AI disputes and appeals', icon: 'in-process' },
-  { title: 'Vendor agreement', meta: 'For pros', icon: 'service' },
+  { title: 'Vendor agreement', meta: 'For Pros', icon: 'service' },
   { title: 'Data sharing (research)', meta: 'Optional program', icon: 'data' },
   { title: 'Delete my account', meta: 'Request page', icon: 'delete' },
 ];

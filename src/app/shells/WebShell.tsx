@@ -47,7 +47,8 @@ export function WebShell<R extends AppRole = 'homeowner'>({
   if (layout !== 'app') {
     return (
       <div className={classes}>
-        <WebTopBar type={layout} paths={topBarPaths} />
+        {/* Review change: no language picker in the prototype's top bar */}
+        <WebTopBar type={layout} paths={topBarPaths} showLanguage={false} />
         {content}
       </div>
     );

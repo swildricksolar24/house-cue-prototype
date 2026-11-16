@@ -3,6 +3,7 @@ import { Banner } from '../../../components/Banner/Banner';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
 import { Button } from '../../../components/Button/Button';
 import { ConsentRow } from '../../../components/ConsentRow/ConsentRow';
+import { openLegal } from '../../data/legal';
 import { useDemoActions } from '../../prototype/DemoTools';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
@@ -47,6 +48,10 @@ const TENANT_INTRO = 'Mesa Verde Holdings invited you as the tenant of 1418 E Ro
  * web frame draws it on load); "Branch: Consent declined
  * (blocked)" 231:23637 = the required-agreements dialog, opened by "Agree and continue" with a required item
  * unchecked, or directly with ?state=error.
+ *
+ * Review change (shorter onboarding, Option A): the homeowner sign-up no longer has this step. Terms, disputes and
+ * privacy are a line on C02; agent contact moved to C06; research sharing stays here, under Settings & account, with
+ * no step counter (Save goes back). The landlord sign-up and the tenant invite still show it as a step.
  */
 export default function Consents({ variant }: ScreenProps) {
   const { device, screenState } = usePrototype();
@@ -55,6 +60,7 @@ export default function Consents({ variant }: ScreenProps) {
   const mobile = device === 'mobile';
   const items = tenant ? tenantConsents : homeownerConsents;
   const blocked = !tenant && screenState === 'error';
+  const signUp = tenant || flow.journey.slug === 'landlord-portfolio';
 
   // Review decision: nothing is ticked and no error shows when the step opens (Figma draws some items ticked and the
   // web frame with the error). The error banner appears only after "Agree and continue" with a required item
@@ -78,7 +84,7 @@ export default function Consents({ variant }: ScreenProps) {
 
   const submit = () => {
     // Homeowner: skip the journey's X08 Terms step (reached from the "Read" links; it has no forward button)
-    if (missing === 0) return tenant ? flow.goNext() : flow.go('C04');
+    if (missing === 0) return !signUp ? flow.goBack() : tenant ? flow.goNext() : flow.go('C04');
     setAttempted(true);
     if (!tenant) setDialog(true);
   };
@@ -92,7 +98,8 @@ export default function Consents({ variant }: ScreenProps) {
           checked={checked[c.id]}
           onChange={(e) => setChecked((s) => ({ ...s, [c.id]: e.target.checked }))}
           linkLabel={c.link}
-          onLinkClick={() => flow.go('X08')}
+          // Same place as the footer's Terms / Privacy: the legal PDFs
+          onLinkClick={() => openLegal(c.id === 'privacy' || c.id === 'research' ? 'privacy' : 'terms')}
         >
           {c.text}
         </ConsentRow>
@@ -135,8 +142,8 @@ export default function Consents({ variant }: ScreenProps) {
     return (
       <MobileShell
         className="hc-onb-mobile"
-        header={{ title: 'Agreements', step: '3 of 6', progress: 3 / 6 }}
-        bottom={<BottomActions primaryLabel="Agree and continue" onPrimary={submit} primaryDisabled={dialog || missing > 0} />}
+        header={signUp ? { title: 'Agreements', step: '3 of 6', progress: 3 / 6 } : { title: 'Agreements' }}
+        bottom={<BottomActions primaryLabel={signUp ? 'Agree and continue' : 'Save'} onPrimary={submit} primaryDisabled={dialog || missing > 0} />}
       >
         {tenant ? (
           <p className="hc-medium hc-muted">{TENANT_INTRO}</p>
@@ -157,7 +164,7 @@ export default function Consents({ variant }: ScreenProps) {
   return (
     <WebShell layout="onboarding" className="hc-onb-web">
       <WebCard>
-        <WebStepHeader step={3} />
+        {signUp && <WebStepHeader step={3} />}
         <h1 className="hc-h2">{tenant ? 'Tenant agreements' : 'A few agreements'}</h1>
         {tenant && <p className="hc-medium hc-muted">{TENANT_INTRO}</p>}
         {errorBanner}
@@ -165,7 +172,7 @@ export default function Consents({ variant }: ScreenProps) {
         {tenantNote}
         <div className="hc-onb-actions">
           <Button fullWidth onClick={submit} disabled={dialog || missing > 0}>
-            Agree and continue
+            {signUp ? 'Agree and continue' : 'Save'}
           </Button>
         </div>
       </WebCard>

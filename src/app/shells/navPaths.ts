@@ -10,7 +10,9 @@ import { screenPath } from '../prototype/journeys';
 const paths = <K extends string>(codes: Record<K, string>) => {
   const out = {} as Record<K, string>;
   for (const key of Object.keys(codes) as K[]) {
-    Object.defineProperty(out, key, { enumerable: true, get: () => screenPath(codes[key]) });
+    // A code may carry a branch, e.g. 'C02?state=signin'
+    const [code, query] = codes[key].split('?');
+    Object.defineProperty(out, key, { enumerable: true, get: () => screenPath(code) + (query ? `?${query}` : '') });
   }
   return out;
 };
@@ -41,11 +43,14 @@ export const tenantPaths: Record<TenantNavKey, string> = paths({
 /** HC/Web Top Bar links (marketing + onboarding) */
 export const topBarPaths = paths({
   home: 'C39',
-  howItWorks: 'C39',
-  membership: 'C28',
-  forPros: 'C39',
-  help: 'C32',
-  login: 'C02',
+  // Its own signed-out page: C39 with ?view=how-it-works (the three steps stacked)
+  howItWorks: 'C39?view=how-it-works',
+  // Signed-out versions (top bar, no side menu): see C28 / C32 ?visitor=1
+  membership: 'C28?visitor=1',
+  forPros: 'C39?view=for-pros',
+  help: 'C32?visitor=1',
+  // Log in opens C02 in sign-in mode (returning user)
+  login: 'C02?state=signin',
   getStarted: 'C02',
 });
 

@@ -80,18 +80,16 @@ export function useDemoActions(actions: DemoAction[]) {
 }
 
 /**
- * The card: slides out from the left edge on every step, open each time (the tab hides it until the next step).
+ * The card: sits at the left edge on every step and is always open (review change: the hide/show tab was removed).
  * "Use Demo Account" shows on steps that offer a shortcut; the Dark mode switch is always there.
  * Rendered into <body> so it sits beside the phone frame on mobile instead of inside it.
  */
 function DemoCard({ actionsRef, labels }: { actionsRef: MutableRefObject<DemoAction[]>; labels: string[] }) {
   const { device, theme, setTheme } = usePrototype();
-  // Starts closed; opening or closing it carries over from step to step
-  const [open, setOpen] = useState(false);
-
+  // Review change: always open (no tab to hide it) on every step
   return createPortal(
-    <aside className={`hc-proto-demo hc-proto-demo--${device}${open ? ' is-open' : ''}`} aria-label="Demo account (prototype only)">
-      <div className="hc-proto-demo__card" aria-hidden={!open} inert={!open}>
+    <aside className={`hc-proto-demo hc-proto-demo--${device} is-open`} aria-label="Demo account (prototype only)">
+      <div className="hc-proto-demo__card">
         <div className="hc-proto-demo__head">
           <span className="hc-proto-demo__icon">
             <Icon name="account" size={20} />
@@ -122,9 +120,6 @@ function DemoCard({ actionsRef, labels }: { actionsRef: MutableRefObject<DemoAct
           )}
         </div>
       </div>
-      <button type="button" className="hc-proto-demo__tab" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-label={open ? 'Hide demo account' : 'Show demo account'}>
-        <Icon name={open ? 'close-small' : 'account'} size={20} />
-      </button>
     </aside>,
     document.body,
   );

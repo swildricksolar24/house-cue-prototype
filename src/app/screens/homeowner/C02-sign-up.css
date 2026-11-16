@@ -6,3 +6,21 @@
 .hc-c02-social img { display: block; object-fit: contain; }
 /* The Apple mark is black artwork; flip it so it stays visible on the dark card */
 [data-theme='dark'] .hc-c02-social__apple { filter: invert(1); }
+
+/* Agreement line under the sign-up form (shorter onboarding): inline link buttons */
+.hc-c02-agree a,
+.hc-c02-agree button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-link);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.hc-c02-agree a:focus-visible,
+.hc-c02-agree button:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-sm); }
+
+/* Email mistake (no account / already registered): banner + the way out, kept together */
+.hc-c02-email-error { display: flex; flex-direction: column; gap: var(--hc-space-2); }

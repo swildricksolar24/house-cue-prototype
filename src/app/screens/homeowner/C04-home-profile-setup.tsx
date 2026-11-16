@@ -76,6 +76,11 @@ const webDetails: Detail[] = [
  * C04 Home profile setup — Figma onboarding mobile 215:11979 (address + who) → 4b Confirm details 230:35405,
  * web 215:14548 (one card); rental owner (landlord-portfolio) mobile 272:31781, web 272:32376.
  * "Branch: Address not found" 231:23837 draws the 4b Confirm details frame, so ?state=error opens on that step (mobile).
+ *
+ * Review change (shorter onboarding, Option A; prototype Figma file, page Onboarding, frames "A4a" / "A4b"): homeowner
+ * onboarding is 3 steps and this is step 2. Two numbered parts: 1 Home address, 2 Is this right?. Typing shows address
+ * suggestions; picking one confirms the address (no "Confirm address" button). "Who is this home for?" is behind the
+ * "Setting this up for someone else?" link (Me is the default). The rental-owner variant is unchanged.
  */
 export default function HomeProfileSetup({ variant }: ScreenProps) {
   const { device, screenState } = usePrototype();
@@ -85,17 +90,23 @@ export default function HomeProfileSetup({ variant }: ScreenProps) {
 
   const sampleAddress = rental ? '1418 E Roosevelt St, Phoenix, AZ 85006' : '2218 W Palm Ln, Phoenix, AZ 85015';
   const [who, setWho] = useState(rental ? 'rental' : 'me');
+  // Coming back from the X05 location prompt with "Use my location" (?state=located): address filled and confirmed
+  const located = !rental && (screenState as string) === 'located';
   // Review decision: the address starts empty and is required; Continue stays disabled until it's filled
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(located ? sampleAddress : '');
   const [stage, setStage] = useState<'address' | 'confirm'>(!rental && screenState === 'error' ? 'confirm' : 'address');
   const [details, setDetails] = useState<Record<string, string>>(() =>
     Object.fromEntries([...mobileDetails, ...webDetails].map((d) => [d.id, d.value])),
   );
   const [editing, setEditing] = useState<string | null>(null);
+  // "Setting this up for someone else?" opens the who options (Me is the default)
+  const [showWho, setShowWho] = useState(false);
 
   // Review change: the address must be confirmed before "Who is this home for?" and "Is this right?" open;
   // the record details are only filled in once it's confirmed. Editing the address un-confirms it.
-  const [confirmed, setConfirmed] = useState(!rental && screenState === 'error');
+  const [confirmed, setConfirmed] = useState((!rental && screenState === 'error') || located);
+  // X05 (location prompt) sits after this step in the journey as its branch, so Continue skips it to C06
+  const finish = () => flow.go('C06');
   const recordDefaults = () => Object.fromEntries([...mobileDetails, ...webDetails].map((d) => [d.id, d.value]));
   const changeAddress = (v: string) => {
     setAddress(v);
@@ -213,30 +224,46 @@ export default function HomeProfileSetup({ variant }: ScreenProps) {
     );
   }
 
-  /* ---------- Homeowner onboarding (step 7) ---------- */
-  // Step 1: address, then "Confirm address". Steps 2 and 3 stay disabled until it's confirmed.
+  /* ---------- Homeowner onboarding (step 2 of 3) ---------- */
+  // Prototype address suggestions (same three as the Figma "A4a" frame); picking one confirms the address
+  const suggestions = ['2218 W Palm Ln, Phoenix, AZ 85015', '2218 W Palm Dr, Tucson, AZ 85705', '2218 W Palmaire Ave, Phoenix, AZ 85021'];
+  const showSuggestions = !confirmed && address.trim().length >= 3;
   const addressStep = (
     <NumberedStep n={1} title="Home address" done={confirmed}>
       {addressInput('Street, city and ZIP')}
-      {!confirmed && (
-        <>
-          <TextLink align="left" onClick={() => changeAddress('2218 W Palm Ln, Phoenix, AZ 85015')}>
-            Use my current location
-          </TextLink>
-          <Button variant="secondary" fullWidth onClick={() => confirmAddress()} disabled={!addressOk}>
-            Confirm address
-          </Button>
-        </>
+      {showSuggestions && (
+        <ul className="hc-c04-suggest" role="listbox" aria-label="Address suggestions">
+          {suggestions.map((a) => {
+            const [line1, ...rest] = a.split(', ');
+            return (
+              <li key={a} role="option" aria-selected={false}>
+                <button type="button" onClick={() => confirmAddress(a)}>
+                  <Icon name="location" size={20} />
+                  <span>
+                    <strong>{line1}</strong>, {rest.join(', ')}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       )}
-    </NumberedStep>
-  );
-  const whoStep = (
-    <NumberedStep n={2} title="Who is this home for?" disabled={!confirmed}>
-      {options(ownerOptions)}
+      {showSuggestions && <p className="hc-small hc-muted">Pick your address from the list to confirm it.</p>}
+      {!confirmed && (
+        <TextLink align="left" onClick={() => flow.go('X05')}>
+          Use my current location
+        </TextLink>
+      )}
+      {confirmed && (
+        <TextLink align="left" underline={false} onClick={() => setShowWho((v) => !v)}>
+          Setting this up for someone else?
+        </TextLink>
+      )}
+      {confirmed && showWho && options(ownerOptions)}
     </NumberedStep>
   );
   const detailsStep = (list: Detail[]) => (
-    <NumberedStep n={3} title="Is this right?" disabled={!confirmed}>
+    <NumberedStep n={2} title="Is this right?" disabled={!confirmed}>
       {confirmed ? (
         <>
           <p className="hc-medium hc-muted">{recordsNote}</p>
@@ -253,8 +280,8 @@ export default function HomeProfileSetup({ variant }: ScreenProps) {
       return (
         <MobileShell
           className="hc-onb-mobile"
-          header={{ title: 'Your home', step: '4 of 6', progress: 4 / 6, onBack: () => setStage('address') }}
-          bottom={<BottomActions primaryLabel="Looks right" onPrimary={flow.goNext} primaryDisabled={!detailsOk} />}
+          header={{ title: 'Your home', step: '2 of 3', progress: 2 / 3, onBack: () => setStage('address') }}
+          bottom={<BottomActions primaryLabel="Looks right" onPrimary={finish} primaryDisabled={!detailsOk} />}
         >
           {detailsStep(mobileDetails)}
           {bookingBanner}
@@ -264,12 +291,11 @@ export default function HomeProfileSetup({ variant }: ScreenProps) {
     return (
       <MobileShell
         className="hc-onb-mobile"
-        header={{ title: 'Your home', step: '4 of 6', progress: 4 / 6 }}
+        header={{ title: 'Your home', step: '2 of 3', progress: 2 / 3 }}
         bottom={<BottomActions primaryLabel="Continue" onPrimary={() => setStage('confirm')} primaryDisabled={!confirmed} />}
       >
         <h1 className="hc-h3">Where’s your home?</h1>
         {addressStep}
-        {whoStep}
       </MobileShell>
     );
   }
@@ -277,14 +303,13 @@ export default function HomeProfileSetup({ variant }: ScreenProps) {
   return (
     <WebShell layout="onboarding" className="hc-onb-web">
       <WebCard>
-        <WebStepHeader step={4} />
+        <WebStepHeader step={2} total={3} />
         <h1 className="hc-h2">Where’s your home?</h1>
         {addressStep}
-        {whoStep}
         {detailsStep(webDetails)}
         {bookingBanner}
         <div className="hc-onb-actions">
-          <Button fullWidth onClick={flow.goNext} disabled={!confirmed || !detailsOk}>
+          <Button fullWidth onClick={finish} disabled={!confirmed || !detailsOk}>
             Continue
           </Button>
         </div>

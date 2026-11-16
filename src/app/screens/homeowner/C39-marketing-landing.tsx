@@ -1,14 +1,19 @@
+import { useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Banner } from '../../../components/Banner/Banner';
 import { Button } from '../../../components/Button/Button';
 import { Icon, type IconName } from '../../../components/Icon/Icon';
 import { ListRow } from '../../../components/ListRow/ListRow';
 import { Logo } from '../../../components/Logo/Logo';
 import { useFlow } from '../../prototype/flow';
+import { stepPath } from '../../prototype/journeys';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
+import { GetAppDialog } from './_get-app';
 import { HeroImage } from './_hero';
+import { NumberedCards, PublicCta, PublicPage, SiteFooter } from './_public-page';
 import './C39-marketing-landing.css';
 
 const LEDE = 'HouseCue keeps your home’s record, plans its upkeep and gets trusted pros booked, always with your OK.';
@@ -64,6 +69,13 @@ const stepsWeb = [
   { title: '3. Let your agent handle pros', body: 'Quotes compared and jobs booked, only with your approval and within your limit.' },
 ];
 
+/** For Pros page steps (placeholder copy, see the For Pros view) */
+const proSteps = [
+  { title: 'Get matched to jobs', body: 'Homeowners’ agents send you requests that fit your trade and service area.' },
+  { title: 'Quote and schedule', body: 'Send a quote and pick a time, all in HouseCue.' },
+  { title: 'Get paid after sign-off', body: 'Payment is held when the job is booked and released when the homeowner signs off.' },
+];
+
 const rows = (items: Row[]) => (
   <div>
     {items.map((r) => (
@@ -76,13 +88,43 @@ const rows = (items: Row[]) => (
 export default function MarketingLanding(_: ScreenProps) {
   const { device } = usePrototype();
   const flow = useFlow();
-
-  const footer = (
-    <p className="hc-small hc-muted hc-c39-footer">
-      <button type="button" onClick={() => flow.go('X08')}>Terms</button> ·{' '}
-      <button type="button" onClick={() => flow.go('X08')}>Privacy</button> · Are you a pro? Join HouseCue · Request account
-      deletion · Español
+  // Review change: "I have an account" opens C02 in sign-in mode (returning user), not the sign-up step
+  const signIn = () => flow.go('C02', '?state=signin');
+  const [params] = useSearchParams();
+  const view = params.get('view');
+  // Review change: "Download the app" opens the Get the app pop-up (web) or the app-store note (mobile), see _get-app.tsx
+  const [appOpen, setAppOpen] = useState(false);
+  // Review change: mobile has no top bar, so a ☰ menu next to the logo opens the same signed-out pages
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  // Review change: landlords' way in. The landlord sign-up is its own journey (/landlord/portfolio/2); hidden when
+  // this landing page is already the landlord journey's first step.
+  const landlordJourney = flow.journey.slug === 'landlord-portfolio';
+  const startLandlord = () => navigate(stepPath('landlord-portfolio', 2));
+  const landlordLink = !landlordJourney && (
+    <p className="hc-small hc-muted">
+      Managing rentals?{' '}
+      <button type="button" className="hc-medium-semibold hc-link hc-c39-text-btn" onClick={startLandlord}>
+        Start here
+      </button>
     </p>
+  );
+  const getApp = appOpen && <GetAppDialog mobile={device === 'mobile'} onClose={() => setAppOpen(false)} />;
+
+  const footer = <SiteFooter />;
+
+  // Review change: "Are you a pro?" section near the bottom of the landing page, linking to the For Pros page
+  // (the same page as the top bar's "For Pros")
+  const proSection = (
+    <section className="hc-c39-card hc-c39-pro">
+      <div className="hc-c39-pro__text">
+        <h2 className="hc-h4">Are you a pro?</h2>
+        <p className="hc-medium hc-muted">Get jobs from homeowners in Phoenix and Tucson, sent to you by their HouseCue agent.</p>
+      </div>
+      <Button variant="secondary" fullWidth={device === 'mobile'} onClick={() => flow.go('C39', '?view=for-pros')}>
+        See HouseCue for Pros
+      </Button>
+    </section>
   );
 
   const freeCard = (cta: boolean) => (
@@ -109,10 +151,86 @@ export default function MarketingLanding(_: ScreenProps) {
     </section>
   );
 
+  // Review change: the top bar's "How it works" and "For Pros" open their own signed-out pages (?view=…), on the
+  // shared layout the four top-bar pages use (Back to this page, title, lede, content, footer).
+  if (view === 'how-it-works') {
+    return (
+      <PublicPage title="How it works" lede={LEDE}>
+        <NumberedCards items={stepsWeb.map((s) => ({ title: s.title.replace(/^\d+\.\s*/, ''), body: s.body }))} />
+        <PublicCta note="Free to start. Members $4.99/mo or $49/yr per home.">
+          <Button fullWidth={device === 'mobile'} onClick={flow.goNext}>
+            Get started free
+          </Button>
+        </PublicCta>
+      </PublicPage>
+    );
+  }
+  if (view === 'for-pros') {
+    // Placeholder copy: no For Pros page in Figma and the vendor journey (J2) isn't built yet
+    return (
+      <PublicPage title="For Pros" lede="Get jobs from homeowners in Phoenix and Tucson, sent to you by their HouseCue agent.">
+        <NumberedCards items={proSteps} />
+        <PublicCta note="Pro sign-up isn’t in this prototype yet.">
+          <Button fullWidth={device === 'mobile'} disabled>
+            Join as a pro
+          </Button>
+        </PublicCta>
+      </PublicPage>
+    );
+  }
+
   if (device === 'mobile') {
     return (
       <MobileShell className="hc-c39-mobile">
-        <Logo />
+        <div className="hc-c39-mhead">
+          <Logo />
+          <button
+            type="button"
+            className="hc-c39-menu-btn"
+            aria-label={menuOpen ? 'Close menu' : 'Menu'}
+            aria-expanded={menuOpen}
+            aria-controls="hc-c39-menu"
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+              {menuOpen ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+            </svg>
+          </button>
+        </div>
+        {menuOpen && (
+          // Review change: the menu takes over the whole screen as a floating nav (pinned to the phone frame)
+          <div
+            id="hc-c39-menu"
+            className="hc-c39-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu"
+            onKeyDown={(e) => e.key === 'Escape' && setMenuOpen(false)}
+          >
+            <div className="hc-c39-menu__head">
+              <Logo />
+              <button type="button" className="hc-c39-menu-btn" aria-label="Close menu" onClick={() => setMenuOpen(false)} autoFocus>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
+                  <path d="M6 6l12 12M18 6L6 18" />
+                </svg>
+              </button>
+            </div>
+            <nav className="hc-c39-menu__links" aria-label="Site">
+              <button type="button" onClick={() => flow.go('C39', '?view=how-it-works')}>How it works</button>
+              <button type="button" onClick={() => flow.go('C28', '?visitor=1')}>Membership</button>
+              <button type="button" onClick={() => flow.go('C39', '?view=for-pros')}>For Pros</button>
+              <button type="button" onClick={() => flow.go('C32', '?visitor=1')}>Help</button>
+            </nav>
+            <div className="hc-c39-menu__actions">
+              <Button variant="secondary" size="large" fullWidth onClick={signIn}>
+                Log in
+              </Button>
+              <Button size="large" fullWidth onClick={flow.goNext}>
+                Get started
+              </Button>
+            </div>
+          </div>
+        )}
         <HeroImage height={260} className="hc-hero-photo--compact" />
         <p className="hc-medium-semibold hc-c39-eyebrow">Now booking in Phoenix and Tucson</p>
         <h1 className="hc-h2">Your home, handled.</h1>
@@ -121,12 +239,13 @@ export default function MarketingLanding(_: ScreenProps) {
         <Button fullWidth onClick={flow.goNext}>
           Get started free
         </Button>
-        <Button variant="secondary" fullWidth onClick={flow.goNext}>
+        <Button variant="secondary" fullWidth onClick={() => setAppOpen(true)}>
           Download the app
         </Button>
-        <button type="button" className="hc-medium-semibold hc-link hc-c39-text-btn" onClick={flow.goNext}>
+        <button type="button" className="hc-medium-semibold hc-link hc-c39-text-btn" onClick={signIn}>
           I have an account
         </button>
+        {landlordLink}
         <h2 className="hc-h4">How it works</h2>
         {rows(stepsMobile)}
         <h2 className="hc-h4">Plans</h2>
@@ -135,7 +254,9 @@ export default function MarketingLanding(_: ScreenProps) {
         <Banner title="Booking metros">
           Quotes and booking are live in Phoenix and Tucson. Everywhere else, your home record and reminders work now.
         </Banner>
+        {proSection}
         {footer}
+        {getApp}
       </MobileShell>
     );
   }
@@ -152,16 +273,17 @@ export default function MarketingLanding(_: ScreenProps) {
             <Button fullWidth onClick={flow.goNext}>
               Get started free
             </Button>
-            <Button variant="secondary" fullWidth onClick={flow.goNext}>
+            <Button variant="secondary" fullWidth onClick={() => setAppOpen(true)}>
               Download the app
             </Button>
           </div>
           <p className="hc-small hc-muted">
             Free to start. Members $4.99/mo or $49/yr per home. Already a member?{' '}
-            <button type="button" className="hc-medium-semibold hc-link hc-c39-text-btn" onClick={flow.goNext}>
+            <button type="button" className="hc-medium-semibold hc-link hc-c39-text-btn" onClick={signIn}>
               I have an account
             </button>
           </p>
+          {landlordLink}
         </div>
         <HeroImage height={560} className="hc-c39-hero__image" />
       </div>
@@ -183,7 +305,9 @@ export default function MarketingLanding(_: ScreenProps) {
         Quotes and booking are live in Phoenix and Tucson. Everywhere else, your home record and reminders work now and we’ll
         tell you when booking arrives.
       </Banner>
+      {proSection}
       {footer}
+      {getApp}
     </WebShell>
   );
 }

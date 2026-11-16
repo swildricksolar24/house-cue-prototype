@@ -43,7 +43,8 @@
   margin: 0 auto;
 }
 
-/* Demo account card (DemoTools): slides out from the top-left corner */
+/* Demo account card (DemoTools): always open, vertically centred on the left edge (review change: moved from the
+   top-left so it doesn't cover the top bar logo or the side menu, and no shadow) */
 .hc-proto-demo {
   --demo-card: 288px;
   position: fixed;
@@ -54,9 +55,9 @@
   transform: translateX(calc(-1 * var(--demo-card)));
   transition: transform 0.25s ease;
 }
-.hc-proto-demo.is-open { transform: translateX(0); }
+.hc-proto-demo.is-open { transform: translateY(-50%); }
 .hc-proto-demo--mobile,
-.hc-proto-demo--web { top: var(--hc-space-3); }
+.hc-proto-demo--web { top: 50%; }
 
 .hc-proto-demo__card {
   display: flex;
@@ -68,7 +69,6 @@
   border-left: 0;
   border-radius: 0 var(--hc-radius-lg) var(--hc-radius-lg) 0;
   background: var(--hc-card);
-  box-shadow: 0 8px 24px var(--hc-fill-10);
 }
 .hc-proto-demo__head { display: flex; align-items: center; gap: var(--hc-space-3); }
 .hc-proto-demo__icon {
@@ -137,6 +137,7 @@
 @media (max-width: 500px) {
   /* On a real phone the frame is the screen: sit lower so it doesn't cover the header */
   .hc-proto-demo--mobile { top: 120px; }
+  .hc-proto-demo--mobile.is-open { transform: none; }
 }
 
 /* Toolbar */

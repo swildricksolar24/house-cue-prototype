@@ -23,7 +23,7 @@ export const webTopBarLinks: Record<WebTopBarType, { key: WebTopBarKey; label: s
   marketing: [
     { key: 'howItWorks', label: 'How it works' },
     { key: 'membership', label: 'Membership' },
-    { key: 'forPros', label: 'For pros' },
+    { key: 'forPros', label: 'For Pros' },
     { key: 'help', label: 'Help' },
   ],
 };
@@ -38,13 +38,23 @@ export type WebTopBarProps = {
   onLanguageClick?: () => void;
   /** Hide the Log in button (e.g. on the login page) */
   hideLogin?: boolean;
+  /** Show the language picker (default true, as in Figma). The prototype hides it (review change). */
+  showLanguage?: boolean;
   className?: string;
 };
 
 /** HC/Web Top Bar (Figma 5:214) — Type Onboarding / Marketing. Web header for signed-out pages. */
-export function WebTopBar({ type = 'onboarding', paths, language = 'English', onLanguageClick, hideLogin = false, className }: WebTopBarProps) {
+export function WebTopBar({
+  type = 'onboarding',
+  paths,
+  language = 'English',
+  onLanguageClick,
+  hideLogin = false,
+  showLanguage = true,
+  className,
+}: WebTopBarProps) {
   const to = { ...webTopBarPaths, ...paths };
-  const languagePicker = (
+  const languagePicker = showLanguage && (
     <button type="button" className="hc-web-top-bar__link" onClick={onLanguageClick} disabled={!onLanguageClick} aria-haspopup="listbox">
       {language} <span aria-hidden>▾</span>
     </button>

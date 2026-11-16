@@ -3,6 +3,7 @@ import { Banner } from '../../../components/Banner/Banner';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
 import { Button } from '../../../components/Button/Button';
 import { Input } from '../../../components/Input/Input';
+import { legalPdf } from '../../data/legal';
 import { demoAccount } from '../../data/sample';
 import { useDemoActions } from '../../prototype/DemoTools';
 import { useFlow } from '../../prototype/flow';
@@ -16,36 +17,88 @@ import googleLogo from './assets/c02-google.png';
 import './C02-sign-up.css';
 
 type Stage = 'email' | 'code';
+type Mode = 'signup' | 'signin';
 
 /**
  * C02 Sign up / sign in — Figma mobile 215:11597 (email step), web 215:14016 (code step with a wrong-code error).
  * Both steps exist on both layouts and both start on the email step: Send code → code step; Verify → next journey step.
+ *
+ * Review change (prototype Figma flow, file 1uysjkCuc5ZiNIocKmdKFg "C02 Sign in"): returning users get a sign-in mode
+ * (?state=signin, or "I have an account"): "Welcome back", email only, no step counter; Verify goes to Home (C08).
+ * Continue with Apple / Google skips the email code: sign up → next step, sign in → Home.
+ *
+ * Review change (shorter onboarding, Option A): the homeowner sign-up is step 1 of 3 and carries the agreements as one
+ * line under the form (Terms, how disputes work, Privacy Policy → X08); the separate Agreements step (C41) is gone.
+ * The landlord sign-up keeps 6 steps and its C41 step.
+ *
+ * Review change (signed-out gaps): email mistakes are caught on Send code. Signing in with an email that has no account
+ * shows "No account with that email" (+ Create an account); signing up with an email that already has one shows "You
+ * already have an account" (+ Sign in instead). In the prototype the one existing account is the demo account
+ * (jordan@example.com); the sign-up demo fills a new email. Branch states: ?state=no-account, ?state=email-taken.
+ * "Can't sign in?" opens Account recovery (C52); the agreement line opens the legal PDFs.
  */
+/** The one existing account in the prototype (sign in works only with it) and the email the sign-up demo fills in */
+const EXISTING_EMAIL = demoAccount.email;
+const NEW_EMAIL = 'new.homeowner@example.com';
 export default function SignUp(_: ScreenProps) {
   const { device, screenState } = usePrototype();
   const flow = useFlow();
   // Both layouts start on the email step (review decision). The Figma web frame's
   // "That code didn't match" state is the Error state (?state=error): code step, wrong code entered.
   const wrongCode = screenState === 'error';
+  const [mode, setMode] = useState<Mode>(['signin', 'no-account'].includes(screenState as string) ? 'signin' : 'signup');
+  const signIn = mode === 'signin';
+  // Homeowner onboarding is 3 steps with the agreement line here; the landlord sign-up keeps its 6 steps and C41
+  const shortFlow = flow.journey.slug === 'onboarding';
+  const total = shortFlow ? 3 : 6;
   const [stage, setStage] = useState<Stage>(wrongCode ? 'code' : 'email');
-  const [email, setEmail] = useState('');
+  const branch = screenState as string;
+  // Email mistakes caught on Send code: 'unknown' (sign in, no account) or 'taken' (sign up, account exists)
+  const [emailError, setEmailError] = useState<null | 'unknown' | 'taken'>(
+    branch === 'no-account' ? 'unknown' : branch === 'email-taken' ? 'taken' : null,
+  );
+  const [email, setEmail] = useState(branch === 'no-account' ? 'jordan@exmaple.com' : branch === 'email-taken' ? EXISTING_EMAIL : '');
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState(wrongCode ? '482913' : '');
   const [codeError, setCodeError] = useState(wrongCode);
 
-  // Review decision: Send code stays disabled until both required fields are filled in
-  const canSend = /^\S+@\S+\.\S+$/.test(email.trim()) && phone.replace(/\D/g, '').length >= 10;
+  const emailOk = /^\S+@\S+\.\S+$/.test(email.trim());
+  // Review decision: Send code stays disabled until the required fields are filled in (sign in only asks for email)
+  const canSend = emailOk && (signIn || phone.replace(/\D/g, '').length >= 10);
+
+  /** Signed in or verified: sign up carries on with onboarding, sign in goes Home (Portfolio for landlords) */
+  const done = () => (signIn ? flow.go(flow.journey.slug === 'landlord-portfolio' ? 'C79' : 'C08') : flow.goNext());
+  const switchMode = (m: Mode) => {
+    setMode(m);
+    setStage('email');
+    setCode('');
+    setCodeError(false);
+    setEmailError(null);
+  };
+  const changeEmail = (v: string) => {
+    setEmail(v);
+    setEmailError(null);
+  };
+  /** Send code: catch "no account" (sign in) and "already have an account" (sign up) before the code step */
+  const sendCode = () => {
+    const known = email.trim().toLowerCase() === EXISTING_EMAIL;
+    if (signIn && !known) return setEmailError('unknown');
+    if (!signIn && known) return setEmailError('taken');
+    setStage('code');
+  };
+  const recover = () => flow.go('C52');
 
   // Prototype shortcuts (not in Figma), like hub360: fill in the demo account / demo code.
   // Only the demo code verifies; any other 6 digits show "That code didn't match".
-  const verify = () => (code === demoAccount.code ? flow.goNext() : setCodeError(true));
+  const verify = () => (code === demoAccount.code ? done() : setCodeError(true));
   useDemoActions(
     stage === 'email'
       ? [
           {
             label: 'Use Demo Account',
             onClick: () => {
-              setEmail(demoAccount.email);
+              // Sign in: the existing demo account. Sign up: a new email (the demo account is already registered)
+              changeEmail(signIn ? EXISTING_EMAIL : NEW_EMAIL);
               setPhone(demoAccount.phone);
             },
           },
@@ -61,15 +114,20 @@ export default function SignUp(_: ScreenProps) {
         ],
   );
 
+  const title = signIn ? 'Welcome back' : 'Create your account';
+  const intro = signIn
+    ? 'Sign in with the account you used before. No password needed.'
+    : 'Use an account you already have, or sign in with your email. No password needed.';
+
   const social = (
     <>
-      <Button variant="secondary" fullWidth onClick={() => setStage('code')}>
+      <Button variant="secondary" fullWidth onClick={done}>
         <span className="hc-c02-social">
           <img src={appleLogo} alt="" width={23} height={19} className="hc-c02-social__apple" />
           Continue with Apple
         </span>
       </Button>
-      <Button variant="secondary" fullWidth onClick={() => setStage('code')}>
+      <Button variant="secondary" fullWidth onClick={done}>
         <span className="hc-c02-social">
           <img src={googleLogo} alt="" width={19} height={19} />
           Continue with Google
@@ -80,10 +138,32 @@ export default function SignUp(_: ScreenProps) {
 
   const emailFields = (
     <>
-      <Input label="Email" type="email" placeholder="name@example.com" value={email} onValueChange={setEmail} />
-      <Input label="Mobile number (for account recovery)" type="phone" value={phone} onValueChange={setPhone} />
+      <Input label="Email" type="email" placeholder="name@example.com" value={email} onValueChange={changeEmail} />
+      {emailError === 'unknown' && (
+        <div className="hc-c02-email-error">
+          <Banner tone="error" title="No account with that email">
+            Check the spelling, or create a new account with this email.
+          </Banner>
+          <Button variant="secondary" fullWidth onClick={() => switchMode('signup')}>
+            Create an account
+          </Button>
+        </div>
+      )}
+      {emailError === 'taken' && (
+        <div className="hc-c02-email-error">
+          <Banner tone="warning" title="You already have an account">
+            {email} is already registered. Sign in instead, or use a different email.
+          </Banner>
+          <Button variant="secondary" fullWidth onClick={() => switchMode('signin')}>
+            Sign in instead
+          </Button>
+        </div>
+      )}
+      {!signIn && <Input label="Mobile number (for account recovery)" type="phone" value={phone} onValueChange={setPhone} />}
       <p className="hc-small hc-muted">
-        We’ll email you a 6-digit code. Your mobile number is only used to text a backup code if you lose access to your email.
+        {signIn
+          ? 'We’ll email you a 6-digit code.'
+          : 'We’ll email you a 6-digit code. Your mobile number is only used to text a backup code if you lose access to your email.'}
       </p>
     </>
   );
@@ -113,6 +193,20 @@ export default function SignUp(_: ScreenProps) {
     </>
   );
 
+  /** Link to the other mode: "I have an account" on sign up, "New to HouseCue? Create an account" on sign in */
+  const otherMode = signIn
+    ? { label: 'New to HouseCue? Create an account', onClick: () => switchMode('signup') }
+    : { label: 'I have an account', onClick: () => switchMode('signin') };
+
+  const agreementLine = shortFlow && !signIn && (
+    <p className="hc-small hc-muted hc-c02-agree">
+      By continuing, you agree to the{' '}
+      <a href={legalPdf.terms} target="_blank" rel="noopener noreferrer">Terms of Service</a>,{' '}
+      <a href={legalPdf.terms} target="_blank" rel="noopener noreferrer">how disputes work</a> and the{' '}
+      <a href={legalPdf.privacy} target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
+    </p>
+  );
+
   const masked = email ? `${email[0]}•••${email.slice(email.indexOf('@'))}` : 'm•••@example.com';
 
   if (device === 'mobile') {
@@ -120,19 +214,18 @@ export default function SignUp(_: ScreenProps) {
       <MobileShell
         className="hc-onb-mobile"
         header={{
-          title: 'Create account',
-          step: '1 of 6',
-          progress: 1 / 6,
+          title: signIn ? 'Sign in' : 'Create account',
+          ...(signIn ? {} : { step: `1 of ${total}`, progress: 1 / total }),
           ...(stage === 'code' ? { onBack: () => setStage('email') } : {}),
         }}
         bottom={
           stage === 'email' ? (
             <BottomActions
               primaryLabel="Send code"
-              onPrimary={() => setStage('code')}
+              onPrimary={sendCode}
               primaryDisabled={!canSend}
-              secondaryLabel="I have an account"
-              onSecondary={() => setStage('code')}
+              secondaryLabel={otherMode.label}
+              onSecondary={otherMode.onClick}
             />
           ) : (
             <BottomActions primaryLabel="Verify" onPrimary={verify} primaryDisabled={code.length < 6} />
@@ -141,11 +234,12 @@ export default function SignUp(_: ScreenProps) {
       >
         {stage === 'email' ? (
           <>
-            <h1 className="hc-h3">Create your account</h1>
-            <p className="hc-medium hc-muted">Use an account you already have, or sign in with your email. No password needed.</p>
+            <h1 className="hc-h3">{title}</h1>
+            <p className="hc-medium hc-muted">{intro}</p>
             {social}
             <p className="hc-small hc-muted hc-onb-divider">or</p>
             {emailFields}
+            {agreementLine}
           </>
         ) : (
           <>
@@ -155,7 +249,7 @@ export default function SignUp(_: ScreenProps) {
           </>
         )}
         <div className="hc-onb-spacer" />
-        <TextLink>Can’t sign in?</TextLink>
+        <TextLink onClick={recover}>Can’t sign in?</TextLink>
       </MobileShell>
     );
   }
@@ -163,19 +257,23 @@ export default function SignUp(_: ScreenProps) {
   return (
     <WebShell layout="onboarding" className="hc-onb-web">
       <WebCard>
-        <WebStepHeader step={1} />
+        {!signIn && <WebStepHeader step={1} total={total} />}
         {stage === 'email' ? (
           <>
-            <h1 className="hc-h2">Create your account</h1>
-            <p className="hc-large hc-muted">Use an account you already have, or sign in with your email. No password needed.</p>
+            <h1 className="hc-h2">{title}</h1>
+            <p className="hc-large hc-muted">{intro}</p>
             {social}
             <p className="hc-small hc-muted hc-onb-divider">or</p>
             {emailFields}
+            <TextLink align="left" onClick={recover}>Can’t sign in?</TextLink>
+            {agreementLine}
             <div className="hc-onb-actions">
-              <Button fullWidth onClick={() => setStage('code')} disabled={!canSend}>
+              <Button fullWidth onClick={sendCode} disabled={!canSend}>
                 Send code
               </Button>
-              <TextLink underline={false}>Can’t sign in?</TextLink>
+              <TextLink underline={false} onClick={otherMode.onClick}>
+                {otherMode.label}
+              </TextLink>
             </div>
           </>
         ) : (
@@ -187,7 +285,7 @@ export default function SignUp(_: ScreenProps) {
               <Button fullWidth onClick={verify} disabled={code.length < 6}>
                 Verify
               </Button>
-              <TextLink underline={false}>Can’t sign in?</TextLink>
+              <TextLink underline={false} onClick={recover}>Can’t sign in?</TextLink>
             </div>
           </>
         )}
