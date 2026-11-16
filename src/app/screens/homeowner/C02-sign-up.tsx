@@ -11,7 +11,7 @@ import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
-import { TextLink, WebCard, WebStepHeader } from './_onboarding';
+import { OnboardingStepper, TextLink, WebCard, WebStepHeader } from './_onboarding';
 import appleLogo from './assets/c02-apple.png';
 import googleLogo from './assets/c02-google.png';
 import './C02-sign-up.css';
@@ -215,7 +215,8 @@ export default function SignUp(_: ScreenProps) {
         className="hc-onb-mobile"
         header={{
           title: signIn ? 'Sign in' : 'Create account',
-          ...(signIn ? {} : { step: `1 of ${total}`, progress: 1 / total }),
+          // Homeowner onboarding shows the stepper in the body instead of the app bar's step and progress
+          ...(signIn || shortFlow ? {} : { step: `1 of ${total}`, progress: 1 / total }),
           ...(stage === 'code' ? { onBack: () => setStage('email') } : {}),
         }}
         bottom={
@@ -232,6 +233,7 @@ export default function SignUp(_: ScreenProps) {
           )
         }
       >
+        {!signIn && shortFlow && <OnboardingStepper step={1} />}
         {stage === 'email' ? (
           <>
             <h1 className="hc-h3">{title}</h1>
@@ -257,7 +259,7 @@ export default function SignUp(_: ScreenProps) {
   return (
     <WebShell layout="onboarding" className="hc-onb-web">
       <WebCard>
-        {!signIn && <WebStepHeader step={1} total={total} />}
+        {!signIn && (shortFlow ? <OnboardingStepper step={1} /> : <WebStepHeader step={1} total={total} />)}
         {stage === 'email' ? (
           <>
             <h1 className="hc-h2">{title}</h1>

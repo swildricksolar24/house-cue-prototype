@@ -23,6 +23,8 @@ export type SetupChecklistProps = {
   /** Footer link text, e.g. "See all 9 items" */
   seeAllLabel?: ReactNode;
   onSeeAll?: () => void;
+  /** When the footer button expands the list in place, whether it's expanded (sets aria-expanded) */
+  seeAllExpanded?: boolean;
   seeAllTo?: string;
   className?: string;
 };
@@ -38,6 +40,7 @@ export function SetupChecklist({
   items,
   seeAllLabel,
   onSeeAll,
+  seeAllExpanded,
   seeAllTo,
   className,
 }: SetupChecklistProps) {
@@ -89,7 +92,7 @@ export function SetupChecklist({
             {seeAllLabel}
           </Link>
         ) : (
-          <button type="button" className="hc-setup-checklist__see-all" onClick={onSeeAll}>
+          <button type="button" className="hc-setup-checklist__see-all" onClick={onSeeAll} aria-expanded={seeAllExpanded}>
             {seeAllLabel}
           </button>
         ))}

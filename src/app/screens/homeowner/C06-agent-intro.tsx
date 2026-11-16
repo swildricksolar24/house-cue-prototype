@@ -13,7 +13,7 @@ import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
-import { WebCard, WebStepHeader } from './_onboarding';
+import { OnboardingStepper, WebCard } from './_onboarding';
 import { SpendLimit } from './_spend-limit';
 import './C06-agent-intro.css';
 
@@ -93,9 +93,10 @@ export default function AgentIntro(_: ScreenProps) {
       <MobileShell
         className="hc-onb-mobile"
         // Back skips the X05 location prompt (a branch of C04) and returns to the address step
-        header={{ title: 'Your agent', step: '3 of 3', progress: 1, onBack: () => flow.go('C04') }}
+        header={{ title: 'Your agent', onBack: () => flow.go('C04') }}
         bottom={<BottomActions primaryLabel="Finish setup" onPrimary={flow.goNext} primaryDisabled={!contact} />}
       >
+        <OnboardingStepper step={3} />
         <AgentCard>{GREETING}</AgentCard>
         {list}
         {spend}
@@ -106,7 +107,7 @@ export default function AgentIntro(_: ScreenProps) {
   return (
     <WebShell layout="onboarding" className="hc-onb-web">
       <WebCard>
-        <WebStepHeader step={3} total={3} />
+        <OnboardingStepper step={3} />
         <AgentCard>{GREETING}</AgentCard>
         {list}
         {spend}

@@ -12,6 +12,7 @@ import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import { GetAppDialog } from './_get-app';
+import { MenuButton, SiteMenu } from '../../shells/SiteMenu';
 import { HeroImage } from './_hero';
 import { NumberedCards, PublicCta, PublicPage, SiteFooter } from './_public-page';
 import './C39-marketing-landing.css';
@@ -263,52 +264,31 @@ export default function MarketingLanding(_: ScreenProps) {
       <MobileShell className="hc-c39-mobile">
         <div className="hc-c39-mhead">
           <Logo />
-          <button
-            type="button"
-            className="hc-c39-menu-btn"
-            aria-label={menuOpen ? 'Close menu' : 'Menu'}
-            aria-expanded={menuOpen}
-            aria-controls="hc-c39-menu"
-            onClick={() => setMenuOpen((o) => !o)}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-              {menuOpen ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
-            </svg>
-          </button>
+          <MenuButton open={menuOpen} onClick={() => setMenuOpen((o) => !o)} controls="hc-c39-menu" />
         </div>
         {menuOpen && (
-          // Review change: the menu takes over the whole screen as a floating nav (pinned to the phone frame)
-          <div
+          // Review change: the shared full-screen menu (SiteMenu), the same one the signed-in pages use at phone width
+          <SiteMenu
             id="hc-c39-menu"
-            className="hc-c39-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu"
-            onKeyDown={(e) => e.key === 'Escape' && setMenuOpen(false)}
-          >
-            <div className="hc-c39-menu__head">
-              <Logo />
-              <button type="button" className="hc-c39-menu-btn" aria-label="Close menu" onClick={() => setMenuOpen(false)} autoFocus>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden>
-                  <path d="M6 6l12 12M18 6L6 18" />
-                </svg>
-              </button>
-            </div>
-            <nav className="hc-c39-menu__links" aria-label="Site">
-              <button type="button" onClick={() => flow.go('C39', '?view=how-it-works')}>How it works</button>
-              <button type="button" onClick={() => flow.go('C28', '?visitor=1')}>Membership</button>
-              <button type="button" onClick={() => flow.go('C39', '?view=for-pros')}>For Pros</button>
-              <button type="button" onClick={() => flow.go('C32', '?visitor=1')}>Help</button>
-            </nav>
-            <div className="hc-c39-menu__actions">
-              <Button variant="secondary" size="large" fullWidth onClick={signIn}>
-                Log in
-              </Button>
-              <Button size="large" fullWidth onClick={flow.goNext}>
-                Get started
-              </Button>
-            </div>
-          </div>
+            statusBar
+            onClose={() => setMenuOpen(false)}
+            links={[
+              { label: 'How it works', onClick: () => flow.go('C39', '?view=how-it-works') },
+              { label: 'Membership', onClick: () => flow.go('C28', '?visitor=1') },
+              { label: 'For Pros', onClick: () => flow.go('C39', '?view=for-pros') },
+              { label: 'Help', onClick: () => flow.go('C32', '?visitor=1') },
+            ]}
+            actions={
+              <>
+                <Button variant="secondary" size="large" fullWidth onClick={signIn}>
+                  Log in
+                </Button>
+                <Button size="large" fullWidth onClick={flow.goNext}>
+                  Get started
+                </Button>
+              </>
+            }
+          />
         )}
         <HeroImage height={260} className="hc-hero-photo--compact" />
         <p className="hc-medium-semibold hc-c39-eyebrow">Now booking in Phoenix and Tucson</p>

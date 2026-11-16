@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type MutableRefObject,
+  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
@@ -80,21 +81,140 @@ export function useDemoActions(actions: DemoAction[]) {
 }
 
 /**
- * The card: sits at the left edge on every step and is always open (review change: the hide/show tab was removed).
+ * The card (review change): a floating panel you can drag anywhere by its header, with × to close it; when closed, a
+ * small tab on the left edge brings it back. Open/closed and where you left it are remembered for the session.
  * "Use Demo Account" shows on steps that offer a shortcut; the Dark mode switch is always there.
- * Rendered into <body> so it sits beside the phone frame on mobile instead of inside it.
+ * Rendered into <body> so it floats over the page (and beside the phone frame on mobile).
  */
+type Pos = { x: number; y: number };
+
+function read<T>(key: string, fallback: T): T {
+  try {
+    const v = sessionStorage.getItem(key);
+    return v == null ? fallback : (JSON.parse(v) as T);
+  } catch {
+    return fallback;
+  }
+}
+
+function write(key: string, v: unknown) {
+  try {
+    sessionStorage.setItem(key, JSON.stringify(v));
+  } catch {
+    /* storage unavailable */
+  }
+}
+
+/** Keep the panel fully on screen */
+function clamp(p: Pos, el: HTMLElement | null): Pos {
+  const w = el?.offsetWidth ?? 288;
+  const h = el?.offsetHeight ?? 200;
+  return {
+    x: Math.min(Math.max(8, p.x), Math.max(8, window.innerWidth - w - 8)),
+    y: Math.min(Math.max(8, p.y), Math.max(8, window.innerHeight - h - 8)),
+  };
+}
+
 function DemoCard({ actionsRef, labels }: { actionsRef: MutableRefObject<DemoAction[]>; labels: string[] }) {
   const { device, theme, setTheme } = usePrototype();
-  // Review change: always open (no tab to hide it) on every step
+  const [open, setOpenState] = useState<boolean>(() => read('hc-proto-demo-open', true));
+  const [pos, setPos] = useState<Pos | null>(() => read<Pos | null>('hc-proto-demo-pos', null));
+  const panel = useRef<HTMLElement>(null);
+  const drag = useRef<{ dx: number; dy: number } | null>(null);
+
+  const setOpen = (next: boolean) => {
+    setOpenState(next);
+    write('hc-proto-demo-open', next);
+  };
+
+  // A spot saved in a wider window may be off screen here: pull it back in when the panel shows
+  useLayoutEffect(() => {
+    if (open) setPos((p) => (p ? clamp(p, panel.current) : p));
+  }, [open]);
+
+  // Stay on screen when the window shrinks
+  useEffect(() => {
+    const onResize = () => setPos((p) => (p ? clamp(p, panel.current) : p));
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLElement).closest('button')) return; // the × isn't a drag handle
+    const r = panel.current?.getBoundingClientRect();
+    if (!r) return;
+    drag.current = { dx: e.clientX - r.left, dy: e.clientY - r.top };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  };
+  const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const d = drag.current;
+    if (!d) return;
+    setPos(clamp({ x: e.clientX - d.dx, y: e.clientY - d.dy }, panel.current));
+  };
+  const onPointerUp = () => {
+    if (!drag.current) return;
+    drag.current = null;
+    setPos((p) => {
+      write('hc-proto-demo-pos', p);
+      return p;
+    });
+  };
+
+  if (!open) {
+    return createPortal(
+      <button
+        type="button"
+        className={`hc-proto-demo__tab hc-proto-demo__tab--${device}`}
+        onClick={() => setOpen(true)}
+        aria-label="Show prototype shortcuts"
+        title="Show prototype shortcuts"
+      >
+        <Icon name="account" size={20} />
+      </button>,
+      document.body,
+    );
+  }
+
   return createPortal(
-    <aside className={`hc-proto-demo hc-proto-demo--${device} is-open`} aria-label="Demo account (prototype only)">
+    <aside
+      ref={panel}
+      className={`hc-proto-demo hc-proto-demo--${device}${pos ? ' is-placed' : ''}`}
+      style={pos ? { left: pos.x, top: pos.y } : undefined}
+      aria-label="Prototype shortcuts (prototype only)"
+    >
       <div className="hc-proto-demo__card">
-        <div className="hc-proto-demo__head">
+        <div
+          className="hc-proto-demo__head"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+          title="Drag to move"
+        >
+          <span className="hc-proto-demo__grip" aria-hidden>
+            <svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor">
+              <circle cx="2" cy="2" r="1.5" />
+              <circle cx="8" cy="2" r="1.5" />
+              <circle cx="2" cy="8" r="1.5" />
+              <circle cx="8" cy="8" r="1.5" />
+              <circle cx="2" cy="14" r="1.5" />
+              <circle cx="8" cy="14" r="1.5" />
+            </svg>
+          </span>
           <span className="hc-proto-demo__icon">
             <Icon name="account" size={20} />
           </span>
           <p className="hc-medium-semibold">Prototype shortcuts</p>
+          <button
+            type="button"
+            className="hc-proto-demo__close"
+            onClick={() => setOpen(false)}
+            aria-label="Close prototype shortcuts"
+            title="Close"
+          >
+            <Icon name="close-small" size={20} />
+          </button>
         </div>
         <Switch
           label={<ThemeIcon dark={theme === 'dark'} />}

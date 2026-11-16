@@ -38,6 +38,11 @@
   outline: none;
 }
 .hc-side-nav__switcher:focus-visible { box-shadow: var(--hc-focus-ring); }
+.hc-side-nav__switcher:hover,
+.hc-side-nav__switcher.is-open { background: color-mix(in srgb, var(--hc-tint) 85%, var(--hc-text) 15%); }
+.hc-side-nav__switcher-caret { display: inline-block; transition: transform 0.2s ease; }
+.hc-side-nav__switcher.is-open .hc-side-nav__switcher-caret { transform: rotate(180deg); }
+@media (prefers-reduced-motion: reduce) { .hc-side-nav__switcher-caret { transition: none; } }
 
 .hc-side-nav__switcher-label {
   font: 600 12px/18px var(--hc-font);

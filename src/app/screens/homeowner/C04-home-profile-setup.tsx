@@ -13,7 +13,7 @@ import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
-import { TextLink, WebCard, WebStepHeader } from './_onboarding';
+import { OnboardingStepper, TextLink, WebCard, WebStepHeader } from './_onboarding';
 import './C04-home-profile-setup.css';
 
 type Option = { id: string; title: string; description: string; icon: IconName };
@@ -280,9 +280,10 @@ export default function HomeProfileSetup({ variant }: ScreenProps) {
       return (
         <MobileShell
           className="hc-onb-mobile"
-          header={{ title: 'Your home', step: '2 of 3', progress: 2 / 3, onBack: () => setStage('address') }}
+          header={{ title: 'Your home', onBack: () => setStage('address') }}
           bottom={<BottomActions primaryLabel="Looks right" onPrimary={finish} primaryDisabled={!detailsOk} />}
         >
+          <OnboardingStepper step={2} />
           {detailsStep(mobileDetails)}
           {bookingBanner}
         </MobileShell>
@@ -291,9 +292,10 @@ export default function HomeProfileSetup({ variant }: ScreenProps) {
     return (
       <MobileShell
         className="hc-onb-mobile"
-        header={{ title: 'Your home', step: '2 of 3', progress: 2 / 3 }}
+        header={{ title: 'Your home' }}
         bottom={<BottomActions primaryLabel="Continue" onPrimary={() => setStage('confirm')} primaryDisabled={!confirmed} />}
       >
+        <OnboardingStepper step={2} />
         <h1 className="hc-h3">Where’s your home?</h1>
         {addressStep}
       </MobileShell>
@@ -303,7 +305,7 @@ export default function HomeProfileSetup({ variant }: ScreenProps) {
   return (
     <WebShell layout="onboarding" className="hc-onb-web">
       <WebCard>
-        <WebStepHeader step={2} total={3} />
+        <OnboardingStepper step={2} />
         <h1 className="hc-h2">Where’s your home?</h1>
         {addressStep}
         {detailsStep(webDetails)}

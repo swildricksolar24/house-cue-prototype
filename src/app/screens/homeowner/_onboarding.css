@@ -149,3 +149,60 @@
 }
 .hc-onb-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
 
+
+/* Homeowner onboarding stepper (review change): three labelled steps joined by a line.
+   Done = filled with a check, current = filled with its number, to do = outlined. */
+.hc-onb-stepper {
+  display: flex;
+  margin: 0 0 var(--hc-space-2);
+  padding: 0;
+  list-style: none;
+}
+.hc-onb-stepper__item {
+  position: relative;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--hc-space-2);
+  min-width: 0;
+  text-align: center;
+}
+/* connector to the next step, from this dot's centre to the next dot's centre */
+.hc-onb-stepper__item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 13px;
+  left: calc(50% + 18px);
+  right: calc(-50% + 18px);
+  height: 2px;
+  border-radius: 1px;
+  background: var(--hc-border);
+}
+.hc-onb-stepper__item--done:not(:last-child)::after { background: var(--hc-primary); }
+.hc-onb-stepper__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--hc-radius-pill);
+  font: 700 13px/20px var(--hc-font);
+  box-sizing: border-box;
+}
+.hc-onb-stepper__item--done .hc-onb-stepper__dot,
+.hc-onb-stepper__item--current .hc-onb-stepper__dot { background: var(--hc-primary); color: var(--hc-on-primary); }
+.hc-onb-stepper__item--current .hc-onb-stepper__dot { box-shadow: 0 0 0 4px var(--hc-selected); }
+.hc-onb-stepper__item--todo .hc-onb-stepper__dot { border: 2px solid var(--hc-border-strong); color: var(--hc-text-muted); }
+.hc-onb-stepper__label { font: 600 13px/18px var(--hc-font); color: var(--hc-text-muted); }
+.hc-onb-stepper__item--current .hc-onb-stepper__label { color: var(--hc-text); }
+
+/* Screen-reader-only text (also defined in C04's CSS; here so every onboarding screen has it) */
+.hc-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

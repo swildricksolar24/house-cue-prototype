@@ -69,10 +69,14 @@
   gap: var(--hc-space-1);
 }
 
+/* Review change: the table fits the 728px content column (the Figma columns added up to ~880px, so Document
+   collapsed to nothing and the rest ran off the edge). Column widths match the restacked Figma frame. On narrower
+   windows (under ~725px of table) it scrolls sideways instead of clipping columns. */
 .hc-c45-table {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   border: 1px solid var(--hc-border);
   border-radius: var(--hc-radius-md);
   background: var(--hc-card);
@@ -80,8 +84,11 @@
 .hc-c45-table__head,
 .hc-c45-table__row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 110px 190px 110px 80px 150px 110px;
-  gap: var(--hc-space-4);
+  grid-template-columns: minmax(96px, 1fr) 76px 109px 84px 64px 86px 104px;
+  gap: var(--hc-space-3);
+  /* the narrowest the columns go (96 + fixed columns + gaps + padding), so when the table scrolls the dividers and
+     the header tint span the whole width */
+  min-width: 723px;
   align-items: center;
   padding: var(--hc-space-3) var(--hc-space-4);
 }

@@ -35,10 +35,18 @@
 .hc-web-shell--page { background: var(--hc-page); }
 .hc-web-shell--card { background: var(--hc-card); }
 
+/* Signed-in web (review change): the side menu and the content sit together in one centred 1024px area, the same
+   width as the landing page, so the menu's left edge lines up with the landing logo and the content ends on the
+   same right edge. Outside it the page background shows. */
 .hc-web-shell--app {
   display: grid;
   grid-template-columns: var(--hc-web-menu) minmax(0, 1fr);
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
 }
+/* The menu is a panel inside that area, so it gets a border on both sides */
+.hc-web-shell--app > .hc-web-shell__nav { box-shadow: inset 1px 0 0 var(--hc-border), inset -1px 0 0 var(--hc-border); }
 .hc-web-shell__nav {
   position: sticky;
   top: 0;
@@ -55,12 +63,12 @@
   margin: 0 auto;
 }
 
-/* Signed-in web (side menu): content sits in one centred column, max 800px (review decision). Big side-by-side
-   columns are stacked by each screen; small cards may still sit side by side. */
+/* Signed-in content: fills the rest of the 1024px area, a 48px gap after the menu and flush with the right edge.
+   Big side-by-side columns are stacked by each screen; small cards may still sit side by side. */
 .hc-web-shell--app > .hc-web-shell__main {
-  width: 100%;
-  max-width: calc(800px + 2 * var(--hc-space-8));
-  justify-self: center;
+  width: auto;
+  max-width: none;
+  padding-right: 0;
 }
 /* Every screen's main/side column wrapper is named "hc-<code>-web__cols": stack its columns in reading order and let
    each take the full width (side panels lose their fixed widths). Card grids inside the columns are left alone. */
@@ -81,3 +89,89 @@
 /* Always reserve the scrollbar's space, so centred content and the top bar don't shift by a few pixels between short
    pages (no scrollbar) and long ones (review change: one width on every top-bar page) */
 html { scrollbar-gutter: stable; }
+
+/* Top bar sizing (review change): on every signed-out page (landing, the top-bar pages and the whole onboarding) the
+   logo and buttons line up with the landing page's centred 1024px column instead of sitting 40px from the window
+   edges; the bar's background still runs full width. */
+.hc-web-shell--onboarding > .hc-web-top-bar,
+.hc-web-shell--marketing > .hc-web-top-bar {
+  padding-left: max(var(--hc-space-5), calc((100% - 1024px) / 2));
+  padding-right: max(var(--hc-space-5), calc((100% - 1024px) / 2));
+}
+
+/* Phone width (review change): the side menu and the top bar's links fold into a ☰ bar that opens SiteMenu, the same
+   full-screen menu as the mobile landing page. Hidden on wider screens. */
+.hc-web-shell__mbar { display: none; }
+.hc-web-shell__mbar-logo { display: inline-flex; border-radius: var(--hc-radius-sm); }
+.hc-web-shell__mbar-logo:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-web-shell__menu-switcher {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  margin-top: var(--hc-space-5);
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-tint);
+  color: var(--hc-text);
+  text-align: left;
+  cursor: pointer;
+}
+.hc-web-shell__menu-switcher:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-web-shell__menu-switcher-value { display: inline-flex; align-items: center; gap: var(--hc-space-2); }
+.hc-web-shell__menu-switcher-caret { display: inline-block; transition: transform 0.2s ease; }
+.hc-web-shell__menu-switcher.is-open .hc-web-shell__menu-switcher-caret { transform: rotate(180deg); }
+/* The homes list opens inside the menu, under the address card */
+.hc-web-shell__menu-home { display: flex; flex-direction: column; }
+.hc-web-shell__menu-homes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  margin-top: var(--hc-space-2);
+  padding: var(--hc-space-2) var(--hc-space-4) var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  animation: hc-site-menu-in 0.18s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc-web-shell__menu-switcher-caret { transition: none; }
+  .hc-web-shell__menu-homes { animation: none; }
+}
+@media (max-width: 767px) {
+  .hc-web-shell__mbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    padding: 0 var(--hc-space-5);
+    background: var(--hc-card);
+    border-bottom: 1px solid var(--hc-border);
+  }
+  .hc-web-shell--app { grid-template-columns: minmax(0, 1fr); }
+  .hc-web-shell--app > .hc-web-shell__mbar { grid-column: 1 / -1; }
+  .hc-web-shell--app > .hc-web-shell__nav { display: none; }
+  .hc-web-shell--app > .hc-web-shell__main { padding-left: var(--hc-space-5); padding-right: var(--hc-space-5); }
+  .hc-web-shell--marketing > .hc-web-top-bar { display: none; }
+}
+
+/* Phone width, web layout (review change: auto mode is a responsive website). Shared fixes for the patterns that were
+   wider than a 390px window: title rows with buttons, button/chip rows and filters wrap; data tables scroll sideways
+   inside their card; side-by-side panels stack. */
+@media (max-width: 767px) {
+  .hc-web-shell__main [class*='-web__head'],
+  .hc-web-shell__main [class*='-web__filters'],
+  .hc-web-shell__main [class*='-actions'],
+  .hc-web-shell__main [class*='-media'],
+  .hc-web-shell__main [class*='-chips'],
+  .hc-web-shell__main .hc-c14-trust { flex-wrap: wrap; }
+  .hc-web-shell__main table { display: block; max-width: 100%; overflow-x: auto; }
+  .hc-web-shell__main .hc-x08-layout { flex-direction: column; }
+  .hc-web-shell__main .hc-x08-panel { width: auto; }
+  /* C24 filters: search above, chips wrap below */
+  .hc-web-shell__main .hc-c24-web__filters { flex-direction: column; align-items: stretch; }
+  .hc-web-shell__main .hc-c24-web__filters > .hc-c24-chips { flex-wrap: wrap; flex-shrink: 1; min-width: 0; }
+}

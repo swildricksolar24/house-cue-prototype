@@ -2,7 +2,11 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { useSearchParams } from 'react-router-dom';
 
 export type Theme = 'light' | 'dark';
-/** mobile = 390×844 phone frame · web = full-width web layout · auto = by window width (< 768 → mobile) */
+/**
+ * mobile = 390×844 phone frame · web = full-width web layout · auto = the web layout at every width (review change:
+ * a responsive website; below 768px the side menu and top bar fold into a ☰ full-screen menu). The phone designs
+ * show only when Mobile is picked in the prototype bar (or ?device=mobile).
+ */
 export type DeviceSetting = 'auto' | 'mobile' | 'web';
 export type Device = 'mobile' | 'web';
 /** Screen state frames drawn in Figma for list screens (#160) */
@@ -38,16 +42,6 @@ function save(v: { theme: Theme; device: DeviceSetting }) {
   }
 }
 
-function useWindowWidth() {
-  const [w, setW] = useState(() => window.innerWidth);
-  useEffect(() => {
-    const on = () => setW(window.innerWidth);
-    window.addEventListener('resize', on);
-    return () => window.removeEventListener('resize', on);
-  }, []);
-  return w;
-}
-
 /**
  * Prototype-wide settings. Theme and device persist per viewer; ?theme=, ?device= and ?state= in the URL override
  * them so a link can open a specific frame (e.g. /homeowner/request-quotes/2?device=mobile&state=empty).
@@ -60,8 +54,7 @@ export function PrototypeProvider({ children }: { children: ReactNode }) {
     (params.get('device') as DeviceSetting) ?? stored.device ?? 'auto',
   );
   const screenState = (params.get('state') as ScreenState) ?? 'default';
-  const width = useWindowWidth();
-  const device: Device = deviceSetting === 'auto' ? (width < 768 ? 'mobile' : 'web') : deviceSetting;
+  const device: Device = deviceSetting === 'auto' ? 'web' : deviceSetting;
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);

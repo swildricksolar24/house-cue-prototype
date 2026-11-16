@@ -1,0 +1,79 @@
+/* Full-screen floating menu (SiteMenu.tsx): logo + × on top, big links, buttons at the bottom */
+.hc-site-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  display: flex;
+  flex-direction: column;
+  padding: var(--hc-space-4) var(--hc-space-5) var(--hc-space-7);
+  overflow-y: auto;
+  background: var(--hc-card);
+  color: var(--hc-text);
+  /* No scrollbar of its own (it would push the × sideways); still scrolls by touch, wheel and keyboard */
+  scrollbar-width: none;
+  animation: hc-site-menu-in 0.18s ease-out;
+}
+.hc-site-menu::-webkit-scrollbar { display: none; }
+/* In the phone frame, start below the status bar */
+.hc-site-menu--status-bar { padding-top: 56px; }
+/* Fade only: the logo and × stay exactly where the bar's logo and ☰ are (see SiteMenu.tsx) */
+@keyframes hc-site-menu-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .hc-site-menu { animation: none; } }
+
+.hc-site-menu__head { display: flex; align-items: center; justify-content: space-between; }
+.hc-site-menu__links { display: flex; flex-direction: column; padding-top: var(--hc-space-6); }
+.hc-site-menu__links > button {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-4) 0;
+  border: 0;
+  border-bottom: 1px solid var(--hc-border);
+  background: none;
+  color: var(--hc-text);
+  font: 700 24px/32px var(--hc-font);
+  text-align: left;
+  cursor: pointer;
+}
+.hc-site-menu__links > button.is-current { color: var(--hc-link); }
+.hc-site-menu__links > button:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-site-menu__actions { display: flex; flex-direction: column; gap: var(--hc-space-3); margin-top: auto; padding-top: var(--hc-space-6); }
+
+/* ☰ / × */
+.hc-site-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-right: calc(-1 * var(--hc-space-2));
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-lg);
+  background: transparent;
+  color: var(--hc-text);
+  cursor: pointer;
+}
+.hc-site-menu-btn:hover { background: var(--hc-fill-10); }
+
+/* ☰ ⇄ × morph: the outer lines slide to the middle and turn 45°, the middle one shrinks away */
+.hc-site-menu-btn path {
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+  transition: transform 0.3s ease, opacity 0.2s ease;
+}
+.hc-site-menu-btn.is-open .hc-site-menu-btn__top { transform: rotate(45deg) translateY(5px); }
+.hc-site-menu-btn.is-open .hc-site-menu-btn__mid { opacity: 0; transform: scaleX(0); }
+.hc-site-menu-btn.is-open .hc-site-menu-btn__bot { transform: rotate(-45deg) translateY(-5px); }
+/* The menu's own × is created already open, so play ☰ → × once when it appears */
+.hc-site-menu .hc-site-menu-btn.is-open path { animation: hc-menu-btn-in 0.3s ease; }
+@keyframes hc-menu-btn-in { from { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .hc-site-menu-btn path { transition: none; }
+  .hc-site-menu .hc-site-menu-btn.is-open path { animation: none; }
+}
+.hc-site-menu-btn:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+/* A secondary button in the menu's actions styled like the side menu's Emergency row */
+.hc-site-menu__emergency.hc-button { border-color: var(--hc-danger); color: var(--hc-danger); }
+.hc-site-menu__emergency.hc-button:hover { background: var(--hc-danger-bg); }

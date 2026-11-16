@@ -57,6 +57,8 @@ export type SideNavShellProps<K extends string> = {
   /** Main switcher line; a ▾ is appended */
   switcherValue: string;
   onSwitcherClick?: () => void;
+  /** The switcher's menu is open (sets aria-expanded and flips the ▾) */
+  switcherExpanded?: boolean;
   /** Route of the logo link. Default "/" */
   logoTo?: string;
   /** Row(s) above the first item (e.g. Emergency) */
@@ -73,6 +75,7 @@ export function SideNavShell<K extends string>({
   switcherLabel,
   switcherValue,
   onSwitcherClick,
+  switcherExpanded,
   logoTo = '/',
   lead,
   footer,
@@ -84,10 +87,16 @@ export function SideNavShell<K extends string>({
       <Link to={logoTo} className="hc-side-nav__logo" aria-label="HouseCue home">
         <Logo />
       </Link>
-      <button type="button" className="hc-side-nav__switcher" onClick={onSwitcherClick} aria-haspopup="listbox">
+      <button
+        type="button"
+        className={['hc-side-nav__switcher', switcherExpanded && 'is-open'].filter(Boolean).join(' ')}
+        onClick={onSwitcherClick}
+        aria-haspopup="menu"
+        aria-expanded={switcherExpanded ?? false}
+      >
         <span className="hc-side-nav__switcher-label">{switcherLabel}</span>
         <span className="hc-side-nav__switcher-value">
-          {switcherValue} <span aria-hidden>▾</span>
+          {switcherValue} <span className="hc-side-nav__switcher-caret" aria-hidden>▾</span>
         </span>
       </button>
       {lead}
@@ -133,6 +142,7 @@ export type WebSideNavProps<R extends AppRole = AppRole> = {
   switcherLabel?: string;
   switcherValue?: string;
   onSwitcherClick?: () => void;
+  switcherExpanded?: boolean;
   /** Emergency row (above the first item). Default route "/emergency" */
   emergencyTo?: string;
   onEmergency?: () => void;

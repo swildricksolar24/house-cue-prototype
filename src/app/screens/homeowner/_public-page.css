@@ -126,9 +126,3 @@
 .hc-site-footer a:hover { text-decoration: underline; }
 .hc-site-footer a:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-sm); }
 .hc-site-footer button:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-sm); }
-
-/* Review change: the top bar's content lines up with the page body (the centred 1024px column, same on every page) */
-.hc-public .hc-web-top-bar {
-  padding-left: max(var(--hc-space-5), calc((100% - 1024px) / 2));
-  padding-right: max(var(--hc-space-5), calc((100% - 1024px) / 2));
-}

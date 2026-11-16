@@ -43,34 +43,57 @@
   margin: 0 auto;
 }
 
-/* Demo account card (DemoTools): always open, vertically centred on the left edge (review change: moved from the
-   top-left so it doesn't cover the top bar logo or the side menu, and no shadow) */
+/* Prototype shortcuts (DemoTools), review change: a floating panel, dragged by its header; × closes it and an edge
+   tab reopens it. Starts in the middle of the left edge; once dragged it stays where it was put (inline left/top). */
 .hc-proto-demo {
   --demo-card: 288px;
   position: fixed;
-  left: 0;
+  left: var(--hc-space-3);
+  top: 50%;
   z-index: 900;
-  display: flex;
-  align-items: flex-start;
-  transform: translateX(calc(-1 * var(--demo-card)));
-  transition: transform 0.25s ease;
+  transform: translateY(-50%);
 }
-.hc-proto-demo.is-open { transform: translateY(-50%); }
-.hc-proto-demo--mobile,
-.hc-proto-demo--web { top: 50%; }
+.hc-proto-demo.is-placed { transform: none; }
 
 .hc-proto-demo__card {
   display: flex;
   flex-direction: column;
   gap: var(--hc-space-4);
   width: var(--demo-card);
-  padding: var(--hc-space-5);
+  padding: var(--hc-space-4) var(--hc-space-5) var(--hc-space-5);
   border: 1px solid var(--hc-border);
-  border-left: 0;
-  border-radius: 0 var(--hc-radius-lg) var(--hc-radius-lg) 0;
+  border-radius: var(--hc-radius-lg);
   background: var(--hc-card);
 }
-.hc-proto-demo__head { display: flex; align-items: center; gap: var(--hc-space-3); }
+.hc-proto-demo__head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  margin: calc(-1 * var(--hc-space-2)) calc(-1 * var(--hc-space-2)) 0;
+  padding: var(--hc-space-2);
+  border-radius: var(--hc-radius-md);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.hc-proto-demo__head:active { cursor: grabbing; }
+.hc-proto-demo__head > p { flex: 1; min-width: 0; }
+.hc-proto-demo__grip { display: inline-flex; color: var(--hc-text-muted); }
+.hc-proto-demo__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: transparent;
+  color: var(--hc-text);
+  cursor: pointer;
+}
+.hc-proto-demo__close:hover { background: var(--hc-fill-10); }
+.hc-proto-demo__close:focus-visible { outline: 2px solid var(--hc-info); outline-offset: 2px; }
 .hc-proto-demo__icon {
   display: grid;
   place-items: center;
@@ -112,32 +135,29 @@
 /* The Switch stretches its label by default, which pushes the switch to the far edge */
 .hc-proto-demo__theme .hc-switch__label { flex: 0 0 auto; }
 
-/* Edge tab: shows "Demo" when closed, × when open */
+/* Closed: a small tab on the left edge, middle, reopens the panel */
 .hc-proto-demo__tab {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  z-index: 900;
   display: flex;
   align-items: center;
-  gap: var(--hc-space-1);
-  padding: var(--hc-space-2) 6px var(--hc-space-2) 6px;
+  padding: var(--hc-space-2) 6px;
   border: 1px solid var(--hc-border);
   border-left: 0;
   border-radius: 0 var(--hc-radius-md) var(--hc-radius-md) 0;
   background: var(--hc-card);
   color: var(--hc-text);
-  font: 600 14px/20px var(--hc-font);
   cursor: pointer;
-  box-shadow: 0 4px 12px var(--hc-fill-10);
+  transform: translateY(-50%);
 }
 .hc-proto-demo__tab:hover { background: var(--hc-tint); }
 .hc-proto-demo__tab:focus-visible { outline: 2px solid var(--hc-info); outline-offset: 2px; }
-.hc-proto-demo.is-open .hc-proto-demo__tab { border-left: 1px solid var(--hc-border); margin-left: -1px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .hc-proto-demo { transition: none; }
-}
 @media (max-width: 500px) {
-  /* On a real phone the frame is the screen: sit lower so it doesn't cover the header */
-  .hc-proto-demo--mobile { top: 120px; }
-  .hc-proto-demo--mobile.is-open { transform: none; }
+  /* On a real phone the frame is the screen: start lower so it doesn't cover the header */
+  .hc-proto-demo--mobile:not(.is-placed) { top: 120px; transform: none; }
+  .hc-proto-demo__tab--mobile { top: 120px; transform: none; }
 }
 
 /* Toolbar */

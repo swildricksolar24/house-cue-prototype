@@ -49,3 +49,9 @@
   padding: 0;
   list-style: none;
 }
+
+/* Phone width, web layout (review change): the title and its two buttons wrap */
+@media (max-width: 767px) {
+  .hc-c83-web__head { flex-wrap: wrap; }
+  .hc-c83-web__title { flex-basis: 100%; }
+}

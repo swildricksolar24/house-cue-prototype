@@ -1,10 +1,14 @@
 import { useState, type ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
-import type { AppRole, RoleNavKey } from '../../components/TabBar/TabBar';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button } from '../../components/Button/Button';
+import { Logo } from '../../components/Logo/Logo';
+import { Radio } from '../../components/Radio/Radio';
+import { roleNavItems, type AppRole, type RoleNavKey } from '../../components/TabBar/TabBar';
 import { WebSideNav } from '../../components/WebSideNav/WebSideNav';
 import { WebTopBar, type WebTopBarType } from '../../components/WebTopBar/WebTopBar';
 import { useCurrentHome } from '../prototype/HomeContext';
 import { HomePicker } from './HomePicker';
+import { MenuButton, SiteMenu, type SiteMenuLink } from './SiteMenu';
 import { homeownerPaths, landlordPaths, tenantPaths, topBarPaths, utilityPaths } from './navPaths';
 import './shells.css';
 
@@ -27,6 +31,64 @@ export type WebShellProps<R extends AppRole = 'homeowner'> = {
   className?: string;
 };
 
+/**
+ * Home switcher inside the phone-width ☰ menu (review change): the address card opens the account's homes right
+ * below it, inside the menu, instead of closing the menu for a separate picker. Picking a home makes it current and
+ * folds the list back up (the menu stays open); "Manage homes" goes to C38.
+ */
+function MenuHomeSwitcher({ onManage }: { onManage: () => void }) {
+  const { home, homes, setHomeId } = useCurrentHome();
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="hc-web-shell__menu-home">
+      <button
+        type="button"
+        className={`hc-web-shell__menu-switcher${open ? ' is-open' : ''}`}
+        aria-expanded={open}
+        aria-controls="hc-menu-homes"
+        onClick={() => setOpen((o) => !o)}
+      >
+        <span className="hc-small hc-muted">Home</span>
+        <span className="hc-medium-semibold hc-web-shell__menu-switcher-value">
+          {`${home.address}, ${home.city}`}
+          <span className="hc-web-shell__menu-switcher-caret" aria-hidden>
+            ▾
+          </span>
+        </span>
+      </button>
+      {open && (
+        <div id="hc-menu-homes" className="hc-web-shell__menu-homes">
+          <div className="hc-home-picker__list" role="radiogroup" aria-label="Your homes">
+            {homes.map((h) => (
+              <Radio
+                key={h.id}
+                name="menu-current-home"
+                value={h.id}
+                checked={h.id === home.id}
+                onChange={() => {
+                  setHomeId(h.id);
+                  setOpen(false);
+                }}
+                label={
+                  <span className="hc-home-picker__option">
+                    <span className="hc-medium-semibold">
+                      {h.address}, {h.city}
+                    </span>
+                    <span className="hc-small hc-muted">{h.meta}</span>
+                  </span>
+                }
+              />
+            ))}
+          </div>
+          <Button variant="secondary" fullWidth onClick={onManage}>
+            Manage homes
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** Web 1440×900 layout: side nav + content for the signed-in app, or top bar + content for onboarding/marketing. */
 export function WebShell<R extends AppRole = 'homeowner'>({
   layout = 'app',
@@ -40,6 +102,9 @@ export function WebShell<R extends AppRole = 'homeowner'>({
   const navigate = useNavigate();
   const { home } = useCurrentHome();
   const [picking, setPicking] = useState(false);
+  // Review change: at phone width the side menu (signed in) and the top bar's links (landing and top-bar pages) fold
+  // into a ☰ that opens the same full-screen menu as the mobile landing page (SiteMenu)
+  const [menuOpen, setMenuOpen] = useState(false);
   const r = (role ?? 'homeowner') as AppRole;
   const classes = ['hc-web-shell', `hc-web-shell--${layout}`, `hc-web-shell--${background}`, className].filter(Boolean).join(' ');
   const content = <main className={`hc-web-shell__main hc-web-shell__main--${width}`}>{children}</main>;
@@ -48,11 +113,50 @@ export function WebShell<R extends AppRole = 'homeowner'>({
     return (
       <div className={classes}>
         {/* Review change: no language picker in the prototype's top bar */}
-        <WebTopBar type={layout} paths={topBarPaths} showLanguage={false} />
+        {/* Review change: no Log in while onboarding (onboarding-style top bar); the landing and top-bar pages keep it */}
+        <WebTopBar type={layout} paths={topBarPaths} showLanguage={false} hideLogin={layout === 'onboarding'} />
+        {layout === 'marketing' && (
+          <>
+            <div className="hc-web-shell__mbar">
+              <Link to={topBarPaths.home} className="hc-web-shell__mbar-logo" aria-label="HouseCue home">
+                <Logo />
+              </Link>
+              <MenuButton open={menuOpen} onClick={() => setMenuOpen(true)} controls="hc-shell-menu" />
+            </div>
+            {menuOpen && (
+              <SiteMenu
+                id="hc-shell-menu"
+                onClose={() => setMenuOpen(false)}
+                links={[
+                  { label: 'How it works', onClick: () => navigate(topBarPaths.howItWorks) },
+                  { label: 'Membership', onClick: () => navigate(topBarPaths.membership) },
+                  { label: 'For Pros', onClick: () => navigate(topBarPaths.forPros) },
+                  { label: 'Help', onClick: () => navigate(topBarPaths.help) },
+                ]}
+                actions={
+                  <>
+                    <Button variant="secondary" size="large" fullWidth onClick={() => navigate(topBarPaths.login)}>
+                      Log in
+                    </Button>
+                    <Button size="large" fullWidth onClick={() => navigate(topBarPaths.getStarted)}>
+                      Get started
+                    </Button>
+                  </>
+                }
+              />
+            )}
+          </>
+        )}
         {content}
       </div>
     );
   }
+
+  const appLinks: SiteMenuLink[] = (roleNavItems[r] as { key: string; label: string }[]).map((item) => ({
+    label: item.label,
+    current: item.key === nav,
+    onClick: () => navigate((rolePaths[r] as Record<string, string>)[item.key]),
+  }));
 
   return (
     <div className={classes}>
@@ -64,14 +168,50 @@ export function WebShell<R extends AppRole = 'homeowner'>({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         paths={rolePaths[r] as any}
         switcherValue={r === 'homeowner' ? `${home.address}, ${home.city}` : undefined}
-        // Homeowner: pick from the account's homes; landlord / tenant switchers still open C38
-        onSwitcherClick={() => (r === 'homeowner' ? setPicking(true) : navigate(utilityPaths.homeSwitcher))}
+        // Homeowner: pick from the account's homes (dropdown under the card; the card toggles it); landlord / tenant
+        // switchers still open C38
+        onSwitcherClick={() => (r === 'homeowner' ? setPicking((p) => !p) : navigate(utilityPaths.homeSwitcher))}
+        switcherExpanded={r === 'homeowner' ? picking : undefined}
         emergencyTo={utilityPaths.emergency}
         logoTo={rolePaths[r].home}
         className="hc-web-shell__nav"
       />
+      <div className="hc-web-shell__mbar">
+        <Link to={rolePaths[r].home} className="hc-web-shell__mbar-logo" aria-label="HouseCue home">
+          <Logo />
+        </Link>
+        <MenuButton open={menuOpen} onClick={() => setMenuOpen(true)} controls="hc-shell-menu" />
+      </div>
+      {menuOpen && (
+        <SiteMenu
+          id="hc-shell-menu"
+          onClose={() => setMenuOpen(false)}
+          top={
+            r === 'homeowner' ? (
+              <MenuHomeSwitcher
+                onManage={() => {
+                  setMenuOpen(false);
+                  navigate(utilityPaths.homeSwitcher);
+                }}
+              />
+            ) : undefined
+          }
+          links={appLinks}
+          actions={
+            <Button variant="secondary" size="large" fullWidth className="hc-site-menu__emergency" leadingIcon="caution" onClick={() => navigate(utilityPaths.emergency)}>
+              Emergency
+            </Button>
+          }
+        />
+      )}
       {content}
-      {picking && <HomePicker variant="popover" onClose={() => setPicking(false)} />}
+      {picking && (
+        <HomePicker
+          variant="dropdown"
+          anchor={document.querySelector<HTMLElement>('.hc-web-shell__nav .hc-side-nav__switcher')}
+          onClose={() => setPicking(false)}
+        />
+      )}
     </div>
   );
 }

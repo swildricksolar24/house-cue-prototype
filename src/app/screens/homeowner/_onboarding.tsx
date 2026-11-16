@@ -28,6 +28,42 @@ export function WebStepHeader({ step, total = 6 }: { step: number; total?: numbe
   );
 }
 
+/** The homeowner sign-up's three steps (shorter onboarding, Option A) */
+export const ONBOARDING_STEPS = ['Account', 'Your home', 'Your agent'] as const;
+
+/**
+ * Review change: a labelled stepper for the homeowner onboarding (replaces "Step n of 3" + the progress bar on
+ * Sign up, Your home and Your agent). Done steps show a check, the current one is filled, later ones are outlined;
+ * the line between two steps fills once the first is done. Not in the HC library yet (no Stepper component).
+ */
+export function OnboardingStepper({ step }: { step: 1 | 2 | 3 }) {
+  return (
+    <ol className="hc-onb-stepper" aria-label={`Sign-up progress: step ${step} of ${ONBOARDING_STEPS.length}`}>
+      {ONBOARDING_STEPS.map((label, i) => {
+        const n = i + 1;
+        const state = n < step ? 'done' : n === step ? 'current' : 'todo';
+        return (
+          <li key={label} className={`hc-onb-stepper__item hc-onb-stepper__item--${state}`} aria-current={state === 'current' ? 'step' : undefined}>
+            <span className="hc-onb-stepper__dot" aria-hidden>
+              {state === 'done' ? (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12.5l4.5 4.5L19 7.5" />
+                </svg>
+              ) : (
+                n
+              )}
+            </span>
+            <span className="hc-onb-stepper__label">
+              {label}
+              {state === 'done' && <span className="hc-visually-hidden"> (done)</span>}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
 /** Centred white card on the web onboarding page (Figma "body" > "card": 40 padding, 16 gap, radius 16) */
 export function WebCard({ width = 560, children, className }: { width?: number; children: ReactNode; className?: string }) {
   return (
