@@ -1,0 +1,13 @@
+/* Add a card or bank account (AddPaymentDialog.tsx, review change): Card | Bank account side by side, stacked on mobile */
+.hc-add-payment__kinds {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--hc-space-2);
+}
+.hc-edit-dialog--mobile .hc-add-payment__kinds { grid-template-columns: 1fr; }
+/* The dialog scrolls when the card form is taller than the window */
+.hc-edit-dialog__panel:has(.hc-add-payment__kinds) {
+  max-height: calc(100% - 2 * var(--hc-space-5));
+  overflow-y: auto;
+}
+.hc-edit-dialog--mobile .hc-edit-dialog__panel:has(.hc-add-payment__kinds) { max-height: 92%; }

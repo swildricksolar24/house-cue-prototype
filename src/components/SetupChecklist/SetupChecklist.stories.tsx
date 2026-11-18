@@ -42,3 +42,37 @@ export const AllVariants: Story = {
     </div>
   ),
 };
+
+/** C08 dashboard (review change): every item listed and numbered (circles, filled when done), status as a tag after the task, Edit on the right, no See all link */
+export const Numbered: Story = {
+  args: {
+    numbered: true,
+    metaAsTag: true,
+    seeAllLabel: undefined,
+    seeAllTo: undefined,
+    items: [
+      { id: 'systems', label: 'Add systems and appliances', meta: 'Done', done: true, onEdit: () => {} },
+      { id: 'prefs', label: 'Set agent preferences', meta: '3 min', onEdit: () => {} },
+      { id: 'calendar', label: 'Connect your calendar', meta: '2 min', onEdit: () => {} },
+      { id: 'email', label: 'Import receipts from email', meta: '2 min', onEdit: () => {} },
+      { id: 'documents', label: 'Upload documents', meta: 'Done', done: true, onEdit: () => {} },
+    ],
+  },
+};
+
+/** C08 dashboard (review change): steps grouped under small headings, numbered 1–9 straight through the groups */
+export const Grouped: Story = {
+  args: {
+    numbered: true,
+    metaAsTag: true,
+    seeAllLabel: undefined,
+    seeAllTo: undefined,
+    items: [
+      { id: 'systems', group: 'Your home', label: 'Add systems and appliances', meta: 'Done', done: true, onEdit: () => {} },
+      { id: 'rooms', group: 'Your home', label: 'Add rooms and materials', meta: '5 min', onEdit: () => {} },
+      { id: 'calendar', group: 'Connections', label: 'Connect your calendar', meta: '2 min', onEdit: () => {} },
+      { id: 'email', group: 'Connections', label: 'Import receipts from email', meta: '2 min', onEdit: () => {} },
+      { id: 'prefs', group: 'Agent and account', label: 'Set agent preferences', meta: '3 min', onEdit: () => {} },
+    ],
+  },
+};

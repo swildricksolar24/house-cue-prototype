@@ -9,6 +9,7 @@ import { StatusPill } from '../../../components/StatusPill/StatusPill';
 import { TimelineStep, type TimelineStepState } from '../../../components/TimelineStep/TimelineStep';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
+import { DialogClose } from '../../shells/DialogClose';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
@@ -114,6 +115,7 @@ function HomeownerJobTracker() {
         aria-labelledby="hc-c18-dialog-title"
         onClick={(e) => e.stopPropagation()}
       >
+        <DialogClose onClick={closeOverlay} />
         <h2 id="hc-c18-dialog-title" className="hc-h4">
           Approve change order: +$86
         </h2>
@@ -148,6 +150,7 @@ function HomeownerJobTracker() {
         onClick={(e) => e.stopPropagation()}
       >
         <span className="hc-c18-sheet__grabber" aria-hidden />
+        <DialogClose onClick={closeOverlay} />
         <h2 id="hc-c18-sheet-title" className="hc-h4">
           Zephyrline HVAC cancelled Thu 8–10 AM
         </h2>

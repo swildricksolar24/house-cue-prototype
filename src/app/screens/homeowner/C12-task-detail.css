@@ -38,15 +38,6 @@
   align-items: flex-start;
   gap: var(--hc-space-5);
 }
-.hc-c12-back {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--hc-link);
-  font: 600 14px/20px var(--hc-font);
-  cursor: pointer;
-}
-.hc-c12-back:hover { text-decoration: underline; }
 .hc-c12-web__title {
   display: flex;
   align-items: center;
@@ -184,4 +175,14 @@
   display: flex;
   justify-content: flex-end;
   gap: var(--hc-space-3);
+}
+/* Review change: the task's steps on mobile (they were only on web) */
+.hc-c12-steps { display: flex; flex-direction: column; gap: var(--hc-space-2); }
+.hc-c12-steps h2 { margin: 0; }
+.hc-c12-steps__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  margin: 0;
+  padding-left: var(--hc-space-5);
 }

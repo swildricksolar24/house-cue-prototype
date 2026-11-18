@@ -19,12 +19,15 @@
 }
 .hc-c10-chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
 
-.hc-c10-edit { padding: var(--hc-space-2) 0; }
-.hc-c10-actions {
+.hc-c10-edit {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--hc-space-2);
+  padding: var(--hc-space-2) 0 var(--hc-space-3);
+  border-bottom: 1px solid var(--hc-border);
 }
+/* Review change: Cancel / Save under the field being edited */
+.hc-c10-edit__actions { display: flex; justify-content: flex-end; gap: var(--hc-space-2); }
 
 .hc-c10-web {
   display: flex;
@@ -52,3 +55,21 @@
   border-radius: var(--hc-radius-lg);
   background: var(--hc-card);
 }
+/* Review change: activity entry with a View job button on the right */
+.hc-c10-log-row { display: flex; align-items: center; gap: var(--hc-space-3); }
+.hc-c10-log-row > .hc-list-row { flex: 1 1 auto; min-width: 0; }
+.hc-c10-log-row__job { flex-shrink: 0; }
+/* Review change: activity grouped by kind (Quotes, Bookings, Calls, Changes), each with a colour-coded icon */
+.hc-c10-log-group { display: flex; flex-direction: column; }
+.hc-c10-log-group + .hc-c10-log-group { margin-top: var(--hc-space-3); }
+.hc-c10-log-group__title {
+  margin: 0;
+  color: var(--hc-text-muted);
+  font: 600 12px/18px var(--hc-font);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.hc-c10-log-row__item--quotes .hc-list-row__icon { background: var(--hc-info-bg); color: var(--hc-info); }
+.hc-c10-log-row__item--bookings .hc-list-row__icon { background: var(--hc-success-bg); color: var(--hc-success); }
+.hc-c10-log-row__item--calls .hc-list-row__icon { background: var(--hc-yellow-bg); color: var(--hc-warning); }
+.hc-c10-log-row__item--changes .hc-list-row__icon { background: var(--hc-tint); color: var(--hc-text); }

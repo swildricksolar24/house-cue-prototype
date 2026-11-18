@@ -79,3 +79,63 @@
 
 .hc-setup-checklist__see-all:hover { text-decoration: underline; }
 .hc-setup-checklist__see-all:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+/* Numbered list (review change): number in a 24px circle in place of the checkbox; done = the green of the Done tag */
+.hc-setup-checklist__num {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--hc-border);
+  background: var(--hc-card);
+  border-radius: var(--hc-radius-pill);
+  color: var(--hc-text-muted);
+  font: 600 12px/1 var(--hc-font);
+}
+/* Numbered rows: no fill (review change: the tinted rows with 2px white gaps were removed), a 1px border-colour line between rows,
+   in line with the title */
+.hc-setup-checklist__items--numbered { gap: 0; }
+.hc-setup-checklist__items--numbered > li + li { border-top: 1px solid var(--hc-border); }
+.hc-setup-checklist__items--numbered .hc-setup-checklist__item { padding: var(--hc-space-2) 0; }
+
+.hc-setup-checklist__num.is-done {
+  border-color: var(--hc-success-bg);
+  background: var(--hc-success-bg);
+  color: var(--hc-success);
+}
+.hc-setup-checklist__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Meta as a tag next to the label, and an Edit button at the row's end (review change) */
+.hc-setup-checklist__label--tagged {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hc-space-1) var(--hc-space-2);
+}
+.hc-setup-checklist__edit { flex-shrink: 0; }
+
+/* Groups (review change): a small muted heading over each group's rows; groups 16px apart */
+.hc-setup-checklist__group { display: flex; flex-direction: column; gap: var(--hc-space-1); }
+.hc-setup-checklist__group + .hc-setup-checklist__group { margin-top: var(--hc-space-2); }
+/* Without names (showGroupNames off): no space between groups (review change), so the rows run on as one list. The
+   negative margin cancels the card's 12px gap between its blocks; the 1px line is the same one every row has. */
+.hc-setup-checklist__group:not(:has(.hc-setup-checklist__group-title)) + .hc-setup-checklist__group {
+  margin-top: calc(-1 * var(--hc-space-3));
+  border-top: 1px solid var(--hc-border);
+}
+.hc-setup-checklist__group-title {
+  margin: 0;
+  font: 600 12px/18px var(--hc-font);
+  letter-spacing: 0.02em;
+  color: var(--hc-text-muted);
+}

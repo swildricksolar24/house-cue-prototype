@@ -175,3 +175,154 @@ html { scrollbar-gutter: stable; }
   .hc-web-shell__main .hc-c24-web__filters { flex-direction: column; align-items: stretch; }
   .hc-web-shell__main .hc-c24-web__filters > .hc-c24-chips { flex-wrap: wrap; flex-shrink: 1; min-width: 0; }
 }
+
+/* "Back to dashboard" above a setup screen opened from the C08 checklist (SetupBack.tsx); same look as the
+   signed-out pages' Back button */
+.hc-web-shell__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--hc-space-1);
+  margin: 0 0 var(--hc-space-4) calc(-1 * var(--hc-space-1));
+  padding: var(--hc-space-2) var(--hc-space-3) var(--hc-space-2) var(--hc-space-1);
+  border: 0;
+  border-radius: var(--hc-radius-lg);
+  background: transparent;
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-web-shell__back:hover { background: var(--hc-fill-10); }
+.hc-web-shell__back:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-web-shell__back-icon {
+  width: 24px;
+  height: 24px;
+  background: currentColor;
+  -webkit-mask: url('../../components/AppBar/assets/back.svg') center / 24px 24px no-repeat;
+  mask: url('../../components/AppBar/assets/back.svg') center / 24px 24px no-repeat;
+}
+
+/* Setup flow (SetupFlow.tsx, review change): step tracker on top of a setup step, Cancel / Save at the bottom */
+.hc-setup-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  flex-shrink: 0;
+}
+.hc-setup-tracker--web { margin-bottom: var(--hc-space-5); }
+.hc-setup-tracker__label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--hc-space-1) var(--hc-space-2);
+  margin: 0;
+}
+.hc-setup-tracker__steps {
+  display: flex;
+  gap: var(--hc-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hc-setup-tracker__steps > li { flex: 1 1 0; min-width: 0; }
+/* 6px segment inside a 22px-tall button, so it's easy to click */
+.hc-setup-tracker__step {
+  display: block;
+  width: 100%;
+  height: 22px;
+  padding: 8px 0;
+  border: 0;
+  border-radius: var(--hc-radius-sm);
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+}
+.hc-setup-tracker__step::before {
+  content: '';
+  display: block;
+  height: 6px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-border);
+  transition: background 0.15s ease;
+}
+.hc-setup-tracker__step--done::before { background: var(--hc-success); }
+/* Steps not done yet: grey at 40% opacity (review change) */
+.hc-setup-tracker__step--todo::before { opacity: 0.4; }
+.hc-setup-tracker__step--todo:hover::before { opacity: 1; }
+/* Current step (review change): blue, ringed by 2px of white (card colour), then a 2px blue border at 40% opacity */
+.hc-setup-tracker__step--current::before {
+  background: var(--hc-link);
+  box-shadow: 0 0 0 2px var(--hc-card), 0 0 0 4px color-mix(in srgb, var(--hc-link) 40%, transparent);
+}
+.hc-setup-tracker__step:hover::before { background: var(--hc-border-strong); }
+.hc-setup-tracker__step--done:hover::before { background: color-mix(in srgb, var(--hc-success) 75%, var(--hc-card)); }
+.hc-setup-tracker__step--current:hover::before { background: var(--hc-link); }
+.hc-setup-tracker__step:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+.hc-setup-actions {
+  display: flex;
+  gap: var(--hc-space-3);
+}
+.hc-setup-actions--web {
+  justify-content: flex-end;
+  margin-top: var(--hc-space-7);
+  padding-top: var(--hc-space-5);
+  border-top: 1px solid var(--hc-border);
+}
+.hc-setup-actions--mobile {
+  padding: var(--hc-space-3) var(--hc-space-5) calc(var(--hc-space-3) + 34px); /* home indicator */
+  border-top: 1px solid var(--hc-border);
+  background: var(--hc-card);
+}
+@media (max-width: 640px) {
+  .hc-setup-actions--web > * { flex: 1 1 0; }
+}
+.hc-setup-actions { flex-wrap: wrap; align-items: center; }
+.hc-setup-actions__error { flex: 1 1 100%; margin: 0; color: var(--hc-danger); text-align: right; }
+.hc-setup-actions--mobile .hc-setup-actions__error { text-align: left; }
+.hc-setup-actions--mobile > .hc-button { flex: 1 1 0; }
+/* Fields Save found empty (SetupFlow flagMissing): HC/Input / HC/Select take their own error state; anything else
+   (option groups, plain fields) gets a red outline. The message sits under the field until it's edited. */
+[data-setup-missing]:not(.hc-input) {
+  outline: 2px solid var(--hc-danger);
+  outline-offset: 2px;
+  border-radius: var(--hc-radius-md);
+}
+.hc-setup-error { margin: var(--hc-space-1) 0 0; }
+
+/* Setup step titles (useSetupTitle): the step number in a circle before the page title, like the C08 checklist
+   (outlined; green when the step is done). Web: the page's h1. Mobile: the app bar title. */
+.hc-web-shell__main.hc-setup-mode h1::before,
+.hc-mobile-shell.hc-setup-mode .hc-app-bar__title::before {
+  content: var(--hc-setup-step);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-card);
+  color: var(--hc-text-muted);
+  font-weight: 700;
+  letter-spacing: 0;
+  vertical-align: middle;
+}
+.hc-web-shell__main.hc-setup-mode h1::before {
+  width: 36px;
+  height: 36px;
+  margin: -4px var(--hc-space-3) 0 0;
+  font-size: 16px;
+  line-height: 1;
+}
+.hc-mobile-shell.hc-setup-mode .hc-app-bar__title::before {
+  width: 24px;
+  height: 24px;
+  margin: -2px var(--hc-space-2) 0 0;
+  font-size: 12px;
+  line-height: 1;
+}
+.hc-setup-mode--done.hc-web-shell__main h1::before,
+.hc-setup-mode--done.hc-mobile-shell .hc-app-bar__title::before {
+  border-color: var(--hc-success-bg);
+  background: var(--hc-success-bg);
+  color: var(--hc-success);
+}

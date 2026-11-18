@@ -64,3 +64,19 @@
 
 /* Mobile content gap is 12 in Figma */
 .hc-c30-mobile .hc-mobile-shell__body--default { gap: var(--hc-space-3); }
+
+/* Receipts downloaded dialog (_c30-receipts.tsx, review change): the receipts in the file, one per row */
+.hc-c30-receipts {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hc-c30-receipts li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--hc-space-2) 0;
+}
+.hc-c30-receipts li + li { border-top: 1px solid var(--hc-border); }

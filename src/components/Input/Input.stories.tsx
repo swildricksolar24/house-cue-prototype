@@ -7,7 +7,7 @@ const meta = {
   component: Input,
   args: { label: 'Label', placeholder: 'Placeholder' },
   argTypes: {
-    type: { control: 'select', options: ['text', 'email', 'phone', 'number', 'code', 'search', 'multiline'] },
+    type: { control: 'select', options: ['text', 'email', 'phone', 'number', 'code', 'search', 'multiline', 'password'] },
     size: { control: 'inline-radio', options: ['medium', 'large'] },
   },
   decorators: [(Story) => <div style={{ width: 342 }}><Story /></div>],
@@ -28,13 +28,15 @@ export const PasswordlessCode: Story = {
 };
 export const Search: Story = { args: { type: 'search', label: 'Search', defaultValue: 'Plumber' }, parameters: { design: figma('177-1372') } };
 export const Multiline: Story = { args: { type: 'multiline', label: 'Notes' }, parameters: { design: figma('177-1472') } };
+/** Password (code only, not in the Figma set yet): hidden characters with a Show / Hide button */
+export const Password: Story = { args: { type: 'password', label: 'Password', defaultValue: 'example-pass' } };
 export const Filled: Story = { args: { defaultValue: 'Placeholder' }, parameters: { design: figma('177-760') } };
 export const ErrorState: Story = { name: 'Error', args: { defaultValue: 'Placeholder', error: 'Error message' }, parameters: { design: figma('177-770') } };
 export const Disabled: Story = { args: { disabled: true }, parameters: { design: figma('177-780') } };
 export const ReadOnly: Story = { name: 'Read-only', args: { readOnly: true, defaultValue: 'Placeholder' }, parameters: { design: figma('177-790') } };
 export const Large: Story = { args: { size: 'large' }, parameters: { design: figma('177-800') } };
 
-const types: InputType[] = ['text', 'email', 'phone', 'number', 'code', 'search', 'multiline'];
+const types: InputType[] = ['text', 'email', 'phone', 'number', 'code', 'search', 'multiline', 'password'];
 
 export const AllVariants: Story = {
   decorators: [(Story) => <Story />],

@@ -1,0 +1,86 @@
+/* Choose an account (_choose-account.tsx, review change): every property you can open, grouped by account */
+.hc-choose-account h1,
+.hc-choose-account h2,
+.hc-choose-account h3,
+.hc-choose-account p { margin: 0; }
+/* One section per kind of account (Homeowner, Landlord, Tenant), then each account in it */
+.hc-choose-account__role { display: flex; flex-direction: column; gap: var(--hc-space-4); }
+.hc-choose-account__role + .hc-choose-account__role { margin-top: var(--hc-space-4); padding-top: var(--hc-space-5); border-top: 1px solid var(--hc-border); }
+.hc-choose-account__role-title { display: flex; align-items: center; gap: var(--hc-space-2); }
+.hc-choose-account__role-title svg { color: var(--hc-link); }
+.hc-choose-account__group { display: flex; flex-direction: column; gap: var(--hc-space-1); }
+.hc-choose-account__group-head { display: flex; align-items: center; gap: var(--hc-space-3); }
+.hc-choose-account__group-name { display: flex; flex-direction: column; min-width: 0; }
+.hc-choose-account__group-title { display: flex; flex-wrap: wrap; align-items: center; gap: var(--hc-space-2); }
+/* Profile avatar of the signed-in person: initials in a circle */
+.hc-choose-account__avatar {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-primary);
+  color: var(--hc-on-primary);
+  font: 600 14px/20px var(--hc-font);
+  letter-spacing: 0.02em;
+}
+.hc-choose-account__list {
+  display: flex;
+  flex-direction: column;
+  margin: var(--hc-space-1) 0 0;
+  padding: 0;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  list-style: none;
+  overflow: hidden;
+}
+.hc-choose-account__list > li + li { border-top: 1px solid var(--hc-border); }
+.hc-choose-account__item {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 0;
+  background: var(--hc-card);
+  color: var(--hc-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.hc-choose-account__item:hover { background: var(--hc-fill-10); }
+.hc-choose-account__item:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--hc-info); } /* inside the row: the list clips outer rings */
+.hc-choose-account__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+.hc-choose-account__text { display: flex; flex: 1 1 auto; min-width: 0; flex-direction: column; gap: 2px; }
+.hc-choose-account__new { margin-left: var(--hc-space-2); vertical-align: middle; }
+.hc-choose-account__chevron { flex-shrink: 0; color: var(--hc-text-muted); }
+/* A landlord or tenant invite waiting in its section (review change) */
+.hc-choose-account__invite {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-4);
+  border: 1px dashed var(--hc-border-strong);
+  border-radius: var(--hc-radius-lg);
+}
+.hc-choose-account__invite-head { display: flex; align-items: center; gap: var(--hc-space-3); }
+.hc-choose-account__invite-actions { display: flex; justify-content: flex-end; gap: var(--hc-space-2); }
+/* No flow in the prototype yet (review change) */
+.hc-choose-account__item.is-disabled { cursor: not-allowed; }
+/* Muted text and icon; a status tag (e.g. Expired) keeps its colours so it stays readable */
+.hc-choose-account__item.is-disabled .hc-choose-account__icon { opacity: 0.5; }
+.hc-choose-account__item.is-disabled .hc-choose-account__text { color: var(--hc-text-muted); }
+.hc-choose-account__item.is-disabled:hover { background: var(--hc-card); }
+.hc-choose-account__action { margin-left: auto; }

@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Banner } from '../../../components/Banner/Banner';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
 import { Button } from '../../../components/Button/Button';
@@ -6,8 +7,10 @@ import { DetailRow } from '../../../components/DetailRow/DetailRow';
 import { Input } from '../../../components/Input/Input';
 import { Radio } from '../../../components/Radio/Radio';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
+import { planTaskDetails } from '../../data/sample';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
+import { DialogClose } from '../../shells/DialogClose';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
@@ -47,8 +50,6 @@ const taskSteps = [
   '5. Turn the system back on and mark the task done.',
 ];
 
-const PART = 'Filter 16×25×1, MERV 8';
-
 const changeTypes = ['Change the text', 'Add a warning', 'Add a tip', 'Add a photo'];
 
 export default function TaskDetail({ variant }: ScreenProps) {
@@ -63,9 +64,9 @@ const safety = (
   </Banner>
 );
 
-function copyPart() {
+function copyPart(name: string) {
   try {
-    void navigator.clipboard?.writeText(PART);
+    void navigator.clipboard?.writeText(name);
   } catch {
     /* clipboard unavailable */
   }
@@ -73,36 +74,80 @@ function copyPart() {
 
 /* ---------- Task detail ---------- */
 
+/**
+ * Review change: the page shows the task you opened on Plan (C11 passes ?task=<id>; default the HVAC filter, as in
+ * Figma): its title, kind (DIY / Pro / Check-up, Overdue), item, due date, time, cost, part, steps and safety note
+ * (data/sample.ts planTaskDetails). The main action follows the kind: DIY → Mark done, Pro → Hire a pro (C13),
+ * Check-up → Start check-up (C61 for that task). Mark done returns to Plan with ?done=<id>.
+ */
 function Task() {
   const { device } = usePrototype();
   const flow = useFlow();
-  const doItMyself = () => flow.go('C26');
+  const [params] = useSearchParams();
+  const id = params.get('task') && planTaskDetails[params.get('task')!] ? params.get('task')! : 'hvac-filter';
+  const t = planTaskDetails[id];
+  // Review change: the DIY coach walks through this task
+  const doItMyself = () => flow.go('C26', `?task=${id}`);
   const hirePro = () => flow.go('C13');
   const backToPlan = () => flow.go('C11');
+  const markDone = () => flow.go('C11', `?done=${id}`);
+  const startCheckUp = () => flow.go('C61', `?task=${id}`);
+
+  // Main action by kind, then the others
+  const actions: { label: string; onClick: () => void }[] =
+    t.kind === 'Pro'
+      ? [{ label: 'Hire a pro', onClick: hirePro }, { label: 'Mark done', onClick: markDone }, { label: 'Do it myself', onClick: doItMyself }]
+      : t.kind === 'Check-up'
+        ? [{ label: 'Start check-up', onClick: startCheckUp }, { label: 'Mark done', onClick: markDone }, { label: 'Hire a pro', onClick: hirePro }]
+        : [{ label: 'Mark done', onClick: markDone }, { label: 'Do it myself', onClick: doItMyself }, { label: 'Hire a pro', onClick: hirePro }];
+  const [main, ...others] = actions;
+
+  const pills = (
+    <>
+      <StatusPill label={t.kind} tone={t.kind === 'Check-up' ? 'success' : 'info'} />
+      {t.overdue && <StatusPill label="Overdue" tone="danger" />}
+    </>
+  );
+  const safetyNote = (
+    <Banner tone="warning" title="Safety first">
+      {t.safety}
+    </Banner>
+  );
 
   if (device === 'mobile') {
     return (
       <MobileShell
         header={{ title: 'Task' }}
-        bottom={<BottomActions primaryLabel="Mark done" onPrimary={flow.goNext} secondaryLabel="Reschedule or skip" onSecondary={backToPlan} />}
+        bottom={<BottomActions primaryLabel={main.label} onPrimary={main.onClick} secondaryLabel="Reschedule or skip" onSecondary={backToPlan} />}
       >
-        <h1 className="hc-h3">{TITLE}</h1>
+        <h1 className="hc-h3">{t.title}</h1>
         <div className="hc-c12-row">
-          <StatusPill label="DIY" tone="info" />
-          <p className="hc-small hc-muted">Due Nov 28 · every 90 days</p>
+          {pills}
+          <p className="hc-small hc-muted">Due {t.due}</p>
         </div>
-        <DetailRow label="Item" value="AC / heat pump · Trane XR14" />
-        <DetailRow label="Time" value="About 15 minutes" />
-        <DetailRow label="Cost" value="$12–$25 for the filter" />
-        <DetailRow label="Part" value={`${PART} · about $14`} actionLabel="Buy from partner ↗" actionDisabled />
-        {safety}
+        <DetailRow label="Item" value={t.item} />
+        <DetailRow label="Time" value={t.time} />
+        <DetailRow label="Cost" value={t.cost} />
+        {t.part && <DetailRow label="Part" value={`${t.part.name} · ${t.part.price}`} actionLabel="Buy from partner ↗" actionDisabled />}
+        <section className="hc-c12-steps" aria-labelledby="hc-c12-steps-title">
+          <h2 id="hc-c12-steps-title" className="hc-large-bold">
+            Steps
+          </h2>
+          <ol className="hc-c12-steps__list">
+            {t.steps.map((s) => (
+              <li key={s} className="hc-medium">
+                {s}
+              </li>
+            ))}
+          </ol>
+        </section>
+        {safetyNote}
         <div className="hc-c12-pair">
-          <Button variant="secondary" onClick={doItMyself}>
-            Do it myself
-          </Button>
-          <Button variant="secondary" onClick={hirePro}>
-            Hire a pro
-          </Button>
+          {others.map((a) => (
+            <Button key={a.label} variant="secondary" onClick={a.onClick}>
+              {a.label}
+            </Button>
+          ))}
         </div>
       </MobileShell>
     );
@@ -111,50 +156,50 @@ function Task() {
   return (
     <WebShell nav="plan">
       <div className="hc-c12-web">
-        <button type="button" className="hc-c12-back" onClick={flow.goBack}>
-          ‹ Plan
-        </button>
         <div className="hc-c12-web__title">
-          <h1 className="hc-h2">{TITLE}</h1>
-          <StatusPill label="DIY" tone="info" />
+          <h1 className="hc-h2">{t.title}</h1>
+          {pills}
         </div>
         <div className="hc-c12-web__cols">
           <div className="hc-c12-web__main">
             <section className="hc-c12-card">
               <h2 className="hc-large-bold">Steps</h2>
-              {taskSteps.map((s) => (
+              {t.steps.map((s, i) => (
                 <p key={s} className="hc-medium">
-                  {s}
+                  {i + 1}. {s}
                 </p>
               ))}
             </section>
-            {safety}
-            <section className="hc-c12-card hc-c12-card--part">
-              <h2 className="hc-large-bold">Need a part?</h2>
-              <p className="hc-medium hc-muted">{PART} · about $14 from our parts partner. HouseCue may earn a commission.</p>
-              <Button>Buy from partner ↗</Button>
-              <Button variant="secondary" onClick={copyPart}>
-                Copy part number
-              </Button>
-            </section>
+            {safetyNote}
+            {t.part && (
+              <section className="hc-c12-card hc-c12-card--part">
+                <h2 className="hc-large-bold">Need a part?</h2>
+                <p className="hc-medium hc-muted">
+                  {t.part.name} · {t.part.price} from our parts partner. HouseCue may earn a commission.
+                </p>
+                <Button>Buy from partner ↗</Button>
+                <Button variant="secondary" onClick={() => copyPart(t.part!.name)}>
+                  Copy part number
+                </Button>
+              </section>
+            )}
           </div>
           <aside className="hc-c12-web__side">
             <section className="hc-c12-card hc-c12-card--rows">
-              <DetailRow label="Item" value="AC / heat pump" />
-              <DetailRow label="Due" value="Nov 28 · every 90 days" />
-              <DetailRow label="Time" value="About 15 minutes" />
-              <DetailRow label="Cost" value="$12–$25 for the filter" />
+              <DetailRow label="Item" value={t.item} />
+              <DetailRow label="Due" value={t.due} />
+              <DetailRow label="Time" value={t.time} />
+              <DetailRow label="Cost" value={t.cost} />
             </section>
             <section className="hc-c12-card">
-              <Button fullWidth onClick={flow.goNext}>
-                Mark done
+              <Button fullWidth onClick={main.onClick}>
+                {main.label}
               </Button>
-              <Button variant="secondary" fullWidth onClick={doItMyself}>
-                Do it myself
-              </Button>
-              <Button variant="secondary" fullWidth onClick={hirePro}>
-                Hire a pro
-              </Button>
+              {others.map((a) => (
+                <Button key={a.label} variant="secondary" fullWidth onClick={a.onClick}>
+                  {a.label}
+                </Button>
+              ))}
               <div className="hc-c12-links">
                 <button type="button" onClick={backToPlan}>
                   Reschedule
@@ -232,9 +277,6 @@ function Guide({ withSuggest = false }: { withSuggest?: boolean }) {
   return (
     <WebShell nav="plan" className="hc-c12-host">
       <div className="hc-c12-web">
-        <button type="button" className="hc-c12-back" onClick={() => flow.go('C11')}>
-          ‹ Plan
-        </button>
         <div className="hc-c12-web__title">
           <h1 className="hc-h2">{TITLE}</h1>
           <StatusPill label="DIY" tone="info" />
@@ -320,6 +362,7 @@ function SuggestChange({ device, onSend, onCancel }: { device: 'mobile' | 'web';
     return (
       <div className="hc-c12-dialog-layer">
         <div className="hc-c12-dialog" role="dialog" aria-modal="true" aria-labelledby="hc-c12-suggest-title">
+          <DialogClose onClick={onCancel} />
           {body}
           <div className="hc-c12-dialog__actions">
             <Button variant="tertiary" onClick={onCancel}>
@@ -337,6 +380,7 @@ function SuggestChange({ device, onSend, onCancel }: { device: 'mobile' | 'web';
       <button type="button" className="hc-c12-scrim" aria-label="Close" onClick={onCancel} />
       <div className="hc-c12-sheet" role="dialog" aria-modal="true" aria-labelledby="hc-c12-suggest-title">
         <button type="button" className="hc-c12-grabber" aria-label="Close" onClick={onCancel} />
+        <DialogClose onClick={onCancel} />
         {body}
         <Button size="large" fullWidth onClick={onSend}>
           Send for review

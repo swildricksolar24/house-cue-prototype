@@ -7,13 +7,14 @@
 }
 .hc-c24-chips::-webkit-scrollbar { display: none; }
 .hc-c24-chip { flex-shrink: 0; white-space: nowrap; }
+/* Review change: smaller filter chips, about 32px tall (were about 46px) */
 .hc-c24-chip {
-  padding: var(--hc-space-3) var(--hc-space-4);
+  padding: 6px var(--hc-space-3);
   border: 1px solid var(--hc-border);
   border-radius: var(--hc-radius-pill);
   background: var(--hc-card);
   color: var(--hc-text);
-  font: 600 14px/20px var(--hc-font);
+  font: 600 12px/18px var(--hc-font);
   cursor: pointer;
 }
 .hc-c24-chip--selected {
@@ -75,3 +76,25 @@
   min-width: 0;
   gap: var(--hc-space-1);
 }
+
+/* Add a document dialog (review change): the drop zone and its error */
+.hc-c24-add__file { display: flex; flex-direction: column; gap: var(--hc-space-1); }
+.hc-c24-add__file .hc-input__error { margin: 0; }
+
+/* Import from email dialogs (_c24-email-import.tsx, review change) */
+.hc-c24-import__providers { display: flex; flex-direction: column; gap: var(--hc-space-2); }
+.hc-c24-import__kv {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  margin: 0;
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-page);
+}
+.hc-c24-import__kv > div { display: flex; flex-direction: column; gap: 2px; }
+.hc-c24-import__kv dd { margin: 0; }
+.hc-c24-found { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.hc-c24-found li { padding: var(--hc-space-2) 0; }
+.hc-c24-found li + li { border-top: 1px solid var(--hc-border); }
+.hc-c24-found__text { display: flex; flex-direction: column; gap: 2px; }

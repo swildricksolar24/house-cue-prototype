@@ -84,3 +84,63 @@
 }
 .hc-c28-web__portfolio-cols > .hc-c28-options { flex: 0 0 560px; gap: var(--hc-space-4); }
 .hc-c28-web__portfolio-cols > .hc-c28-card { flex: 1 1 0; min-width: 0; }
+
+/* Signed-out Membership page (?visitor=1): Free | Member in one row, equal heights, buttons lined up at the bottom;
+   one column at phone width and in the mobile frame */
+.hc-c28-plans {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--hc-space-5);
+}
+.hc-c28-plans > .hc-public-card { min-width: 0; }
+.hc-c28-plans > .hc-public-card > :last-child { margin-top: auto; }
+@media (max-width: 720px) {
+  .hc-c28-plans { grid-template-columns: 1fr; }
+}
+.hc-public-mobile .hc-c28-plans { grid-template-columns: 1fr; }
+
+/* Signed-out Membership page: landlord card. Same white card as the others (review change), tinted icon tile | title and pitch | price panel with the button.
+   Stacks into one column at phone width and in the mobile frame. */
+.hc-c28-rentals {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--hc-space-5);
+}
+.hc-c28-rentals__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-tint);
+  color: var(--hc-text);
+}
+.hc-c28-rentals__text {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+}
+.hc-c28-rentals__text p,
+.hc-c28-rentals__plan p { margin: 0; }
+.hc-c28-rentals__eyebrow { color: var(--hc-link); }
+.hc-c28-rentals__plan {
+  display: flex;
+  flex: 0 0 280px;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  padding: var(--hc-space-4);
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-page);
+}
+.hc-c28-rentals__price { display: flex; align-items: baseline; gap: var(--hc-space-1); }
+.hc-c28-rentals__plan .hc-button { margin-top: var(--hc-space-3); }
+@media (max-width: 720px) {
+  .hc-c28-rentals { flex-direction: column; align-items: stretch; }
+  .hc-c28-rentals__plan { flex-basis: auto; }
+}
+.hc-public-mobile .hc-c28-rentals { flex-direction: column; align-items: stretch; }
+.hc-public-mobile .hc-c28-rentals__plan { flex-basis: auto; }

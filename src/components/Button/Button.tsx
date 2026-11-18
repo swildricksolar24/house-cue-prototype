@@ -4,12 +4,12 @@ import { Icon, type IconName } from '../Icon/Icon';
 import './Button.css';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'destructive' | 'link';
-export type ButtonSize = 'small' | 'medium' | 'large';
+export type ButtonSize = 'tiny' | 'small' | 'medium' | 'large';
 
 export type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
   /** Primary = the one main action per view; Secondary = alternatives; Tertiary = low emphasis; Destructive = delete/remove (always confirm); Link = navigation in text */
   variant?: ButtonVariant;
-  /** Medium 44 default · Large 52 for onboarding/hero CTAs · Small 36 only in dense web tables */
+  /** Medium 44 default · Large 52 for onboarding/hero CTAs · Small 36 only in dense web tables · Tiny 24 for row actions inside cards (code only, not in the Figma set yet) */
   size?: ButtonSize;
   children?: ReactNode;
   leadingIcon?: IconName;
@@ -43,6 +43,7 @@ export function Button({
   type = 'button',
   ...props
 }: ButtonProps) {
+  const iconSize = size === 'tiny' ? 16 : 20;
   const classes = [
     'hc-button',
     `hc-button--${variant}`,
@@ -57,10 +58,10 @@ export function Button({
 
   const content = (
     <>
-      {icon && <Icon name={icon} size={20} />}
-      {!icon && leadingIcon && <Icon name={leadingIcon} size={20} />}
+      {icon && <Icon name={icon} size={iconSize} />}
+      {!icon && leadingIcon && <Icon name={leadingIcon} size={iconSize} />}
       {!icon && children != null && <span className="hc-button__label">{children}</span>}
-      {!icon && trailingIcon && <Icon name={trailingIcon} size={20} />}
+      {!icon && trailingIcon && <Icon name={trailingIcon} size={iconSize} />}
       {loading && <span className="hc-button__spinner" aria-hidden />}
     </>
   );

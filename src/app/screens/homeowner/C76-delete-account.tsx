@@ -5,6 +5,7 @@ import { Button } from '../../../components/Button/Button';
 import { CodeEntry } from '../../../components/CodeEntry/CodeEntry';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
+import { DialogClose } from '../../shells/DialogClose';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
@@ -37,6 +38,7 @@ function DeleteDialog({ mode, onDelete, onKeep }: { mode: 'mobile' | 'web'; onDe
         aria-describedby={bodyId}
         onClick={(e) => e.stopPropagation()}
       >
+        <DialogClose onClick={onKeep} />
         <h2 id={titleId} className="hc-h4">
           Delete your account?
         </h2>

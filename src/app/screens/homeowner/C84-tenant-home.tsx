@@ -5,6 +5,7 @@ import { DetailRow } from '../../../components/DetailRow/DetailRow';
 import { HomeHeader } from '../../../components/HomeHeader/HomeHeader';
 import { ListRow } from '../../../components/ListRow/ListRow';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
+import { useAccounts } from '../../prototype/accounts';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { stepPath } from '../../prototype/journeys';
@@ -42,6 +43,7 @@ export default function TenantHome(_: ScreenProps) {
   const { device } = usePrototype();
   const flow = useFlow();
   const navigate = useNavigate();
+  const { hasOthers } = useAccounts();
 
   /** Jump to a later step of this (tenant) journey, so C18/C85 open in their tenant variants */
   const goInJourney = (code: string) => {
@@ -61,7 +63,8 @@ export default function TenantHome(_: ScreenProps) {
             address="1418 E Roosevelt St, Unit A"
             emergencyTo={utilityPaths.emergency}
             notificationsTo={utilityPaths.notifications}
-            onSwitchHome={() => navigate(utilityPaths.homeSwitcher)}
+            // Review change: Choose an account when you have more than one account (joined by invite)
+            onSwitchHome={() => navigate(hasOthers ? '/accounts' : utilityPaths.homeSwitcher)}
           />
         }
       >

@@ -1,0 +1,10 @@
+/* New request dialog (_new-request-dialog.tsx, review change) */
+.hc-new-request__section { display: flex; flex-direction: column; gap: var(--hc-space-2); }
+.hc-new-request__section h3 { margin: 0; }
+.hc-new-request__items {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--hc-space-2);
+}
+.hc-edit-dialog--mobile .hc-new-request__items { grid-template-columns: 1fr; }
+.hc-new-request__media { display: flex; flex-wrap: wrap; gap: var(--hc-space-2); }

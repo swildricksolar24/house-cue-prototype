@@ -10,7 +10,7 @@ const meta = {
   args: { children: 'Send quote' },
   argTypes: {
     variant: { control: 'inline-radio', options: ['primary', 'secondary', 'tertiary', 'destructive', 'link'] },
-    size: { control: 'inline-radio', options: ['small', 'medium', 'large'] },
+    size: { control: 'inline-radio', options: ['tiny', 'small', 'medium', 'large'] },
   },
   parameters: { design: figma('176-2811') },
 } satisfies Meta<typeof Button>;
@@ -27,7 +27,7 @@ export const LinkButton: Story = { name: 'Link', args: { variant: 'link', childr
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'grid', gap: 16 }}>
-      {(['small', 'medium', 'large'] as const).map((size) => (
+      {(['tiny', 'small', 'medium', 'large'] as const).map((size) => (
         <div key={size} style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
           <Button size={size}>Primary</Button>
           <Button size={size} variant="secondary">Secondary</Button>

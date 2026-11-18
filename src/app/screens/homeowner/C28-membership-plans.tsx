@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Banner } from '../../../components/Banner/Banner';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
 import { Button } from '../../../components/Button/Button';
+import { Icon } from '../../../components/Icon/Icon';
 import { MetricRow } from '../../../components/MetricRow/MetricRow';
 import { OptionCard } from '../../../components/OptionCard/OptionCard';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
@@ -99,6 +100,9 @@ export default function MembershipPlans(_: ScreenProps) {
     const signUp = () => flow.go('C02');
     return (
       <PublicPage title="Membership" lede="Membership is per home. Start free and upgrade any time.">
+        {/* Review change: Free and Member side by side in one row (equal heights, buttons lined up at the bottom);
+            they stack again at phone width */}
+        <div className="hc-c28-plans">
         <PublicCard>
           <h2 className="hc-large-bold">Free</h2>
           <p className="hc-h3">$0</p>
@@ -124,17 +128,36 @@ export default function MembershipPlans(_: ScreenProps) {
             Get started with {billing === 'monthly' ? 'Monthly · $4.99' : 'Annual · $49'}
           </Button>
         </PublicCard>
+        </div>
         {/* Review change: landlords' way in from the signed-out Membership page (starts the landlord sign-up) */}
-        <PublicCard>
-          <h2 className="hc-large-bold">Own rental properties?</h2>
-          <p className="hc-small hc-muted">
-            Add one or several; tenants report issues to you. Two or more rentals use the Portfolio plan: $9.99 a month + $2
-            per door.
-          </p>
-          <Button variant="secondary" fullWidth onClick={() => navigate(stepPath('landlord-portfolio', 2))}>
-            Start as a landlord
-          </Button>
-        </PublicCard>
+        {/* Review change: the landlord card is laid out as a band instead of a plain text card: house icon, title and
+            pitch on the left, the Portfolio plan price in its own panel with the button on the right. Stacks at phone
+            width. */}
+        <section className="hc-public-card hc-c28-rentals" aria-labelledby="hc-c28-rentals-title">
+          <span className="hc-c28-rentals__icon" aria-hidden>
+            <Icon name="home" size={24} />
+          </span>
+          {/* Typography: link-coloured eyebrow, H4 title, 16px pitch; the panel reads label, H3 price with a muted
+              unit, then the per-door terms in small type */}
+          <div className="hc-c28-rentals__text">
+            <p className="hc-medium-semibold hc-c28-rentals__eyebrow">For landlords</p>
+            <h2 id="hc-c28-rentals-title" className="hc-h4">
+              Own rental properties?
+            </h2>
+            <p className="hc-large hc-muted">Add one or several; tenants report issues to you.</p>
+          </div>
+          <div className="hc-c28-rentals__plan">
+            <p className="hc-medium-semibold">Portfolio plan</p>
+            <p className="hc-c28-rentals__price">
+              <span className="hc-h3">$9.99</span>
+              <span className="hc-medium hc-muted">a month</span>
+            </p>
+            <p className="hc-small hc-muted">+ $2 per door · for 2 or more rentals</p>
+            <Button variant="secondary" fullWidth onClick={() => navigate(stepPath('landlord-portfolio', 2))}>
+              Start as a landlord
+            </Button>
+          </div>
+        </section>
         <PublicCard>
           <h2 className="hc-large-bold">How you pay</h2>
           <p className="hc-small hc-muted">

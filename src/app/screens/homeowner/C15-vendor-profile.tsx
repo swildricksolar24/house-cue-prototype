@@ -120,9 +120,6 @@ export default function VendorProfile({ variant }: ScreenProps) {
   return (
     <WebShell nav="plan">
       <div className="hc-c15-web">
-        <button type="button" className="hc-c15-back hc-small" onClick={flow.goBack}>
-          ‹ Quotes
-        </button>
         {pendingBanner}
         <div className="hc-c15-web__cols">
           <div className="hc-c15-web__left">

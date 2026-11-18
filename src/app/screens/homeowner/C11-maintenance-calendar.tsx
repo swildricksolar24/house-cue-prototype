@@ -1,4 +1,5 @@
 import { Fragment, useState, type ReactNode } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Banner } from '../../../components/Banner/Banner';
 import { StatTile } from '../../../components/StatTile/StatTile';
 import { SkeletonCard } from '../../../components/SkeletonCard/SkeletonCard';
@@ -9,6 +10,7 @@ import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
+import { TaskIcon, type TaskIconKind } from './_task-icon';
 import './C11-maintenance-calendar.css';
 
 type PlanTask = {
@@ -24,16 +26,18 @@ type PlanTask = {
   mobileOnly?: boolean;
   /** Screen the row opens */
   opens: string;
+  /** Review change: the task's own icon (its appliance) instead of the generic tasks icon */
+  icon: TaskIconKind;
 };
 
 const tasks: PlanTask[] = [
-  { id: 'dryer-vent', title: 'Clean dryer vent', meta: 'Dryer · Overdue since Nov 1', tag: 'Overdue', tone: 'danger', month: 'November', day: 1, webOnly: true, opens: 'C12' },
-  { id: 'hvac-filter', title: 'Replace HVAC filter', meta: 'AC / heat pump · Due Nov 28', tag: 'DIY', month: 'November', day: 28, opens: 'C12' },
-  { id: 'pool-basket', title: 'Clean pool pump basket', meta: 'Pool pump · Due Nov 30', tag: 'DIY', month: 'November', day: 30, opens: 'C12' },
-  { id: 'gfci', title: 'Test GFCI outlets', meta: 'Electrical · Due Nov 30', tag: 'Pro', month: 'November', day: 30, opens: 'C12' },
-  { id: 'flush-wh', title: 'Flush water heater', meta: 'Water heater · Due Dec 3', tag: 'Pro', month: 'December', day: 3, opens: 'C12' },
-  { id: 'coils', title: 'Clean AC condenser coils', meta: 'AC / heat pump · Due Dec 10', tag: 'Pro', month: 'December', day: 10, webOnly: true, opens: 'C12' },
-  { id: 'roof-check', title: 'Roof line photo check-up', meta: 'Roof · Due Dec 12', tag: 'Check-up', tone: 'success', month: 'December', day: 12, mobileOnly: true, opens: 'C61' },
+  { id: 'dryer-vent', icon: 'dryer', title: 'Clean dryer vent', meta: 'Dryer · Overdue since Nov 1', tag: 'Overdue', tone: 'danger', month: 'November', day: 1, webOnly: true, opens: 'C12' },
+  { id: 'hvac-filter', icon: 'hvac-filter', title: 'Replace HVAC filter', meta: 'AC / heat pump · Due Nov 28', tag: 'DIY', month: 'November', day: 28, opens: 'C12' },
+  { id: 'pool-basket', icon: 'pool', title: 'Clean pool pump basket', meta: 'Pool pump · Due Nov 30', tag: 'DIY', month: 'November', day: 30, opens: 'C12' },
+  { id: 'gfci', icon: 'outlet', title: 'Test GFCI outlets', meta: 'Electrical · Due Nov 30', tag: 'Pro', month: 'November', day: 30, opens: 'C12' },
+  { id: 'flush-wh', icon: 'water-heater', title: 'Flush water heater', meta: 'Water heater · Due Dec 3', tag: 'Pro', month: 'December', day: 3, opens: 'C12' },
+  { id: 'coils', icon: 'ac-unit', title: 'Clean AC condenser coils', meta: 'AC / heat pump · Due Dec 10', tag: 'Pro', month: 'December', day: 10, webOnly: true, opens: 'C12' },
+  { id: 'roof-check', icon: 'roof', title: 'Roof line photo check-up', meta: 'Roof · Due Dec 12', tag: 'Check-up', tone: 'success', month: 'December', day: 12, mobileOnly: true, opens: 'C61' },
 ];
 
 /** Weekday of the 1st (0 = Sunday) and length, for the 2026 months shown */
@@ -46,9 +50,19 @@ export default function MaintenanceCalendar(_: ScreenProps) {
   const { device, screenState, setScreenState } = usePrototype();
   const flow = useFlow();
   const [view, setView] = useState<View>('list');
-  const visible = tasks.filter((t) => (device === 'mobile' ? !t.webOnly : !t.mobileOnly));
+  // Review change: completing a task (C12 Mark done) comes back here with ?done=<task id>: a confirmation on top, and
+  // the task is off the list
+  const [params] = useSearchParams();
+  const doneTask = tasks.find((t) => t.id === params.get('done'));
+  const visible = tasks.filter((t) => (device === 'mobile' ? !t.webOnly : !t.mobileOnly) && t !== doneTask);
+  const doneBanner = doneTask && (
+    <Banner tone="success" title={`Marked done: ${doneTask.title}`}>
+      Nice work. It’s off your list, and the next one is scheduled in your plan.
+    </Banner>
+  );
 
-  const open = (t: PlanTask) => (t.opens === 'C12' ? flow.goNext() : flow.go(t.opens));
+  // Review change: every task opens Task detail (C12) about that task (?task=<id>); the roof check-up starts from there
+  const open = (t: PlanTask) => flow.go('C12', `?task=${t.id}`);
 
   const chips = (
     <div className="hc-c11-chips" role="group" aria-label="View">
@@ -63,7 +77,7 @@ export default function MaintenanceCalendar(_: ScreenProps) {
   const rows = (month: PlanTask['month']) =>
     visible
       .filter((t) => t.month === month)
-      .map((t) => <TaskRow key={t.id} title={t.title} meta={t.meta} tag={t.tag} tagTone={t.tone} onClick={() => open(t)} />);
+      .map((t) => <TaskRow key={t.id} customIcon={<TaskIcon kind={t.icon} />} title={t.title} meta={t.meta} tag={t.tag} tagTone={t.tone} onClick={() => open(t)} />);
 
   const monthView = (month: PlanTask['month']) => {
     const { first, days } = monthGrid[month];
@@ -162,6 +176,7 @@ export default function MaintenanceCalendar(_: ScreenProps) {
   if (device === 'mobile') {
     return (
       <MobileShell header={{ title: 'Plan', showBack: false }} tab="plan">
+        {doneBanner}
         {chips}
         {sections()}
       </MobileShell>
@@ -175,15 +190,19 @@ export default function MaintenanceCalendar(_: ScreenProps) {
           <h1 className="hc-h2">Plan</h1>
           {chips}
         </header>
+        {doneBanner}
         {/* Review change: "This year" sits at the top as three stat tiles across the column */}
         <section className="hc-c11-year" aria-labelledby="hc-c11-year-title">
           <h2 id="hc-c11-year-title" className="hc-large-bold">
             This year
           </h2>
           <div className="hc-c11-year__tiles">
-            <StatTile label="Done" value="12" meta="tasks" />
-            <StatTile label="Due this month" value="4" meta="tasks" />
-            <StatTile label="Skipped" value="1" meta="task" />
+            {/* Review change: Done on a green background */}
+            <StatTile label="Done" value="12" meta="tasks" className="hc-c11-year__done" />
+            {/* Review change: Skipped on a yellow background */}
+            <StatTile label="Skipped" value="1" meta="task" className="hc-c11-year__skipped" />
+            {/* Review change: Due this month sits at the right end, on a red background */}
+            <StatTile label="Due this month" value="4" meta="tasks" className="hc-c11-year__due" />
           </div>
         </section>
         <div className="hc-c11-web__cols">

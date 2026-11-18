@@ -1,5 +1,8 @@
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { DemoProvider } from './prototype/DemoTools';
+import { DeviceFrame } from './prototype/DeviceFrame';
 import { HomeProvider } from './prototype/HomeContext';
+import { ChooseAccount } from './screens/homeowner/_choose-account';
 import { JourneyMap } from './prototype/JourneyMap';
 import { PrototypeBar } from './prototype/PrototypeBar';
 import { PrototypeProvider } from './prototype/PrototypeContext';
@@ -25,6 +28,20 @@ export function App() {
           element={
             <>
               <JourneyMap />
+              <PrototypeBar />
+            </>
+          }
+        />
+        {/* Review change: Choose an account, after accepting an invite and signing in (and Switch account) */}
+        <Route
+          path="/accounts"
+          element={
+            <>
+              <DemoProvider>
+                <DeviceFrame>
+                  <ChooseAccount />
+                </DeviceFrame>
+              </DemoProvider>
               <PrototypeBar />
             </>
           }

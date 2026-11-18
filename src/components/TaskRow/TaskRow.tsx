@@ -11,6 +11,8 @@ export type TaskRowProps = {
   meta?: ReactNode;
   /** Icon in the 40px tile. Default tasks. */
   icon?: IconName;
+  /** A custom 24px drawing for the tile instead of an HC icon, e.g. the task's appliance (review change: C11 Plan) */
+  customIcon?: ReactNode;
   /** Trailing pill text, e.g. "DIY" or "Pro" */
   tag?: string;
   tagTone?: TaskRowTagTone;
@@ -22,12 +24,12 @@ export type TaskRowProps = {
 };
 
 /** HC/Task Row (Figma 19:62) — one maintenance task: item, due date and DIY/Pro tag (C08, C11, C23). */
-export function TaskRow({ title, meta, icon = 'tasks', tag, tagTone = 'info', onClick, to, className }: TaskRowProps) {
+export function TaskRow({ title, meta, icon = 'tasks', customIcon, tag, tagTone = 'info', onClick, to, className }: TaskRowProps) {
   const classes = ['hc-task-row', (to || onClick) && 'hc-task-row--interactive', className].filter(Boolean).join(' ');
   const content = (
     <>
       <span className="hc-task-row__icon">
-        <Icon name={icon} size={24} />
+        {customIcon ?? <Icon name={icon} size={24} />}
       </span>
       <span className="hc-task-row__text">
         <span className="hc-task-row__title">{title}</span>

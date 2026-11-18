@@ -9,6 +9,7 @@ import { StatusPill } from '../../../components/StatusPill/StatusPill';
 import { TimelineStep } from '../../../components/TimelineStep/TimelineStep';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
+import { DialogClose } from '../../shells/DialogClose';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
@@ -105,6 +106,7 @@ export default function IssuesAndDisputes(_: ScreenProps) {
     >
       <div className="hc-c31-sheet" role="dialog" aria-modal="true" aria-labelledby="hc-c31-sheet-title">
         <span className="hc-c31-sheet__grabber" aria-hidden />
+        <DialogClose onClick={() => setAppealOpen(false)} />
         <h2 id="hc-c31-sheet-title" className="hc-h4">
           Appeal to a person
         </h2>

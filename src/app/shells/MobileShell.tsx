@@ -6,6 +6,8 @@ import { TabBar, type AppRole, type RoleNavKey } from '../../components/TabBar/T
 import { useOptionalFlow } from '../prototype/flow';
 import { useCurrentHome } from '../prototype/HomeContext';
 import { HomePicker } from './HomePicker';
+import { ReceivedInvite } from './ReceivedInvite';
+import { SetupActions, SetupTracker, useSetupEdits, useSetupFlow, useSetupTitle } from './SetupFlow';
 import { homeownerPaths, landlordPaths, tenantPaths, utilityPaths } from './navPaths';
 import './shells.css';
 
@@ -50,6 +52,9 @@ export function MobileShell<R extends AppRole = 'homeowner'>({
   className,
 }: MobileShellProps<R>) {
   const flow = useOptionalFlow();
+  const { fromSetup, backToDashboard } = useSetupFlow();
+  const setupEdits = useSetupEdits();
+  const setupTitle = useSetupTitle();
   const { home } = useCurrentHome();
   const [picking, setPicking] = useState(false);
   const r = (role ?? 'homeowner') as AppRole;
@@ -65,23 +70,32 @@ export function MobileShell<R extends AppRole = 'homeowner'>({
       />
     );
   } else if (isAppBarProps(header)) {
-    // Default back = previous journey step, unless the screen passes its own onBack or backTo
-    top = <AppBar {...header} onBack={header.onBack ?? (header.backTo ? undefined : flow?.goBack)} />;
+    // Default back = previous journey step, unless the screen passes its own onBack or backTo. Review change: on a
+    // setup screen opened from the C08 checklist (?from=setup) it goes back to the dashboard.
+    const defaultBack = fromSetup ? backToDashboard : flow?.goBack;
+    top = <AppBar {...header} onBack={header.onBack ?? (header.backTo ? undefined : defaultBack)} />;
   } else if (header) {
     top = header;
   }
 
   return (
-    <div className={['hc-mobile-shell', `hc-mobile-shell--${background}`, className].filter(Boolean).join(' ')}>
+    <div className={['hc-mobile-shell', `hc-mobile-shell--${background}`, setupTitle.className, className].filter(Boolean).join(' ')} style={setupTitle.style}>
       <StatusBar />
       {top}
-      <main className={`hc-mobile-shell__body hc-mobile-shell__body--${padding}`}>{children}</main>
-      {bottom}
-      {!bottom && tab && (
+      <main className={`hc-mobile-shell__body hc-mobile-shell__body--${padding}`} {...setupEdits.handlers}>
+        {/* Review change: setup screens opened from the C08 checklist start with the step tracker (SetupFlow.tsx) */}
+        <SetupTracker variant="mobile" />
+        {children}
+      </main>
+      {/* …and end with Cancel / Save in place of the screen's own bottom actions or tab bar */}
+      {fromSetup ? <SetupActions variant="mobile" edited={setupEdits.edited} /> : bottom}
+      {!fromSetup && !bottom && tab && (
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         <TabBar role={r as any} active={tab as any} paths={rolePaths[r] as any} />
       )}
       {picking && <HomePicker variant="sheet" onClose={() => setPicking(false)} />}
+      {/* Review change: an invite from another home's owner (prototype shortcuts → Receive an invite) */}
+      <ReceivedInvite />
     </div>
   );
 }

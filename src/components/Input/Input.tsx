@@ -8,7 +8,7 @@ import {
 import { Icon, type IconName } from '../Icon/Icon';
 import './Input.css';
 
-export type InputType = 'text' | 'email' | 'phone' | 'number' | 'code' | 'search' | 'multiline';
+export type InputType = 'text' | 'email' | 'phone' | 'number' | 'code' | 'search' | 'multiline' | 'password';
 export type InputSize = 'medium' | 'large';
 
 export type InputProps = Omit<
@@ -18,7 +18,10 @@ export type InputProps = Omit<
   /** Visible label above the field. Keep it visible; use `hideLabel` only when a visible heading labels the field. */
   label: ReactNode;
   hideLabel?: boolean;
-  /** Text / Email / Phone (+1 prefix) / Number (right-aligned) / Password-less code / Search / Multiline */
+  /**
+   * Text / Email / Phone (+1 prefix) / Number (right-aligned) / Password-less code / Search / Multiline / Password
+   * (Password: code only, not in the Figma set yet; hidden characters with a Show / Hide button)
+   */
   type?: InputType;
   /** Medium 44 default · Large 52 for onboarding and hero forms */
   size?: InputSize;
@@ -49,6 +52,7 @@ const nativeType: Record<InputType, string> = {
   code: 'text',
   search: 'search',
   multiline: 'text',
+  password: 'password',
 };
 
 const typeDefaults: Partial<Record<InputType, InputHTMLAttributes<HTMLInputElement>>> = {
@@ -57,6 +61,7 @@ const typeDefaults: Partial<Record<InputType, InputHTMLAttributes<HTMLInputEleme
   number: { inputMode: 'decimal' },
   code: { autoComplete: 'one-time-code', inputMode: 'numeric', spellCheck: false },
   search: { inputMode: 'search', enterKeyHint: 'search' },
+  password: { autoComplete: 'current-password', spellCheck: false },
 };
 
 /** HC/Input (Figma 177:1592) — Type 7 × State 6 × Size 2. Focus, filled and placeholder come from CSS; Error, Disabled and Read-only are props. */
@@ -87,6 +92,8 @@ export function Input({
   const describedBy = [props['aria-describedby'], helperId, errorId].filter(Boolean).join(' ') || undefined;
 
   const [inner, setInner] = useState(defaultValue ?? '');
+  // Password: Show / Hide toggles the characters
+  const [reveal, setReveal] = useState(false);
   const current = value ?? inner;
 
   const update = (next: string) => {
@@ -146,7 +153,18 @@ export function Input({
             style={rows ? { height: 'auto', ...props.style } : props.style}
           />
         ) : (
-          <input {...typeDefaults[type]} {...props} {...shared} type={nativeType[type]} />
+          <input {...typeDefaults[type]} {...props} {...shared} type={type === 'password' && reveal ? 'text' : nativeType[type]} />
+        )}
+        {type === 'password' && editable && (
+          <button
+            type="button"
+            className="hc-input__action"
+            aria-label={reveal ? 'Hide password' : 'Show password'}
+            aria-pressed={reveal}
+            onClick={() => setReveal((r) => !r)}
+          >
+            <Icon name="visibility" size={20} />
+          </button>
         )}
         {showClear && (
           <button

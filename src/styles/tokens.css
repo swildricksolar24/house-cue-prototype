@@ -32,6 +32,7 @@
   --hc-fill-10: #221e1a1a; /* [P] */
   --hc-fill-20: #221e1a33; /* [P] */
   --hc-scrim: rgba(0, 0, 0, 0.25); /* [P] */
+  --hc-scrim-strong: rgba(0, 0, 0, 0.6); /* [P] darker dim behind dialogs (review change) */
   --hc-logo-word: #2f2a25;
   --hc-logo-ai: #2a65a6;
   --hc-icon-tile: #5e5147;
@@ -43,6 +44,8 @@
   --hc-success-bg: #dceae6;
   --hc-warning: #7a5c12;
   --hc-warning-bg: #ece8de; /* [P] */
+  --hc-yellow: #c99a0e; /* [P] review change: a true yellow, C11 Skipped tile */
+  --hc-yellow-bg: #fbf1cc; /* [P] */
   --hc-info: #2a65a6; /* [P] = sky-700 */
   --hc-info-bg: #e5edf4;
 
@@ -104,6 +107,8 @@
   --hc-success-bg: #39453d;
   --hc-warning: #e0be70;
   --hc-warning-bg: #4e4431;
+  --hc-yellow: #e6c14d; /* [P] */
+  --hc-yellow-bg: #4a3e17; /* [P] */
   --hc-info: #8ec4f3;
   --hc-info-bg: #3b4448;
 }

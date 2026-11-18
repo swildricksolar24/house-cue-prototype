@@ -44,3 +44,6 @@
   border-radius: var(--hc-radius-lg);
   background: var(--hc-card);
 }
+
+/* Mobile, setup flow (review change): the screen's own actions inside the content (the setup bar takes the bottom) */
+.hc-c05-inline-actions { display: flex; flex-direction: column; gap: var(--hc-space-2); flex-shrink: 0; }

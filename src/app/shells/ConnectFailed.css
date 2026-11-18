@@ -1,0 +1,22 @@
+/* Couldn't connect panel (ConnectFailed.tsx, review change) */
+.hc-connect-failed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 1px solid var(--hc-danger);
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-danger-bg);
+}
+.hc-connect-failed__text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--hc-space-2);
+}
+.hc-connect-failed__text p { margin: 0; }
+.hc-connect-failed__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}

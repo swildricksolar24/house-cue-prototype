@@ -115,6 +115,10 @@
   justify-content: flex-start;
   gap: var(--hc-space-3);
 }
+/* Connections fail switch (review change): error icon tile + label, switch at the end */
+.hc-proto-demo .hc-proto-demo__fail { display: flex; width: 100%; gap: var(--hc-space-3); }
+.hc-proto-demo__fail-label { display: inline-flex; align-items: center; gap: var(--hc-space-2); }
+.hc-proto-demo__fail-label .hc-proto-demo__icon { color: var(--hc-danger); }
 /* Sun in light mode, moon in dark mode: the outgoing icon spins away and fades, the incoming one spins in */
 .hc-proto-demo__theme-icon { position: relative; overflow: hidden; }
 .hc-proto-demo__theme-icon svg {
@@ -288,3 +292,5 @@
 .hc-proto-map__card a:hover { color: var(--hc-link); text-decoration: underline; }
 .hc-proto-map__card ol { margin: 12px 0 0; padding-left: 20px; font: 400 14px/22px var(--hc-font); }
 .hc-proto-map__card li.is-todo { color: var(--hc-text-muted); }
+
+/* Receive an invite (review change) */

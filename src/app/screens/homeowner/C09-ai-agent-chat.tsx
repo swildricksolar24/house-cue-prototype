@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { Fragment, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { ActionCard } from '../../../components/ActionCard/ActionCard';
 import { AgentCard } from '../../../components/AgentCard/AgentCard';
 import { Button } from '../../../components/Button/Button';
-import { DetailRow } from '../../../components/DetailRow/DetailRow';
 import { PushCard } from '../../../components/PushCard/PushCard';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
 import { TabBar } from '../../../components/TabBar/TabBar';
@@ -10,10 +9,13 @@ import { UserBubble } from '../../../components/UserBubble/UserBubble';
 import { agent, currentHome, money, systems } from '../../data/sample';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
+import { DialogClose } from '../../shells/DialogClose';
 import { MobileShell } from '../../shells/MobileShell';
 import { homeownerPaths, landlordPaths } from '../../shells/navPaths';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
+import { answerFor, type AgentAnswer } from './_agent-answer';
+import { useCurrentHome } from '../../prototype/HomeContext';
 import './C09-ai-agent-chat.css';
 
 /**
@@ -26,13 +28,8 @@ import './C09-ai-agent-chat.css';
 type C09State = 'default' | 'over-cap' | 'vendor-cancelled' | 'tenant-report' | 'rental-emergency';
 const C09_STATES: C09State[] = ['over-cap', 'vendor-cancelled', 'tenant-report', 'rental-emergency'];
 
-type Message = { id: number; from: 'user' | 'agent'; text: string };
-
-const AGENT_REPLIES = [
-  'Got it. I’ve added that to the brief so the pros have it.',
-  'Thanks. I’ll keep that in mind and check with you before anything is booked.',
-  'Noted. Want me to include that when I ask for quotes?',
-];
+/** A chat message. Review change: an agent answer can carry an "Ask 5 pros" quotes card (answerFor in _agent-answer.ts) */
+type Message = { id: number; from: 'user' | 'agent'; text: string; quote?: AgentAnswer['quote']; rejected?: boolean };
 
 const ac = systems.find((s) => s.id === 'ac') ?? systems[0];
 
@@ -63,7 +60,7 @@ export default function AiAgentChat(_: ScreenProps) {
   const [cardDone, setCardDone] = useState<'approved' | 'rejected' | null>(null);
   const [sheetOpen, setSheetOpen] = useState(true);
   const endRef = useRef<HTMLDivElement>(null);
-  const replyIndex = useRef(0);
+  const { home } = useCurrentHome();
 
   useEffect(() => {
     setSheetOpen(true);
@@ -81,12 +78,13 @@ export default function AiAgentChat(_: ScreenProps) {
     if (!text) return;
     setMessages((m) => [...m, { id: Date.now(), from: 'user', text }]);
     setDraft('');
-    const reply = AGENT_REPLIES[replyIndex.current++ % AGENT_REPLIES.length];
-    window.setTimeout(() => addAgentReply(reply), 600);
+    // Review change: the agent answers what you asked (topic from keywords, answer from the home's data)
+    const answer = answerFor(text, home.address);
+    window.setTimeout(() => setMessages((m) => [...m, { id: Date.now() + 1, from: 'agent', text: answer.text, quote: answer.quote }]), 600);
   };
 
   /* ---------- Thread content per state ---------- */
-  let thread: ReactNode;
+  let thread: ReactNode = null;
   if (state === 'tenant-report') {
     thread = (
       <>
@@ -145,36 +143,63 @@ export default function AiAgentChat(_: ScreenProps) {
       </>
     );
   } else {
-    thread = (
-      <>
-        <p className="hc-small hc-muted">Today 9:12 AM</p>
-        <UserBubble>The AC is blowing warm air upstairs.</UserBubble>
-        <AgentCard>
-          Sorry about that. Your {ac.model} is {ac.age} old, and warm air upstairs is usually a refrigerant or capacitor issue.
-          That needs a licensed pro.
-        </AgentCard>
-        {cardDone === 'rejected' ? null : (
-          <ActionCard
-            meta="Agent · now"
-            title="Ask 5 pros for AC repair quotes"
-            body={`I’ll email 5 licensed HVAC pros near ${currentHome.address} and collect quotes by 6 PM. Nothing is booked or paid without your OK.`}
-            onApprove={flow.goNext}
-            onEdit={flow.goNext}
-            onReject={() => {
-              setCardDone('rejected');
-              addAgentReply('Okay, I won’t contact anyone. Tell me if you want to try something else first.');
-            }}
-          />
-        )}
-      </>
-    );
+    const quotesCard =
+      cardDone === 'rejected' ? null : (
+        <ActionCard
+          meta="Agent · now"
+          title="Ask 5 pros for AC repair quotes"
+          body={`I’ll email 5 licensed HVAC pros near ${currentHome.address} and collect quotes by 6 PM. Nothing is booked or paid without your OK.`}
+          onApprove={flow.goNext}
+          onEdit={flow.goNext}
+          onReject={() => {
+            setCardDone('rejected');
+            addAgentReply('Okay, I won’t contact anyone. Tell me if you want to try something else first.');
+          }}
+        />
+      );
+    // Review change: the default state opens empty (just the message box and Send); the agent answers what you ask
+    if (state !== 'default') {
+      thread = (
+        <>
+          <p className="hc-small hc-muted">Today 9:12 AM</p>
+          <UserBubble>The AC is blowing warm air upstairs.</UserBubble>
+          <AgentCard>
+            Sorry about that. Your {ac.model} is {ac.age} old, and warm air upstairs is usually a refrigerant or capacitor issue.
+            That needs a licensed pro.
+          </AgentCard>
+          {quotesCard}
+        </>
+      );
+    }
   }
 
-  const chat = (
+  const rejectQuote = (id: number) => {
+    setMessages((m) => m.map((x) => (x.id === id ? { ...x, rejected: true } : x)));
+    addAgentReply('Okay, I won’t contact anyone. Tell me if you want to try something else first.');
+  };
+
+  const chat = (messages.length > 0 || thread) && (
     <div className="hc-c09-thread">
       {thread}
       {messages.map((m) =>
-        m.from === 'user' ? <UserBubble key={m.id}>{m.text}</UserBubble> : <AgentCard key={m.id}>{m.text}</AgentCard>,
+        m.from === 'user' ? (
+          <UserBubble key={m.id}>{m.text}</UserBubble>
+        ) : (
+          <Fragment key={m.id}>
+            <AgentCard>{m.text}</AgentCard>
+            {/* A repair answer offers to ask pros; Approve / Edit continue to the request (next journey step) */}
+            {m.quote && !m.rejected && (
+              <ActionCard
+                meta="Agent · now"
+                title={m.quote.title}
+                body={m.quote.body}
+                onApprove={flow.goNext}
+                onEdit={flow.goNext}
+                onReject={() => rejectQuote(m.id)}
+              />
+            )}
+          </Fragment>
+        ),
       )}
       <div ref={endRef} />
     </div>
@@ -189,11 +214,7 @@ export default function AiAgentChat(_: ScreenProps) {
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
       />
-      {device === 'mobile' && (
-        <button type="button" className="hc-c09-composer__mic" aria-label="Talk to your agent" disabled>
-          <span className="hc-c09-composer__mic-icon" aria-hidden />
-        </button>
-      )}
+      {/* Review change: just the message box and Send (the mic button is gone) */}
       <Button type="submit">Send</Button>
     </form>
   );
@@ -209,6 +230,7 @@ export default function AiAgentChat(_: ScreenProps) {
         onClick={(e) => e.stopPropagation()}
       >
         {device === 'mobile' && <span className="hc-c09-sheet__handle" aria-hidden />}
+        <DialogClose onClick={() => setSheetOpen(false)} />
         <h2 id="hc-c09-sheet-title" className="hc-h3">
           {SHEETS[sheetKey].title}
         </h2>
@@ -267,26 +289,8 @@ export default function AiAgentChat(_: ScreenProps) {
             chat={chat}
             composer={composer}
             onLog={() => flow.go('C10')}
-            side={
-              <>
-                <section className="hc-c09-card hc-c09-card--side">
-                  <h2 className="hc-large-bold">About this item</h2>
-                  <DetailRow label="Item" value={ac.name} />
-                  <DetailRow label="Model" value={ac.model} />
-                  <DetailRow label="Age" value={ac.age} />
-                  <DetailRow label="Last service" value="Mar 12, 2025" />
-                </section>
-                <section className="hc-c09-card hc-c09-card--side">
-                  <h2 className="hc-large-bold">Spending rules</h2>
-                  <DetailRow
-                    label="Booking cap"
-                    value="$0 · every booking needs your OK"
-                    actionLabel="Edit"
-                    onAction={() => flow.go('C07')}
-                  />
-                </section>
-              </>
-            }
+            // Review change: the About this item and Spending rules cards are gone; the chat takes the full width
+            side={null}
           />
         </WebShell>
       )}
@@ -301,7 +305,7 @@ function WebLayout({ chat, composer, side, onLog }: { chat: ReactNode; composer:
       <header className="hc-c09-web__head">
         <h1 className="hc-h2">Agent</h1>
         <Button variant="secondary" onClick={onLog}>
-          Memory and log
+          Memory and activity log
         </Button>
       </header>
       <div className="hc-c09-web__cols">

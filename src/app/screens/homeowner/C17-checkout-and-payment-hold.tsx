@@ -9,6 +9,7 @@ import { HoldExplainer } from '../../../components/HoldExplainer/HoldExplainer';
 import { OptionCard } from '../../../components/OptionCard/OptionCard';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
+import { DialogClose } from '../../shells/DialogClose';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
@@ -69,6 +70,7 @@ export default function CheckoutAndPaymentHold(_: ScreenProps) {
     <div className={`hc-c17-overlay hc-c17-overlay--${device === 'mobile' ? 'bottom' : 'center'}`} role="presentation">
       <div className="hc-c17-sheet" role="dialog" aria-modal="true" aria-labelledby="hc-c17-sheet-title">
         {device === 'mobile' && <span className="hc-c17-sheet__grabber" aria-hidden />}
+        <DialogClose onClick={() => setSheetOpen(false)} />
         <h2 id="hc-c17-sheet-title" className="hc-h4">
           Approve $412? It’s over your $300 cap
         </h2>

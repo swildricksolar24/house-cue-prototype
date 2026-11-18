@@ -1,0 +1,12 @@
+/* Room icon (_c63-room-icon.tsx, review change): 32px tinted tile; used on C63 Rooms and C46 Devices by room */
+.hc-c63-room-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-tint);
+  color: var(--hc-text);
+}

@@ -4,6 +4,7 @@ import { ImagePlaceholder } from '../../../components/ImagePlaceholder/ImagePlac
 import { Input } from '../../../components/Input/Input';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
+import { DialogClose } from '../../shells/DialogClose';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
@@ -33,6 +34,8 @@ export default function PermissionPrompts(_: ScreenProps) {
     const sheet = (
         <section className="hc-x05-sheet" role="dialog" aria-modal="true" aria-labelledby="hc-x05-title">
           <span className="hc-x05-grabber" aria-hidden />
+          {/* × = not now: type the address (camera prompt: skip to the location prompt) */}
+          <DialogClose onClick={camera ? () => setPrompt('location') : typeAddress} />
           <h2 id="hc-x05-title" className="hc-h4">
             {camera ? 'Allow camera to scan labels' : 'Find your address faster'}
           </h2>

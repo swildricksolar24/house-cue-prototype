@@ -71,7 +71,8 @@
 .hc-c63-table__head,
 .hc-c63-table__row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 180px 240px 80px;
+  /* Review change: Room (icon + name) | Floor | Connected items | Edit; the Walls column is removed */
+  grid-template-columns: 180px minmax(0, 1fr) 120px 48px; /* review change: Room fixed at 180px so Floor sits further left */
   gap: var(--hc-space-4);
   align-items: center;
   padding: var(--hc-space-3) var(--hc-space-4);
@@ -94,3 +95,40 @@
 }
 .hc-c63-table__row:hover { background: var(--hc-page); }
 .hc-c63-table__row:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--hc-info); }
+
+/* Edit buttons (review change). Web: the room name opens Room detail, Edit sits in the last column. */
+.hc-c63-table__name {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-text);
+  font: 600 14px/20px var(--hc-font);
+  text-align: left;
+  cursor: pointer;
+}
+.hc-c63-table__name:hover { text-decoration: underline; }
+.hc-c63-table__name:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-sm); }
+.hc-c63-table__edit { display: flex; justify-content: flex-end; }
+.hc-c63-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+/* Mobile: the row opens Room detail, Edit at the right */
+.hc-c63-row-wrap { display: flex; align-items: center; gap: var(--hc-space-2); }
+.hc-c63-row-wrap > .hc-c63-row { flex: 1 1 0; min-width: 0; }
+.hc-c63-edit { flex-shrink: 0; }
+
+.hc-c63-table__room { display: flex; align-items: center; gap: var(--hc-space-3); min-width: 0; }
+/* Mobile row: icon tile, then name and summary */
+.hc-c63-row { display: flex; align-items: center; gap: var(--hc-space-3); padding: var(--hc-space-2) 0; text-align: left; }
+.hc-c63-row__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+/* Connected items (3rd column): header and values centred (review change) */
+.hc-c63-table__head > :nth-child(3),
+.hc-c63-table__row > :nth-child(3) { text-align: center; }
+/* Floor (2nd column): 24px in from its left edge, header and values (review change) */
+.hc-c63-table__head > :nth-child(2),
+.hc-c63-table__row > :nth-child(2) { padding-left: var(--hc-space-5); }

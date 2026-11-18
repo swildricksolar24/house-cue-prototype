@@ -69,3 +69,11 @@
 }
 .hc-c42-card--list { gap: var(--hc-space-1); }
 .hc-c42-card--side { flex: 0 0 340px; }
+
+/* Urgency rules per device, grouped by room (review change): room title, then rows of icon · name + urgency tag · Edit */
+.hc-c42-urgency-room { display: flex; flex-direction: column; gap: var(--hc-space-1); margin-top: var(--hc-space-2); }
+.hc-c42-urgency-room__title { margin: 0; font: 600 12px/18px var(--hc-font); letter-spacing: 0.02em; color: var(--hc-text-muted); }
+.hc-c42-urgency { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.hc-c42-urgency__row { display: flex; align-items: center; gap: var(--hc-space-3); padding: var(--hc-space-2) 0; }
+.hc-c42-urgency__row + .hc-c42-urgency__row { border-top: 1px solid var(--hc-border); }
+.hc-c42-urgency__text { display: flex; flex: 1 1 0; min-width: 0; flex-direction: column; align-items: flex-start; gap: 4px; }

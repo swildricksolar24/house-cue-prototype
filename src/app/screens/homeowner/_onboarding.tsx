@@ -83,7 +83,7 @@ export function Dialog({
   actions,
   onClose,
   width = 342,
-  showClose = false,
+  showClose = true,
 }: {
   title: string;
   children?: ReactNode;

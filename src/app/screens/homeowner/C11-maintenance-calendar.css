@@ -141,3 +141,18 @@
   color: var(--hc-text);
 }
 .hc-c11-year .hc-stat-tile__meta { margin-top: calc(-1 * var(--hc-space-1)); }
+/* Review change: "Due this month" tile on a red background (danger tokens, light and dark) */
+.hc-stat-tile.hc-c11-year__due {
+  border-color: var(--hc-danger);
+  background: var(--hc-danger-bg);
+}
+/* Review change: "Done" tile on a green background (success tokens, light and dark) */
+.hc-stat-tile.hc-c11-year__done {
+  border-color: var(--hc-success);
+  background: var(--hc-success-bg);
+}
+/* Review change: "Skipped" tile on a yellow background (--hc-yellow tokens, light and dark) */
+.hc-stat-tile.hc-c11-year__skipped {
+  border-color: var(--hc-yellow);
+  background: var(--hc-yellow-bg);
+}

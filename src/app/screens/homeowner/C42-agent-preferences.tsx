@@ -1,41 +1,98 @@
 import { useState } from 'react';
+import { Button } from '../../../components/Button/Button';
 import { DetailRow } from '../../../components/DetailRow/DetailRow';
-import { ListRow } from '../../../components/ListRow/ListRow';
 import { NumberStepper } from '../../../components/NumberStepper/NumberStepper';
 import { SettingRow } from '../../../components/SettingRow/SettingRow';
-import { useFlow } from '../../prototype/flow';
+import { StatusPill, type StatusTone } from '../../../components/StatusPill/StatusPill';
+import { homeDevices, roomOrder } from '../../data/sample';
 import { usePrototype } from '../../prototype/PrototypeContext';
+import { EditDialog, type EditDialogProps } from '../../shells/EditDialog';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
+import { DeviceIcon } from './_c46-device-icon';
 import './C42-agent-preferences.css';
 
 const PRIORITIES = ['Lowest price', 'Balanced', 'Best quality'];
 
-/** Invented sample categories and pros from the Figma frame */
-const CATEGORIES = [
-  { title: 'HVAC', description: '7 quotes · Best quality · cap $300 · prefers Zephyrline HVAC' },
-  { title: 'Plumbing', description: 'Default · leaks are Same day' },
-  { title: 'Pool', description: 'Default' },
-  { title: 'Electrical', description: 'Default · pro only' },
-];
+/**
+ * Review change: urgency rules are per device, for every known device (data/sample.ts homeDevices), grouped by room
+ * with the device's icon. They replace the three sample rules from the Figma frame (AC not cooling, Water leak, Pool
+ * pump noise). Starting urgency comes from the kind of device.
+ */
+const defaultUrgency = (name: string) => {
+  const n = name.toLowerCase();
+  if (/leak|smoke|co alarm/.test(n)) return 'Emergency';
+  if (/thermostat|garage door/.test(n)) return 'Same day';
+  if (/plug|\blight\b|lamp/.test(n)) return 'Flexible'; // whole word "light": "floodlight" is a motion sensor
+  return 'This week';
+};
+const URGENCY_TONE: Record<string, StatusTone> = { Emergency: 'danger', 'Same day': 'warning', 'This week': 'info', Flexible: 'neutral' };
 
-const URGENCY = [
-  { label: 'AC not cooling', value: 'Emergency' },
-  { label: 'Water leak', value: 'Same day' },
-  { label: 'Pool pump noise', value: 'This week' },
-];
+/** Choices in the edit dialogs (review change) */
+const URGENCY_LEVELS = ['Emergency', 'Same day', 'This week', 'Flexible'];
+const ESTIMATE_TIMES = ['Weekdays 8–11 AM', 'Weekdays 12–5 PM', 'Weekday evenings 5–8 PM', 'Saturdays 9 AM–1 PM', 'Any time'];
+
+type Editing = Omit<EditDialogProps, 'onCancel'>;
 
 /**
  * C42 Agent preferences — Figma mobile 215:13230 (batch 211:6306), web 215:16463 (batch 211:6307). J1 Onboarding step 18.
- * Estimate times → Edit goes to C43 Calendar connect (the next step).
+ * Review change: every Edit opens an edit dialog (EditDialog): Estimate times (choice), Monthly budget (amount, optional)
+ * and each urgency rule (Emergency / Same day / This week / Flexible). Estimate times' Edit used to jump to C43 Calendar
+ * connect; budget and the urgency rules were disabled.
  */
 export default function AgentPreferences(_: ScreenProps) {
   const { device } = usePrototype();
-  const flow = useFlow();
   const [quotes, setQuotes] = useState(5);
   const [priority, setPriority] = useState('Balanced');
+  const [estimateTimes, setEstimateTimes] = useState(ESTIMATE_TIMES[0]);
+  const [budget, setBudget] = useState('150');
+  // Urgency per device id (review change)
+  const [urgency, setUrgency] = useState<Record<string, string>>(() => Object.fromEntries(homeDevices.map((d) => [d.id, defaultUrgency(d.name)])));
+  const [editing, setEditing] = useState<Editing | null>(null);
   const web = device === 'web';
+
+  const edit = (e: Editing) =>
+    setEditing({
+      ...e,
+      onSave: (v) => {
+        e.onSave(v);
+        setEditing(null);
+      },
+    });
+  const dialog = editing && <EditDialog {...editing} onCancel={() => setEditing(null)} />;
+
+  const editEstimateTimes = () =>
+    edit({
+      title: 'Edit estimate times',
+      description: 'When pros can come by for estimates.',
+      label: 'Estimate times',
+      field: { kind: 'select', options: ESTIMATE_TIMES },
+      value: estimateTimes,
+      onSave: setEstimateTimes,
+    });
+  const editBudget = () =>
+    edit({
+      title: 'Edit monthly budget',
+      description: 'Your agent warns you before going over it. Your spend cap is always the ceiling.',
+      label: 'Monthly budget in $',
+      field: { kind: 'number', placeholder: 'e.g. 150' },
+      optional: true,
+      value: budget,
+      onSave: (v) => setBudget(v.replace(/[^0-9.]/g, '')),
+    });
+  const editUrgency = (id: string) => {
+    const d = homeDevices.find((x) => x.id === id);
+    if (!d) return;
+    edit({
+      title: `Edit urgency: ${d.name}`,
+      description: `How fast your agent looks for a pro when the ${d.room.toLowerCase()} ${d.name.split(' · ')[0].toLowerCase()} reports a problem.`,
+      label: 'Urgency',
+      field: { kind: 'select', options: URGENCY_LEVELS },
+      value: urgency[id],
+      onSave: (v) => setUrgency((u) => ({ ...u, [id]: v })),
+    });
+  };
 
   const general = (
     <>
@@ -63,7 +120,7 @@ export default function AgentPreferences(_: ScreenProps) {
           </button>
         ))}
       </div>
-      <DetailRow label="Estimate times" value="Weekdays 8–11 AM" actionLabel="Edit" onAction={flow.goNext} />
+      <DetailRow label="Estimate times" value={estimateTimes} actionLabel="Edit" onAction={editEstimateTimes} />
       <SettingRow title="Include pros I’ve used" description={web ? 'Ask them for quotes too' : 'Ask them too'} defaultChecked />
       <SettingRow
         title="Price negotiation"
@@ -85,6 +142,7 @@ export default function AgentPreferences(_: ScreenProps) {
     return (
       <MobileShell header={{ title: 'Agent preferences' }} tab="agent">
         <div className="hc-c42-content">{general}</div>
+        {dialog}
       </MobileShell>
     );
   }
@@ -99,26 +157,39 @@ export default function AgentPreferences(_: ScreenProps) {
         <div className="hc-c42-web__cols">
           <section className="hc-c42-card hc-c42-card--main">
             {general}
-            <DetailRow label="Monthly budget (optional)" value="$150" actionLabel="Edit" actionDisabled />
+            <DetailRow label="Monthly budget (optional)" value={budget ? `$${budget}` : 'Not set'} actionLabel="Edit" onAction={editBudget} />
           </section>
-          <section className="hc-c42-card hc-c42-card--list">
-            <h2 className="hc-large-bold">By category</h2>
-            {CATEGORIES.map((c) => (
-              <ListRow key={c.title} title={c.title} description={c.description} />
-            ))}
-            <button type="button" className="hc-c42-link" disabled>
-              + Add a category
-            </button>
-          </section>
+          {/* Review change: the "By category" card (HVAC, Plumbing, Pool, Electrical, + Add a category) is removed */}
           <section className="hc-c42-card hc-c42-card--list hc-c42-card--side">
             <h2 className="hc-large-bold">Urgency rules</h2>
-            {URGENCY.map((u) => (
-              <DetailRow key={u.label} label={u.label} value={u.value} actionLabel="Edit" actionDisabled />
-            ))}
+            {roomOrder.map((room) => {
+              const devices = homeDevices.filter((d) => d.room === room);
+              if (!devices.length) return null;
+              return (
+                <div key={room} className="hc-c42-urgency-room">
+                  <h3 className="hc-c42-urgency-room__title">{room}</h3>
+                  <ul className="hc-c42-urgency">
+                    {devices.map((d) => (
+                      <li key={d.id} className="hc-c42-urgency__row">
+                        <DeviceIcon name={d.name} />
+                        <span className="hc-c42-urgency__text">
+                          <span className="hc-medium">{d.name}</span>
+                          <StatusPill label={urgency[d.id]} tone={URGENCY_TONE[urgency[d.id]] ?? 'neutral'} />
+                        </span>
+                        <Button variant="secondary" size="tiny" onClick={() => editUrgency(d.id)} aria-label={`Edit urgency: ${d.name}, ${d.room}`}>
+                          Edit
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
             <p className="hc-small hc-muted">Anything not listed: This week.</p>
           </section>
         </div>
       </div>
+      {dialog}
     </WebShell>
   );
 }

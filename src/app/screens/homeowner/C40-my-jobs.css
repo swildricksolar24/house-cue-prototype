@@ -98,3 +98,30 @@
 .hc-c40-table tbody th { font-weight: 600; }
 .hc-c40-table tbody tr:last-child > * { border-bottom: 0; }
 .hc-c40-table th:first-child { width: 45%; }
+/* Review change: jobs grouped by status (Quotes, In progress, Estimate, Booked, Done, Complete) */
+.hc-c40-group { display: flex; flex-direction: column; }
+/* Each status is its own card (review change); web stacks them 16px apart, mobile uses the body gap */
+.hc-c40-groups { display: flex; flex-direction: column; gap: var(--hc-space-4); }
+.hc-mobile-shell .hc-c40-card.hc-c40-group { padding: var(--hc-space-4); }
+.hc-c40-group__title {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+  margin: 0;
+  font: 700 16px/24px var(--hc-font);
+  color: var(--hc-text);
+}
+.hc-c40-group__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 var(--hc-space-1);
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-tint);
+  color: var(--hc-text-muted);
+  font: 600 12px/18px var(--hc-font);
+}
+/* No divider under the last job in a card */
+.hc-c40-group .hc-task-row:last-child { border-bottom: 0; padding-bottom: 0; }

@@ -5,11 +5,12 @@ import { SkeletonCard } from '../../../components/SkeletonCard/SkeletonCard';
 import { StateBlock } from '../../../components/StateBlock/StateBlock';
 import { TaskRow, type TaskRowTagTone } from '../../../components/TaskRow/TaskRow';
 import { Upload } from '../../../components/Upload/Upload';
-import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
+import { AddDocumentDialog } from './_c24-add-document';
+import { EmailImportDialog } from './_c24-email-import';
 import './C24-document-vault.css';
 
 type Doc = { id: string; title: string; meta: string; webMeta: string; tag: string; tone: TaskRowTagTone | 'neutral'; mobile: boolean };
@@ -33,16 +34,71 @@ const matches = (filter: string, d: Doc) => filter === 'All' || d.tag === filter
 /**
  * C24 Document vault — Figma mobile 215:12885 (batch 211:6296), web 215:15893 (batch 211:6297).
  * States: Empty 110:5156, Loading 110:5253, Error 110:5360 (+ web 110:5457/5592/5737). J1 Onboarding step 15.
+ * Review change: Upload, the side panel's drop zone (with the dropped file) and "Add a document" open the Add a document
+ * dialog (_c24-add-document.tsx) instead of jumping to the next onboarding step (C46). The new document goes to the top
+ * of the list.
+ * Review change: "Import from email" opens the email import dialogs (_c24-email-import.tsx: provider, confirm account,
+ * searching, found documents) instead of going to C44; the documents you keep go to the top of the list, "from email".
  */
 export default function DocumentVault(_: ScreenProps) {
   const { device, screenState } = usePrototype();
-  const flow = useFlow();
   const [filter, setFilter] = useState('All');
   const [query, setQuery] = useState('');
+  const [docs, setDocs] = useState(DOCS);
+  // Add a document dialog: false = closed, null = open with no file, File = opened from the drop zone with that file
+  const [adding, setAdding] = useState<File | null | false>(false);
+  const addDocument = () => setAdding(null);
+  const [importing, setImporting] = useState(false);
+  const importDialog = importing && (
+    <EmailImportDialog
+      onClose={() => setImporting(false)}
+      onAdd={(found) => {
+        setDocs((list) => [
+          ...found.map((f, i) => ({
+            id: `email-${list.length + i + 1}`,
+            title: f.title,
+            meta: `${f.linked} · from email`,
+            webMeta: `${f.linked} · from email · ${f.detail}`,
+            tag: f.type,
+            tone: (f.type === 'Receipt' || f.type === 'Warranty' ? 'success' : 'info') as Doc['tone'],
+            mobile: true,
+          })),
+          ...list,
+        ]);
+        setFilter('All');
+        setQuery('');
+        setImporting(false);
+      }}
+    />
+  );
+  const addDialog = adding !== false && (
+    <AddDocumentDialog
+      initialFile={adding}
+      onCancel={() => setAdding(false)}
+      onAdd={(d) => {
+        const where = d.linked || 'Whole home';
+        setDocs((list) => [
+          {
+            id: `added-${list.length + 1}`,
+            title: d.title,
+            meta: `${where} · added today`,
+            webMeta: `${where} · ${d.size} · added today`,
+            tag: d.type,
+            tone: ['Receipt', 'Warranty'].includes(d.type) ? 'success' : ['Manual', 'Invoice'].includes(d.type) ? 'info' : d.type === 'Inspection' ? 'warning' : 'neutral',
+            mobile: true,
+          },
+          ...list,
+        ]);
+        setFilter('All');
+        setQuery('');
+        setAdding(false);
+      }}
+    />
+  );
 
   const state =
     screenState === 'empty' ? (
-      <StateBlock title="No documents yet" body="Add receipts, manuals and warranties, or import them from email." actionLabel="Add a document" onAction={flow.goNext} />
+      <StateBlock title="No documents yet" body="Add receipts, manuals and warranties, or import them from email." actionLabel="Add a document" onAction={addDocument} />
     ) : screenState === 'error' ? (
       <StateBlock kind="error" title="Couldn’t load your documents" body="Check your connection and try again. Nothing was lost." actionLabel="Try again" />
     ) : screenState === 'loading' ? (
@@ -92,10 +148,12 @@ export default function DocumentVault(_: ScreenProps) {
       <MobileShell header={{ title: 'Documents' }} tab="home" className="hc-c24">
         {search}
         {chips(MOBILE_FILTERS)}
-        {state ?? <div>{rows(DOCS.filter((d) => d.mobile), false)}</div>}
-        <Button fullWidth onClick={flow.goNext}>
+        {state ?? <div>{rows(docs.filter((d) => d.mobile), false)}</div>}
+        <Button fullWidth onClick={addDocument}>
           Add a document
         </Button>
+        {addDialog}
+        {importDialog}
       </MobileShell>
     );
   }
@@ -105,21 +163,21 @@ export default function DocumentVault(_: ScreenProps) {
       <div className="hc-c24-web">
         <div className="hc-c24-web__head">
           <h1 className="hc-h2">Documents</h1>
-          <Button variant="secondary" onClick={() => flow.go('C44')}>
+          <Button variant="secondary" onClick={() => setImporting(true)}>
             Import from email
           </Button>
-          <Button onClick={flow.goNext}>Upload</Button>
+          <Button onClick={addDocument}>Upload</Button>
         </div>
         <div className="hc-c24-web__filters">
           <div className="hc-c24-web__search">{search}</div>
           {chips(WEB_FILTERS)}
         </div>
         <div className="hc-c24-web__cols">
-          <section className="hc-c24-card hc-c24-card--list">{state ?? rows(DOCS, true)}</section>
+          <section className="hc-c24-card hc-c24-card--list">{state ?? rows(docs, true)}</section>
           <aside className="hc-c24-web__side">
             <section className="hc-c24-card">
               <h2 className="hc-large-bold">Add documents</h2>
-              <Upload onFiles={flow.goNext} />
+              <Upload onFiles={(files) => files[0] && setAdding(files[0])} />
               <p className="hc-small hc-muted">
                 Or take a photo in the app, or forward receipts to your HouseCue import address (set up in Settings).
               </p>
@@ -127,6 +185,8 @@ export default function DocumentVault(_: ScreenProps) {
           </aside>
         </div>
       </div>
+      {addDialog}
+        {importDialog}
     </WebShell>
   );
 }

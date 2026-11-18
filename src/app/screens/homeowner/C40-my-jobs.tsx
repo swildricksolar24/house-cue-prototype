@@ -13,6 +13,7 @@ import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
+import { NewRequestDialog } from './_new-request-dialog';
 import './C40-my-jobs.css';
 
 type Filter = 'upcoming' | 'active' | 'past';
@@ -76,13 +77,23 @@ const JOBS: Record<string, Job> = {
     tone: 'neutral',
     to: 'C49',
   },
+  // Review change: a job that's finished but still waits for your sign-off (Done), so Done and Complete both have one
+  faucet: {
+    id: 'faucet',
+    title: 'Kitchen faucet replacement',
+    meta: 'Copperwick Pipe Co. · finished today · sign off to release $210',
+    icon: 'check',
+    tag: 'Done',
+    tone: 'info',
+    to: 'C20',
+  },
   pool: {
     id: 'pool',
     title: 'Pool pump repair',
     meta: 'Feb 10, 2026 · $320 · you reviewed it',
-    webMeta: 'Fernhollow Pool Care · Feb 10, 2026 · $320',
+    webMeta: 'Fernhollow Pool Care · Feb 10, 2026 · $320 · you reviewed it',
     icon: 'check',
-    tag: 'Done',
+    tag: 'Complete',
     tone: 'success',
   },
   dryer: {
@@ -95,20 +106,19 @@ const JOBS: Record<string, Job> = {
   },
 };
 
-/** Mobile list per filter: Upcoming is the Figma frame (upcoming rows + a "Past" section) */
-const MOBILE: Record<Filter, { rows: string[]; past?: string[] }> = {
-  upcoming: { rows: ['ac', 'quotes', 'estimate'], past: ['pool'] },
-  active: { rows: ['garage', 'quotes'] },
-  past: { rows: ['pool', 'dryer'] },
-};
-
-/** Web "Jobs" card per filter (Upcoming = the Figma frame); the "Requests in progress" card stays */
-const WEB_JOBS: Record<Filter, string[]> = {
-  upcoming: ['ac', 'garage', 'pool', 'dryer'],
-  active: ['garage'],
-  past: ['pool', 'dryer'],
-};
-const WEB_REQUESTS = ['quotes', 'estimate'];
+/**
+ * Review change: the homeowner's jobs are grouped by status, in this order: Quotes, In progress, Estimate, Booked, Done
+ * (finished, waiting for your sign-off), Complete (closed: reviewed and paid, or cancelled). This replaces the Upcoming /
+ * Active / Past chips and the separate "Requests in progress" card on web.
+ */
+const GROUPS: { name: string; ids: string[] }[] = [
+  { name: 'Quotes', ids: ['quotes'] },
+  { name: 'In progress', ids: ['garage'] },
+  { name: 'Estimate', ids: ['estimate'] },
+  { name: 'Booked', ids: ['ac'] },
+  { name: 'Done', ids: ['faucet'] },
+  { name: 'Complete', ids: ['pool', 'dryer'] },
+];
 
 /** Tenant view, status only (Figma 269:15512 / 321:75712) */
 const TENANT_JOBS: { title: string; meta: string; vendor: string; when: string; status: string; tone: StatusTone }[] = [
@@ -148,6 +158,7 @@ export default function MyJobs(_: ScreenProps) {
   const [params] = useSearchParams();
   const [tenant] = useState(params.get('state') === 'tenant');
   const [filter, setFilter] = useState<Filter>('upcoming');
+  const [requesting, setRequesting] = useState(false);
 
   const open = (code?: string) => {
     if (!code) return undefined;
@@ -278,22 +289,22 @@ export default function MyJobs(_: ScreenProps) {
   }
 
   /* ---------------- Homeowner ---------------- */
+  // Review change: each status is its own card
+  const groups = (web: boolean) =>
+    GROUPS.map((g) => (
+      <section key={g.name} className="hc-c40-card hc-c40-group" aria-labelledby={`hc-c40-group-${g.name}`}>
+        <h2 id={`hc-c40-group-${g.name}`} className="hc-c40-group__title">
+          {g.name}
+          <span className="hc-c40-group__count">{g.ids.length}</span>
+        </h2>
+        <div>{g.ids.map((id) => row(id, web))}</div>
+      </section>
+    ));
+
   if (device === 'mobile') {
-    const list = MOBILE[filter];
     return (
-      <MobileShell tab="jobs" header={{ title: 'My jobs', showBack: false }}>
-        {chips}
-        {stateContent ?? (
-          <>
-            <div>{list.rows.map((id) => row(id))}</div>
-            {list.past && (
-              <>
-                <h2 className="hc-large-bold">Past</h2>
-                <div>{list.past.map((id) => row(id))}</div>
-              </>
-            )}
-          </>
-        )}
+      <MobileShell tab="jobs" header={{ title: 'My jobs', showBack: false }} background={stateContent ? 'card' : 'page'}>
+        {stateContent ?? groups(false)}
       </MobileShell>
     );
   }
@@ -303,19 +314,17 @@ export default function MyJobs(_: ScreenProps) {
       <div className="hc-c40-web">
         <header className="hc-c40-web__head">
           <h1 className="hc-h2">My jobs</h1>
-          <div className="hc-c40-web__chips">{chips}</div>
-          <Button onClick={() => flow.go('C13')}>New request</Button>
+          {/* Review change: "New Job" (was New request) opens the New request dialog over My jobs instead of going to C13 */}
+          <Button onClick={() => setRequesting(true)}>New Job</Button>
         </header>
-        <div className="hc-c40-web__cols">
-          <section className="hc-c40-card hc-c40-web__main">
-            <h2 className="hc-large-bold">Jobs</h2>
-            {stateContent ? <div className="hc-c40-stack">{stateContent}</div> : <div>{WEB_JOBS[filter].map((id) => row(id, true))}</div>}
+        {requesting && <NewRequestDialog onContinue={() => flow.go('C48')} onCancel={() => setRequesting(false)} />}
+        {stateContent ? (
+          <section className="hc-c40-card">
+            <div className="hc-c40-stack">{stateContent}</div>
           </section>
-          <section className="hc-c40-card hc-c40-web__side">
-            <h2 className="hc-large-bold">Requests in progress</h2>
-            <div>{WEB_REQUESTS.map((id) => row(id, true))}</div>
-          </section>
-        </div>
+        ) : (
+          <div className="hc-c40-groups">{groups(true)}</div>
+        )}
       </div>
     </WebShell>
   );

@@ -7,9 +7,12 @@ import { StateBlock } from '../../../components/StateBlock/StateBlock';
 import { TaskRow, type TaskRowTagTone } from '../../../components/TaskRow/TaskRow';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
+import { useCurrentHome } from '../../prototype/HomeContext';
+import { AddPaymentDialog } from '../../shells/AddPaymentDialog';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
+import { ReceiptsDownload } from './_c30-receipts';
 import './C30-payment-methods-and-history.css';
 
 type Row = { id: string; title: string; meta: string; icon: IconName; tag: string; tone: TaskRowTagTone };
@@ -30,7 +33,9 @@ const onHold: Row[] = [
   { id: 'pool', title: 'Pool pump repair · $32', meta: 'Holdback released Mar 12, 2026', icon: 'dollar-sign', tag: 'Released', tone: 'info' },
 ];
 
-const cards = [
+type Method = { id: string; title: string; mobile: string; web: string };
+
+const CARDS: Method[] = [
   { id: 'visa', title: 'Visa •• 4242', mobile: 'Default for 2218 W Palm Ln · expires 08/28', web: 'Default for 2218 W Palm Ln · expires 08/28' },
   { id: 'mc', title: 'Mastercard •• 5100', mobile: 'Expires 02/27', web: 'Default for 81 N Mesa Vista · expires 02/27' },
 ];
@@ -38,12 +43,43 @@ const cards = [
 /**
  * C30 Payment methods and history — Figma mobile 217:32220, web 217:32814 (J1 Payment & review step 2).
  * States (batch B5): Empty 110:11727 / 110:11986, Loading 110:11810 / 110:12109, Error 110:11903 / 110:12242.
+ * Review change: "Add a card or bank account" (and the empty state's "Add a card") opens AddPaymentDialog. The new
+ * method joins the list and is selected; "Make this the default" moves the "Default for <home>" note to it.
  */
 export default function PaymentMethodsAndHistory(_: ScreenProps) {
   const { device, screenState, setScreenState } = usePrototype();
   const flow = useFlow();
   const [tab, setTab] = useState<'methods' | 'history'>('methods');
   const [selected, setSelected] = useState('visa');
+  const [cards, setCards] = useState(CARDS);
+  const [adding, setAdding] = useState(false);
+  // Review change: Download receipts opens the receipts dialogs (_c30-receipts.tsx)
+  const [downloading, setDownloading] = useState(false);
+  const receiptsDialog = downloading && <ReceiptsDownload onClose={() => setDownloading(false)} />;
+  const { home } = useCurrentHome();
+  const addDialog = adding && (
+    <AddPaymentDialog
+      homeAddress={home.address}
+      onCancel={() => setAdding(false)}
+      onAdd={(m) => {
+        const id = `added-${cards.length + 1}`;
+        const defaultNote = `Default for ${home.address}`;
+        const own = m.makeDefault ? `${defaultNote} · ${m.detail.charAt(0).toLowerCase()}${m.detail.slice(1)}` : m.detail;
+        setCards((list) => [
+          // A new default takes the home's "Default for …" note from the old one
+          ...list.map((c) =>
+            m.makeDefault && c.web.startsWith(defaultNote)
+              ? { ...c, web: c.web.replace(`${defaultNote} · e`, 'E'), mobile: c.mobile.replace(`${defaultNote} · e`, 'E') }
+              : c,
+          ),
+          { id, title: m.title, mobile: own, web: own },
+        ]);
+        setSelected(id);
+        setAdding(false);
+        if (screenState === 'empty') setScreenState('default');
+      }}
+    />
+  );
 
   const pills = (items: Row[]) => (
     <div>
@@ -84,6 +120,7 @@ export default function PaymentMethodsAndHistory(_: ScreenProps) {
       title="No payments yet"
       body="Holds, charges and receipts show up here after your first booking."
       actionLabel="Add a card"
+      onAction={() => setAdding(true)}
     />
   );
   const errorBlock = (
@@ -99,7 +136,7 @@ export default function PaymentMethodsAndHistory(_: ScreenProps) {
   const stateContent = screenState === 'empty' ? emptyBlock : screenState === 'error' ? errorBlock : screenState === 'loading' ? loading : null;
 
   const addButton = (
-    <Button variant="secondary" fullWidth>
+    <Button variant="secondary" fullWidth leadingIcon="plus" onClick={() => setAdding(true)}>
       Add a card or bank account
     </Button>
   );
@@ -129,8 +166,18 @@ export default function PaymentMethodsAndHistory(_: ScreenProps) {
             {pills(onHold)}
           </>
         ) : (
-          (stateContent ?? pills(history))
+          <>
+            {stateContent ?? pills(history)}
+            {/* Review change: mobile gets Download receipts too, under the history (web has it in the History card) */}
+            {!stateContent && (
+              <Button variant="secondary" fullWidth onClick={() => setDownloading(true)}>
+                Download receipts
+              </Button>
+            )}
+          </>
         )}
+        {addDialog}
+        {receiptsDialog}
       </MobileShell>
     );
   }
@@ -149,7 +196,7 @@ export default function PaymentMethodsAndHistory(_: ScreenProps) {
           <section className="hc-c30-card hc-c30-card--history">
             <div className="hc-c30-card__head">
               <h2 className="hc-large-bold">History</h2>
-              <Button variant="secondary">
+              <Button variant="secondary" onClick={() => setDownloading(true)}>
                 Download receipts
               </Button>
             </div>
@@ -157,6 +204,8 @@ export default function PaymentMethodsAndHistory(_: ScreenProps) {
           </section>
         </div>
       </div>
+      {addDialog}
+      {receiptsDialog}
     </WebShell>
   );
 }

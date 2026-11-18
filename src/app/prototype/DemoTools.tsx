@@ -11,10 +11,17 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button/Button';
 import { Icon } from '../../components/Icon/Icon';
 import { Switch } from '../../components/Switch/Switch';
+import { setConnectFail, useConnectFailSwitch } from './connectFail';
+import { useOptionalFlow } from './flow';
+import { screenPath } from './journeys';
 import { usePrototype } from './PrototypeContext';
+
+/** Review change: every button on the shortcuts panel looks like Use Demo Account (primary, default size, full width) */
+const PANEL_BUTTON = { fullWidth: true } as const;
 
 /**
  * Sun (light mode) / moon (dark mode) for the Dark mode switch, Material "light_mode" / "dark_mode" shapes (the HC
@@ -83,7 +90,9 @@ export function useDemoActions(actions: DemoAction[]) {
 /**
  * The card (review change): a floating panel you can drag anywhere by its header, with × to close it; when closed, a
  * small tab on the left edge brings it back. Open/closed and where you left it are remembered for the session.
- * "Use Demo Account" shows on steps that offer a shortcut; the Dark mode switch is always there.
+ * "Use Demo Account" shows on steps that offer a shortcut; the Dark mode switch is always there; "Connections fail"
+ * shows on screens that connect something (connectFail.ts). All buttons share one style. (Review change: the invite
+ * buttons were removed; invites now show on Choose an account.)
  * Rendered into <body> so it floats over the page (and beside the phone frame on mobile).
  */
 type Pos = { x: number; y: number };
@@ -117,6 +126,9 @@ function clamp(p: Pos, el: HTMLElement | null): Pos {
 
 function DemoCard({ actionsRef, labels }: { actionsRef: MutableRefObject<DemoAction[]>; labels: string[] }) {
   const { device, theme, setTheme } = usePrototype();
+  const navigate = useNavigate();
+  const onLanding = useOptionalFlow()?.step.code === 'C39';
+  const failSwitch = useConnectFailSwitch();
   const [open, setOpenState] = useState<boolean>(() => read('hc-proto-demo-open', true));
   const [pos, setPos] = useState<Pos | null>(() => read<Pos | null>('hc-proto-demo-pos', null));
   const panel = useRef<HTMLElement>(null);
@@ -224,20 +236,47 @@ function DemoCard({ actionsRef, labels }: { actionsRef: MutableRefObject<DemoAct
           onCheckedChange={(on) => setTheme(on ? 'dark' : 'light')}
           className="hc-proto-demo__theme"
         />
+        {/* Review change: on screens that connect something (Calendar, Email, Devices), make connecting fail */}
+        {failSwitch.visible && (
+          <Switch
+            label={
+              <span className="hc-proto-demo__fail-label">
+                <span className="hc-proto-demo__icon" aria-hidden>
+                  <Icon name="error" size={20} />
+                </span>
+                <span className="hc-small">Connections fail</span>
+              </span>
+            }
+            switchPosition="end"
+            checked={failSwitch.on}
+            onCheckedChange={setConnectFail}
+            className="hc-proto-demo__fail"
+          />
+        )}
         {/* Always at the bottom: fills in what this step needs (disabled when there's nothing to fill); the
             screen's own button moves on */}
         <div className="hc-proto-demo__actions">
           {labels.length > 0 ? (
             labels.map((label, i) => (
-              <Button key={label} fullWidth onClick={() => actionsRef.current[i]?.onClick()}>
+              <Button key={label} {...PANEL_BUTTON} onClick={() => actionsRef.current[i]?.onClick()}>
                 {label}
               </Button>
             ))
           ) : (
-            <Button fullWidth disabled title="Nothing to fill in on this step">
+            <Button {...PANEL_BUTTON} disabled title="Nothing to fill in on this step">
               Use Demo Account
             </Button>
           )}
+          {/* Review change: sign out from anywhere, back to the landing page (C39), like Settings' Log out. Disabled
+              on the landing page itself. */}
+          <Button
+            {...PANEL_BUTTON}
+            disabled={onLanding}
+            title={onLanding ? 'You’re already signed out' : undefined}
+            onClick={() => navigate(screenPath('C39', 'homeowner'))}
+          >
+            Sign out
+          </Button>
         </div>
       </div>
     </aside>,

@@ -6,8 +6,12 @@ import { Radio } from '../../components/Radio/Radio';
 import { roleNavItems, type AppRole, type RoleNavKey } from '../../components/TabBar/TabBar';
 import { WebSideNav } from '../../components/WebSideNav/WebSideNav';
 import { WebTopBar, type WebTopBarType } from '../../components/WebTopBar/WebTopBar';
+import { useAccounts } from '../prototype/accounts';
+import { useOptionalFlow } from '../prototype/flow';
 import { useCurrentHome } from '../prototype/HomeContext';
 import { HomePicker } from './HomePicker';
+import { ReceivedInvite } from './ReceivedInvite';
+import { PageBackButton, SetupActions, SetupBackButton, SetupTracker, useSetupEdits, useSetupFlow, useSetupTitle } from './SetupFlow';
 import { MenuButton, SiteMenu, type SiteMenuLink } from './SiteMenu';
 import { homeownerPaths, landlordPaths, tenantPaths, topBarPaths, utilityPaths } from './navPaths';
 import './shells.css';
@@ -101,13 +105,41 @@ export function WebShell<R extends AppRole = 'homeowner'>({
 }: WebShellProps<R>) {
   const navigate = useNavigate();
   const { home } = useCurrentHome();
+  // Review change: with more than one account (joined by invite), Switch account opens Choose an account
+  const { hasOthers } = useAccounts();
   const [picking, setPicking] = useState(false);
   // Review change: at phone width the side menu (signed in) and the top bar's links (landing and top-bar pages) fold
   // into a ☰ that opens the same full-screen menu as the mobile landing page (SiteMenu)
   const [menuOpen, setMenuOpen] = useState(false);
   const r = (role ?? 'homeowner') as AppRole;
+  // Review change: setup steps opened from the C08 checklist keep Home highlighted in the menu, whichever section the
+  // screen belongs to (Agent preferences, Payments, …)
+  const { fromSetup } = useSetupFlow();
+  // A page under the Plan tab other than Plan itself (C11)
+  const flow = useOptionalFlow();
+  const planSubPage = layout === 'app' && nav === 'plan' && !fromSetup && !!flow && flow.step.code !== 'C11';
+  const activeNav = fromSetup && r === 'homeowner' ? 'home' : nav;
+  // Setup steps: Save turns on once something on the page is edited
+  const setupEdits = useSetupEdits();
+  // …and the page title gets the step number in a circle
+  const setupTitle = useSetupTitle();
   const classes = ['hc-web-shell', `hc-web-shell--${layout}`, `hc-web-shell--${background}`, className].filter(Boolean).join(' ');
-  const content = <main className={`hc-web-shell__main hc-web-shell__main--${width}`}>{children}</main>;
+  const content = (
+    <main
+      className={[`hc-web-shell__main hc-web-shell__main--${width}`, layout === 'app' && setupTitle.className].filter(Boolean).join(' ')}
+      style={layout === 'app' ? setupTitle.style : undefined}
+      {...setupEdits.handlers}
+    >
+      {/* Review change: setup screens opened from the C08 checklist (signed-in pages only) get "Back to dashboard" and
+          the step tracker on top, Cancel / Save at the bottom (SetupFlow.tsx) */}
+      {layout === 'app' && <SetupBackButton />}
+      {/* Review change: every Plan sub page starts with the same back button as the Home tab's pages, back to Plan */}
+      {planSubPage && <PageBackButton label="Back to plan" onClick={() => navigate(r === 'landlord' ? landlordPaths.plan : homeownerPaths.plan)} />}
+      {layout === 'app' && <SetupTracker variant="web" />}
+      {children}
+      {layout === 'app' && <SetupActions variant="web" edited={setupEdits.edited} />}
+    </main>
+  );
 
   if (layout !== 'app') {
     return (
@@ -148,15 +180,17 @@ export function WebShell<R extends AppRole = 'homeowner'>({
           </>
         )}
         {content}
+        <ReceivedInvite />
       </div>
     );
   }
 
   const appLinks: SiteMenuLink[] = (roleNavItems[r] as { key: string; label: string }[]).map((item) => ({
     label: item.label,
-    current: item.key === nav,
+    current: item.key === activeNav,
     onClick: () => navigate((rolePaths[r] as Record<string, string>)[item.key]),
   }));
+  if (hasOthers) appLinks.push({ label: 'Switch account', onClick: () => navigate('/accounts') });
 
   return (
     <div className={classes}>
@@ -164,13 +198,13 @@ export function WebShell<R extends AppRole = 'homeowner'>({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         role={r as any}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        active={nav as any}
+        active={activeNav as any}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         paths={rolePaths[r] as any}
         switcherValue={r === 'homeowner' ? `${home.address}, ${home.city}` : undefined}
         // Homeowner: pick from the account's homes (dropdown under the card; the card toggles it); landlord / tenant
-        // switchers still open C38
-        onSwitcherClick={() => (r === 'homeowner' ? setPicking((p) => !p) : navigate(utilityPaths.homeSwitcher))}
+        // switchers open C38, or Choose an account when you have more than one account (review change)
+        onSwitcherClick={() => (r === 'homeowner' ? setPicking((p) => !p) : navigate(hasOthers ? '/accounts' : utilityPaths.homeSwitcher))}
         switcherExpanded={r === 'homeowner' ? picking : undefined}
         emergencyTo={utilityPaths.emergency}
         logoTo={rolePaths[r].home}
@@ -205,6 +239,8 @@ export function WebShell<R extends AppRole = 'homeowner'>({
         />
       )}
       {content}
+      {/* Review change: an invite from another home's owner (prototype shortcuts → Receive an invite) */}
+      <ReceivedInvite />
       {picking && (
         <HomePicker
           variant="dropdown"

@@ -3,7 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button/Button';
 import { Icon } from '../../components/Icon/Icon';
 import { Radio } from '../../components/Radio/Radio';
+import { useAccounts } from '../prototype/accounts';
 import { useCurrentHome } from '../prototype/HomeContext';
+import { DialogClose } from './DialogClose';
 import { utilityPaths } from './navPaths';
 import './HomePicker.css';
 
@@ -32,6 +34,7 @@ export function HomePicker({
 
 function HomeSheet({ onClose }: { onClose: () => void }) {
   const { home, homes, setHomeId } = useCurrentHome();
+  const { hasOthers } = useAccounts();
   const panel = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -47,6 +50,7 @@ function HomeSheet({ onClose }: { onClose: () => void }) {
       <div className="hc-home-picker__scrim" onClick={onClose} aria-hidden />
       <div ref={panel} className="hc-home-picker__panel" role="dialog" aria-modal="true" aria-labelledby="hc-home-picker-title">
         <span className="hc-home-picker__grabber" aria-hidden />
+        <DialogClose onClick={onClose} />
         <h2 id="hc-home-picker-title" className="hc-large-bold">
           Your homes
         </h2>
@@ -75,6 +79,12 @@ function HomeSheet({ onClose }: { onClose: () => void }) {
         <Button variant="secondary" fullWidth to={utilityPaths.homeSwitcher} onClick={onClose}>
           Manage homes
         </Button>
+        {/* Review change: with more than one account (joined by invite), open Choose an account */}
+        {hasOthers && (
+          <Button variant="secondary" fullWidth to="/accounts" onClick={onClose}>
+            Switch account
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -82,6 +92,7 @@ function HomeSheet({ onClose }: { onClose: () => void }) {
 
 function HomeDropdown({ anchor, onClose }: { anchor: HTMLElement | null; onClose: () => void }) {
   const { home, homes, setHomeId } = useCurrentHome();
+  const { hasOthers } = useAccounts();
   const navigate = useNavigate();
   const menu = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
@@ -192,6 +203,21 @@ function HomeDropdown({ anchor, onClose }: { anchor: HTMLElement | null; onClose
       >
         Manage homes
       </button>
+      {/* Review change: with more than one account (joined by invite), open Choose an account */}
+      {hasOthers && (
+        <button
+          type="button"
+          role="menuitem"
+          tabIndex={-1}
+          className="hc-home-dropdown__item hc-home-dropdown__manage"
+          onClick={() => {
+            close(false);
+            navigate('/accounts');
+          }}
+        >
+          Switch account
+        </button>
+      )}
     </div>
   );
 }

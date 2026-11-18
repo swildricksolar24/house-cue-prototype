@@ -23,16 +23,6 @@
   flex-direction: column;
   gap: var(--hc-space-5);
 }
-.hc-c15-back {
-  align-self: flex-start;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--hc-link);
-  font-weight: 600;
-  cursor: pointer;
-}
-.hc-c15-back:hover { text-decoration: underline; }
 .hc-c15-web__cols {
   display: flex;
   align-items: flex-start;

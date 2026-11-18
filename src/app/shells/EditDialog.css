@@ -1,0 +1,78 @@
+/* Edit dialog (EditDialog.tsx, review change): web = centred dialog over a dimmed page; mobile = bottom sheet in the
+   phone frame (fixed = pinned to the phone frame, which is the containing block there) */
+.hc-edit-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hc-edit-dialog__scrim {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  background: var(--hc-scrim-strong); /* review change: a plain, darker dim behind the dialog */
+  cursor: pointer;
+  animation: hc-edit-dialog-fade 0.15s ease;
+}
+/* No drop shadow (review change: it showed as a white blur in dark mode, where the shadow colour is light); the scrim
+   separates the panel from the page */
+.hc-edit-dialog__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  width: 440px;
+  max-width: calc(100% - 2 * var(--hc-space-5));
+  margin: 0;
+  padding: var(--hc-space-6);
+  border-radius: var(--hc-radius-xl);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  animation: hc-edit-dialog-in 0.18s ease;
+  /* Long forms scroll inside the dialog (review change) */
+  max-height: calc(100% - 2 * var(--hc-space-5));
+  overflow-y: auto;
+}
+/* Wide (review change): 600px for longer forms, e.g. a person with their permissions (C35) */
+.hc-edit-dialog__panel--wide { width: 600px; }
+/* Extra button (e.g. Remove) sits at the start of the row, Cancel / Save stay at the end (web) */
+.hc-edit-dialog__extra { margin-right: auto; }
+.hc-edit-dialog--mobile .hc-edit-dialog__extra { margin-right: 0; }
+.hc-edit-dialog__head { display: flex; flex-direction: column; gap: var(--hc-space-1); }
+.hc-edit-dialog__head > * { margin: 0; }
+.hc-edit-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--hc-space-3);
+  margin-top: var(--hc-space-2);
+}
+
+/* Mobile: bottom sheet */
+.hc-edit-dialog--mobile { align-items: flex-end; }
+.hc-edit-dialog--mobile .hc-edit-dialog__panel {
+  width: 100%;
+  max-width: none;
+  padding: var(--hc-space-3) var(--hc-space-5) calc(var(--hc-space-5) + 34px); /* home indicator */
+  border-radius: var(--hc-radius-xl) var(--hc-radius-xl) 0 0;
+  animation-name: hc-edit-dialog-up;
+  max-height: 92%;
+}
+.hc-edit-dialog__grabber {
+  align-self: center;
+  width: 40px;
+  height: 4px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-border-strong);
+}
+.hc-edit-dialog--mobile .hc-edit-dialog__actions > * { flex: 1 1 0; }
+
+@keyframes hc-edit-dialog-fade { from { opacity: 0; } }
+@keyframes hc-edit-dialog-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } }
+@keyframes hc-edit-dialog-up { from { transform: translateY(100%); } }
+@media (prefers-reduced-motion: reduce) {
+  .hc-edit-dialog__scrim,
+  .hc-edit-dialog__panel { animation: none; }
+}

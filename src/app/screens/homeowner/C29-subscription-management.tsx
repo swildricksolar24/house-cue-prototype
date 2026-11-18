@@ -72,7 +72,7 @@ export default function SubscriptionManagement(_: ScreenProps) {
             <section className="hc-c29-card hc-c29-card--web hc-c29-card--gap">
               <h2 className="hc-large-bold">Cancel membership</h2>
               <p className="hc-small hc-muted">
-                You keep member features until Mar 15, 2027. After that, household access for Sam and Riley ends, and only 10 items stay active.
+                You keep member features until Mar 15, 2027. After that, household access for Jennifer and George ends, and only 10 items stay active.
               </p>
               <Button variant="secondary" onClick={flow.goNext}>
                 Cancel membership

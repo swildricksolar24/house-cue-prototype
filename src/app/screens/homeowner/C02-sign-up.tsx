@@ -4,9 +4,12 @@ import { BottomActions } from '../../../components/BottomActions/BottomActions';
 import { Button } from '../../../components/Button/Button';
 import { Input } from '../../../components/Input/Input';
 import { legalPdf } from '../../data/legal';
-import { demoAccount } from '../../data/sample';
+import { useNavigate } from 'react-router-dom';
+import { demoAccount, sampleInvites } from '../../data/sample';
+import { completePendingInvite, useAccounts } from '../../prototype/accounts';
 import { useDemoActions } from '../../prototype/DemoTools';
 import { useFlow } from '../../prototype/flow';
+import { useCurrentHome } from '../../prototype/HomeContext';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
@@ -34,8 +37,11 @@ type Mode = 'signup' | 'signin';
  * Review change (signed-out gaps): email mistakes are caught on Send code. Signing in with an email that has no account
  * shows "No account with that email" (+ Create an account); signing up with an email that already has one shows "You
  * already have an account" (+ Sign in instead). In the prototype the one existing account is the demo account
- * (jordan@example.com); the sign-up demo fills a new email. Branch states: ?state=no-account, ?state=email-taken.
+ * (marty@example.com); the sign-up demo fills a new email. Branch states: ?state=no-account, ?state=email-taken.
  * "Can't sign in?" opens Account recovery (C52); the agreement line opens the legal PDFs.
+ *
+ * Review change (invites): after Accept invite (prototype shortcuts) sign in shows a note about the invite on top, and
+ * signing in goes to Choose an account (/accounts) with the new account added, instead of Home.
  */
 /** The one existing account in the prototype (sign in works only with it) and the email the sign-up demo fills in */
 const EXISTING_EMAIL = demoAccount.email;
@@ -57,7 +63,7 @@ export default function SignUp(_: ScreenProps) {
   const [emailError, setEmailError] = useState<null | 'unknown' | 'taken'>(
     branch === 'no-account' ? 'unknown' : branch === 'email-taken' ? 'taken' : null,
   );
-  const [email, setEmail] = useState(branch === 'no-account' ? 'jordan@exmaple.com' : branch === 'email-taken' ? EXISTING_EMAIL : '');
+  const [email, setEmail] = useState(branch === 'no-account' ? 'marty@exmaple.com' : branch === 'email-taken' ? EXISTING_EMAIL : '');
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState(wrongCode ? '482913' : '');
   const [codeError, setCodeError] = useState(wrongCode);
@@ -66,8 +72,24 @@ export default function SignUp(_: ScreenProps) {
   // Review decision: Send code stays disabled until the required fields are filled in (sign in only asks for email)
   const canSend = emailOk && (signIn || phone.replace(/\D/g, '').length >= 10);
 
-  /** Signed in or verified: sign up carries on with onboarding, sign in goes Home (Portfolio for landlords) */
-  const done = () => (signIn ? flow.go(flow.journey.slug === 'landlord-portfolio' ? 'C79' : 'C08') : flow.goNext());
+  // Review change: an invite accepted from the prototype shortcuts waits for this sign-in (prototype/accounts.ts)
+  const { pending } = useAccounts();
+  const invite = pending && signIn ? sampleInvites[pending] : null;
+  const { addHome } = useCurrentHome();
+  const navigate = useNavigate();
+
+  /**
+   * Signed in or verified: sign up carries on with onboarding, sign in goes Home (Portfolio for landlords). With an
+   * invite waiting, sign in adds its account and goes to Choose an account instead.
+   */
+  const done = () => {
+    if (invite) {
+      const joined = completePendingInvite();
+      if (joined?.home) addHome(joined.home);
+      return navigate('/accounts');
+    }
+    return signIn ? flow.go(flow.journey.slug === 'landlord-portfolio' ? 'C79' : 'C08') : flow.goNext();
+  };
   const switchMode = (m: Mode) => {
     setMode(m);
     setStage('email');
@@ -207,7 +229,13 @@ export default function SignUp(_: ScreenProps) {
     </p>
   );
 
-  const masked = email ? `${email[0]}•••${email.slice(email.indexOf('@'))}` : 'm•••@example.com';
+  const inviteNote = invite && (
+    <Banner tone="info" title={invite.signInTitle}>
+      After you sign in, you can choose which account to open.
+    </Banner>
+  );
+
+  const masked = email ?`${email[0]}•••${email.slice(email.indexOf('@'))}` : 'm•••@example.com';
 
   if (device === 'mobile') {
     return (
@@ -236,6 +264,7 @@ export default function SignUp(_: ScreenProps) {
         {!signIn && shortFlow && <OnboardingStepper step={1} />}
         {stage === 'email' ? (
           <>
+            {inviteNote}
             <h1 className="hc-h3">{title}</h1>
             <p className="hc-medium hc-muted">{intro}</p>
             {social}
@@ -262,6 +291,7 @@ export default function SignUp(_: ScreenProps) {
         {!signIn && (shortFlow ? <OnboardingStepper step={1} /> : <WebStepHeader step={1} total={total} />)}
         {stage === 'email' ? (
           <>
+            {inviteNote}
             <h1 className="hc-h2">{title}</h1>
             <p className="hc-large hc-muted">{intro}</p>
             {social}
