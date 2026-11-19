@@ -13,7 +13,8 @@ export type NavItem<K extends string = string> = {
 export type AppRole = 'homeowner' | 'landlord' | 'tenant';
 
 export type HomeownerNavKey = 'home' | 'plan' | 'agent' | 'jobs' | 'account';
-export type LandlordNavKey = 'portfolio' | 'home' | 'plan' | 'jobs' | 'account';
+/** Review change: no Home or Plan for the landlord (Portfolio is their home base); they were disabled items */
+export type LandlordNavKey = 'portfolio' | 'jobs' | 'account';
 export type TenantNavKey = 'home' | 'agent' | 'jobs' | 'account';
 
 export type RoleNavKey = {
@@ -36,8 +37,6 @@ export const roleNavItems: { [R in AppRole]: NavItem<RoleNavKey[R]>[] } = {
   ],
   landlord: [
     { key: 'portfolio', label: 'Portfolio', icon: 'dashboard', to: '/landlord/portfolio' },
-    { key: 'home', label: 'Home', icon: 'home', to: '/landlord/home' },
-    { key: 'plan', label: 'Plan', icon: 'calendar', to: '/landlord/plan' },
     { key: 'jobs', label: 'Jobs', icon: 'tasks', to: '/landlord/jobs' },
     { key: 'account', label: 'Account', icon: 'account', to: '/landlord/account' },
   ],

@@ -1,0 +1,5 @@
+/* Approve & get quotes dialog (_get-quotes-dialog.tsx, review change): the two checkboxes under the choices */
+.hc-get-quotes__options {
+  display: flex;
+  flex-direction: column;
+}

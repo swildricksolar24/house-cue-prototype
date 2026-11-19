@@ -98,3 +98,19 @@
   bottom: var(--hc-space-5);
   z-index: 10;
 }
+
+/* Review change: the Plan card's table (Item, Rate, This month) with a tinted total row; it fits the narrow side card */
+.hc-c89-table--plan { padding: 0; border-radius: var(--hc-radius-md); }
+.hc-c89-table--plan .hc-c89-table__row {
+  grid-template-columns: minmax(0, 1fr) 96px 84px;
+  padding: 10px var(--hc-space-3);
+  font-size: 13px;
+  line-height: 18px;
+}
+.hc-c89-table--plan .hc-c89-table__row > span:last-child { justify-content: flex-end; }
+.hc-c89-table--plan .hc-c89-table__row--head { background: var(--hc-tint); }
+.hc-c89-table__row--total { background: var(--hc-tint); font-weight: 600; }
+/* Review change: the Plan table's dropdowns (plan, doors), compact so the rows stay short */
+.hc-c89-table--plan .hc-c89-table__row { grid-template-columns: minmax(0, 1fr) 118px 80px; }
+.hc-c89-plan-select .hc-input__field { height: 34px; }
+.hc-c89-plan-select .hc-select__control { font-size: 13px; }

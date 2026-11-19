@@ -56,6 +56,10 @@ let activeUser: UserKey = 'homeowner';
 export function setActiveUser(user: UserKey) {
   activeUser = user;
 }
+/** Review change: the user whose step is on screen, for shared screens that differ by user (e.g. C34 Settings) */
+export function getActiveUser(): UserKey {
+  return activeUser;
+}
 
 /**
  * URL of a step inside a journey (step is 1-based). A user's own journey always uses that user's address

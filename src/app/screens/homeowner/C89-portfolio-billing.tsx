@@ -1,39 +1,69 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AgentFab } from '../../../components/AgentFab/AgentFab';
 import { Banner } from '../../../components/Banner/Banner';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
-import { Button } from '../../../components/Button/Button';
 import { CreditsMeter } from '../../../components/CreditsMeter/CreditsMeter';
-import { DetailRow } from '../../../components/DetailRow/DetailRow';
-import { Input } from '../../../components/Input/Input';
 import { ListRow } from '../../../components/ListRow/ListRow';
 import { MetricRow } from '../../../components/MetricRow/MetricRow';
+import { Select } from '../../../components/Select/Select';
 import { StatTile } from '../../../components/StatTile/StatTile';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
+import { portfolioInvoices } from '../../data/sample';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { screenPath } from '../../prototype/journeys';
 import { MobileShell } from '../../shells/MobileShell';
+import { PageBackButton } from '../../shells/SetupFlow';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
+import { EditableRow, isEmail } from './_editable-row';
+import { cardLabel, PaymentMethodEditor, SAMPLE_CARDS } from './_payment-method-editor';
+import { DetailRow } from '../../../components/DetailRow/DetailRow';
 import './C89-portfolio-billing.css';
+import { useCompanyName } from '../../prototype/portfolio';
 
-const invoices = [
-  { date: 'Nov 1, 2026', doors: '8', amount: '$25.99', mobileMeta: '8 doors · Paid · Visa 4242' },
-  { date: 'Oct 1, 2026', doors: '8', amount: '$25.99', mobileMeta: '8 doors · Paid' },
-  { date: 'Sep 1, 2026', doors: '6', amount: '$21.99', mobileMeta: '6 doors · Paid' },
-];
+/**
+ * Review change: the Plan table's items are dropdowns: the plan (Portfolio monthly or yearly) and how many doors are
+ * billed. Rates and totals follow the choice (prototype only; nothing is charged).
+ */
+const PLANS = {
+  monthly: { label: 'Portfolio · monthly', base: 9.99, door: 2, period: 'mo', total: 'Monthly total' },
+  yearly: { label: 'Portfolio · yearly', base: 99, door: 20, period: 'yr', total: 'Yearly total' },
+} as const;
+type PlanKey = keyof typeof PLANS;
+const DOOR_OPTIONS = Array.from({ length: 20 }, (_, i) => ({ value: String(i + 1), label: `${i + 1} ${i === 0 ? 'door' : 'doors'}` }));
+const usd = (n: number) => `$${n.toLocaleString('en-US', { minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 })}`;
+const usd2 = (n: number) => `$${n.toFixed(2)}`;
+
+// Review change: the invoices moved to sample.ts (portfolioInvoices), shared with the Settings billing dialog
+const invoices = portfolioInvoices;
 
 /** C89 Portfolio billing — Figma mobile 272:32256, web 272:33291 (J1 Landlord portfolio step 8). Billing is bought and managed on the web only (#192). */
 export default function PortfolioBilling(_: ScreenProps) {
+  const company = useCompanyName();
   const { device } = usePrototype();
   const flow = useFlow();
-  const [editingEmail, setEditingEmail] = useState(false);
   const [email, setEmail] = useState('billing@mesaverde.example');
+  // Review change: the cards on file and the one charged; Edit opens the payment method editor inside the card
+  const [cards, setCards] = useState(SAMPLE_CARDS);
+  const [cardId, setCardId] = useState(SAMPLE_CARDS[0].id);
+  const [editingCard, setEditingCard] = useState(false);
+  const current = cards.find((c) => c.id === cardId) ?? cards[0];
+  const card = cardLabel(current);
+  // Review change: opened from Settings' Portfolio billing card (?from=settings): Back returns there
+  const fromSettings = useSearchParams()[0].get('from') === 'settings';
+  // Review change: the plan and doors chosen in the Plan table
+  const [planKey, setPlanKey] = useState<PlanKey>('monthly');
+  const [doors, setDoors] = useState(9);
+  const plan = PLANS[planKey];
+  const money = planKey === 'monthly' ? usd2 : usd;
+  const doorsCost = plan.door * doors;
+  const total = plan.base + doorsCost;
 
   if (device === 'mobile') {
     return (
-      <MobileShell header={{ title: 'Portfolio billing' }} bottom={<BottomActions primaryLabel="Manage on web" onPrimary={flow.goNext} />}>
+      <MobileShell header={{ title: 'Billing', ...(fromSettings ? { onBack: () => flow.go('C34') } : {}) }} bottom={<BottomActions primaryLabel="Manage on web" onPrimary={flow.goNext} />}>
         <Banner tone="info" title="Billing is managed on the web">
           To change your plan, doors or payment method, sign in at housecue.ai on a computer. The app shows your plan and invoices (#192).
         </Banner>
@@ -59,22 +89,22 @@ export default function PortfolioBilling(_: ScreenProps) {
   return (
     <WebShell role="landlord" nav="account">
       <div className="hc-c89-web">
+        {fromSettings && <PageBackButton label="Back to settings" onClick={() => flow.go('C34')} />}
         <header className="hc-c89-web__head">
           <div className="hc-c89-web__title">
-            <h1 className="hc-h2">Portfolio billing</h1>
+            {/* Review change: titled Billing (was Portfolio billing) */}
+            <h1 className="hc-h2">Billing</h1>
             <p className="hc-medium hc-muted">
-              Mesa Verde Holdings · billed monthly · bought and managed on the web only (#192) · required from 2+ rental properties (#185)
+              {company} · billed monthly · bought and managed on the web only (#192) · required from 2+ rental properties (#185)
             </p>
           </div>
-          <Button variant="secondary" onClick={flow.goNext}>
-            Edit payment method
-          </Button>
+          {/* Review change: no Edit payment method button in the header; the Payment card's Edit stays */}
         </header>
         <div className="hc-c89-web__stats">
-          <StatTile label="Monthly total" value="$27.99" meta="$9.99 base + 9 doors × $2" />
-          <StatTile label="Doors billed" value="9" meta="+1 door Nov 18 · prorated daily" />
+          <StatTile label={plan.total} value={money(total)} meta={`${money(plan.base)} base + ${doors} ${doors === 1 ? 'door' : 'doors'} × ${usd(plan.door)}`} />
+          <StatTile label="Doors billed" value={String(doors)} meta="+1 door Nov 18 · prorated daily" />
           <StatTile label="Agent credits" value="212" meta="One 240 / yr pool · 300 cap" />
-          <StatTile label="Next charge" value="Dec 1" meta="Visa ending 4242" />
+          <StatTile label="Next charge" value="Dec 1" meta={card} />
         </div>
         <div className="hc-c89-web__cols">
           <div className="hc-c89-web__main">
@@ -106,11 +136,58 @@ export default function PortfolioBilling(_: ScreenProps) {
           </div>
           <aside className="hc-c89-web__side">
             <section className="hc-c89-card">
-              <h2 className="hc-large-bold">Plan</h2>
-              <MetricRow label="Plan" value="Portfolio" />
-              <MetricRow label="Base" value="$9.99 / mo" />
-              <MetricRow label="Per door" value="$2.00 / mo" />
-              <MetricRow label="Includes" value="Repairs & maintenance only" />
+              <h2 id="hc-c89-plan" className="hc-large-bold">
+                Plan
+              </h2>
+              {/* Review change: the plan as a table (item, rate, this month, total) instead of label / value rows */}
+              <div className="hc-c89-table hc-c89-table--plan" role="table" aria-labelledby="hc-c89-plan">
+                <div className="hc-c89-table__row hc-c89-table__row--head" role="row">
+                  <span role="columnheader">Item</span>
+                  <span role="columnheader">Rate</span>
+                  <span role="columnheader">Cost</span>
+                </div>
+                {/* Review change: each item is a dropdown; rate and cost follow it */}
+                <div className="hc-c89-table__row" role="row">
+                  <span role="cell">
+                    <Select
+                      label="Plan"
+                      hideLabel
+                      placeholder=""
+                      className="hc-c89-plan-select"
+                      options={Object.entries(PLANS).map(([value, p]) => ({ value, label: p.label }))}
+                      value={planKey}
+                      onValueChange={(v) => setPlanKey(v as PlanKey)}
+                    />
+                  </span>
+                  <span role="cell">
+                    {money(plan.base)} / {plan.period}
+                  </span>
+                  <span role="cell">{money(plan.base)}</span>
+                </div>
+                <div className="hc-c89-table__row" role="row">
+                  <span role="cell">
+                    <Select
+                      label="Doors"
+                      hideLabel
+                      placeholder=""
+                      className="hc-c89-plan-select"
+                      options={DOOR_OPTIONS}
+                      value={String(doors)}
+                      onValueChange={(v) => setDoors(Number(v))}
+                    />
+                  </span>
+                  <span role="cell">
+                    {usd(plan.door)} / door / {plan.period}
+                  </span>
+                  <span role="cell">{money(doorsCost)}</span>
+                </div>
+                <div className="hc-c89-table__row hc-c89-table__row--total" role="row">
+                  <span role="cell">{plan.total}</span>
+                  <span role="cell" />
+                  <span role="cell">{money(total)}</span>
+                </div>
+              </div>
+              <p className="hc-small hc-muted">Includes repairs &amp; maintenance only.</p>
               <Banner tone="info" title="What counts as a door">
                 Each separately leased unit is a door, so a duplex counts as 2 (#190). Adding or removing a door is prorated daily (#191). Back to one
                 rental: switch to a $4.99 membership.
@@ -118,17 +195,24 @@ export default function PortfolioBilling(_: ScreenProps) {
             </section>
             <section className="hc-c89-card">
               <h2 className="hc-large-bold">Payment</h2>
-              <DetailRow label="Payment method" value="Visa ending 4242" actionLabel="Edit" onAction={flow.goNext} />
-              {editingEmail ? (
-                <div className="hc-c89-email">
-                  <Input label="Billing email" type="email" value={email} onValueChange={setEmail} />
-                  <Button variant="secondary" onClick={() => setEditingEmail(false)}>
-                    Save
-                  </Button>
-                </div>
+              {/* Review change: Edit opens the editor inside the card (a dropdown of cards, the email field), with Cancel
+                  and Save, like Settings */}
+              {editingCard ? (
+                <PaymentMethodEditor
+                  cards={cards}
+                  currentId={cardId}
+                  nextCharge={`${money(total)} on Dec 1`}
+                  onSave={(next, id) => {
+                    setCards(next);
+                    setCardId(id);
+                    setEditingCard(false);
+                  }}
+                  onCancel={() => setEditingCard(false)}
+                />
               ) : (
-                <DetailRow label="Billing email" value={email} actionLabel="Edit" onAction={() => setEditingEmail(true)} />
+                <DetailRow label="Payment method" value={`${card} · Expires ${current.exp}`} actionLabel="Edit" onAction={() => setEditingCard(true)} />
               )}
+              <EditableRow kind="email" label="Billing email" display={email} value={email} validate={isEmail} onSave={setEmail} />
             </section>
           </aside>
         </div>

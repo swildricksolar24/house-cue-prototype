@@ -11,10 +11,12 @@ import { Radio } from '../../../components/Radio/Radio';
 import { SettingRow } from '../../../components/SettingRow/SettingRow';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
 import { findProperty } from '../../data/sample';
+import { getPropertyRules, setPropertyRules } from '../../prototype/portfolio';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { screenPath } from '../../prototype/journeys';
 import { MobileShell } from '../../shells/MobileShell';
+import { PageBackButton } from '../../shells/SetupFlow';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import './C81-property-rules.css';
@@ -47,10 +49,18 @@ export default function PropertyRules(_: ScreenProps) {
   const [params] = useSearchParams();
   const fromDetail = params.has('property');
   const p = findProperty(params.get('property'));
-  const save = fromDetail ? () => flow.go('C79', `?property=${p.id}&saved=rules`) : flow.goNext;
+  const save = fromDetail
+    ? () => {
+        // Review change: the ceilings saved here persist for the visit and show on the property's detail page
+        setPropertyRules(p.id, { routine, emergency, emergencyRules });
+        flow.go('C79', `?property=${p.id}&saved=rules`);
+      }
+    : flow.goNext;
   const back = fromDetail ? () => flow.go('C79', `?property=${p.id}`) : flow.goBack;
-  const [routine, setRoutine] = useState(p.rules.routine);
-  const [emergency, setEmergency] = useState(p.rules.emergency);
+  // Review change: starts from the rules saved for this property earlier in the visit, if any
+  const own = getPropertyRules(p.id);
+  const [routine, setRoutine] = useState(own?.routine ?? p.rules.routine);
+  const [emergency, setEmergency] = useState(own?.emergency ?? p.rules.emergency);
   const [allowed, setAllowed] = useState<string[]>(DEFAULTS.allowed);
   const [showCosts, setShowCosts] = useState(DEFAULTS.showCosts);
   const [emergencyRules, setEmergencyRules] = useState(DEFAULTS.emergencyRules);
@@ -126,18 +136,18 @@ export default function PropertyRules(_: ScreenProps) {
   return (
     <WebShell role="landlord" nav="portfolio">
       <div className="hc-c81-web">
+        {/* Review change: a clear Back to <address> button at the very top (same as Back to portfolio on Add property);
+            the breadcrumb under it stays */}
+        <PageBackButton label={fromDetail ? `Back to ${p.short}` : 'Back'} onClick={back} />
         <header className="hc-c81-web__head">
           <div className="hc-c81-web__title">
-            <ConsoleBreadcrumb parent={p.short} onParentClick={back} current="Property rules" />
+            <ConsoleBreadcrumb homeTo={screenPath('C79')} homeLabel="Portfolio" parent={p.short} onParentClick={back} current="Property rules" />
             <h1 className="hc-h2">Property rules</h1>
             <p className="hc-medium hc-muted">
               {p.address} · {p.units} · inherits portfolio defaults; changes here apply to this property only
             </p>
           </div>
-          <Button variant="secondary" onClick={useDefaults}>
-            Use portfolio defaults
-          </Button>
-          <Button onClick={save}>Save rules</Button>
+          {/* Review change: Use portfolio defaults and Save rules moved to the bottom of the page */}
         </header>
         <div className="hc-c81-web__cols">
           <div className="hc-c81-web__col hc-c81-web__col--left">
@@ -173,6 +183,13 @@ export default function PropertyRules(_: ScreenProps) {
               <p className="hc-small hc-muted">Quote comparisons always stay with you. Vendors are told the setting (VW8).</p>
             </section>
           </div>
+        </div>
+        {/* Review change: the page's buttons at the bottom, on the right (were in the header) */}
+        <div className="hc-c81-actions">
+          <Button variant="secondary" onClick={useDefaults}>
+            Use portfolio defaults
+          </Button>
+          <Button onClick={save}>Save rules</Button>
         </div>
       </div>
       <AgentFab size="extended" to={screenPath('C09')} className="hc-c81-fab" />

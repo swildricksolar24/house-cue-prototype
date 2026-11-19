@@ -73,3 +73,14 @@
 
 /* NumberStepper value is a fixed 32px; "$150" / "$600" need more room */
 .hc-c81-money .hc-number-stepper__value { width: auto; min-width: 32px; }
+
+/* Review change: Use portfolio defaults and Save rules at the bottom of the page, on the right */
+.hc-c81-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--hc-space-2);
+  padding-top: var(--hc-space-4);
+  border-top: 1px solid var(--hc-border);
+}
+/* …with room under them so the floating Agent button doesn't cover Save rules at the end of the page */
+.hc-c81-web { padding-bottom: 72px; }

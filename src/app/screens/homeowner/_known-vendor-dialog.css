@@ -1,0 +1,6 @@
+/* Approve a known vendor dialog (_known-vendor-dialog.tsx, review change): the pros you've hired, one per card */
+.hc-known-vendor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+}

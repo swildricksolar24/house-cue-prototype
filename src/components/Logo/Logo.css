@@ -15,6 +15,9 @@
 .hc-logo--horizontal .hc-logo__art { inset: 8.75% 2.14% 8.75% 0; width: 97.86%; height: 82.5%; }
 .hc-logo--symbol .hc-logo__art { inset: 3.13% 4.56% 3.13% 4.69%; width: 90.75%; height: 93.74%; }
 
+/* Review change: fill = the parent's full width, block so no inline gap under it */
+.hc-logo--fill { display: block; }
+
 .hc-logo__mono {
   background: var(--hc-text);
   -webkit-mask-size: 100% 100%;

@@ -15,8 +15,11 @@
 }
 
 .hc-side-nav__logo {
-  display: inline-flex;
-  align-self: flex-start;
+  /* Review change: full column width (was the logo's own 143px), so the logo inside can fill it */
+  display: block;
+  align-self: stretch;
+  /* Review change: room around the logo (12px top and bottom, 8px at the sides; it still fills the rest of the width) */
+  padding: var(--hc-space-3) var(--hc-space-2);
   border-radius: var(--hc-radius-sm);
   outline: none;
 }
@@ -86,6 +89,21 @@
 .hc-side-nav__label {
   font: 400 14px/20px var(--hc-font);
   white-space: nowrap;
+}
+/* Review change: an item with a note on the same line after a dash (e.g. "Account – Landlord") */
+.hc-side-nav__text {
+  display: flex;
+  align-items: baseline;
+  gap: var(--hc-space-1);
+  min-width: 0;
+}
+.hc-side-nav__note {
+  overflow: hidden;
+  /* Review change: smaller than the label (was 12px) */
+  font: 400 11px/14px var(--hc-font);
+  color: var(--hc-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .hc-side-nav__item--active,

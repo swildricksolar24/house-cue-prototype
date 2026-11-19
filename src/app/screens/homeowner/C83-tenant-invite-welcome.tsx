@@ -9,9 +9,11 @@ import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import type { ScreenProps } from '../registry';
 import './C83-tenant-invite-welcome.css';
+import { useCompanyName } from '../../prototype/portfolio';
 
 /** C83 Tenant invite accept and welcome — Figma mobile 272:33818, web 272:34637 (J1 Tenant step 1). The web frame has no side nav or top bar. */
 export default function TenantInviteWelcome(_: ScreenProps) {
+  const company = useCompanyName();
   const { device } = usePrototype();
   const flow = useFlow();
   // Leaving the invite: back to the public landing page (C39, which now includes the C01 welcome)
@@ -23,7 +25,7 @@ export default function TenantInviteWelcome(_: ScreenProps) {
         header={{ title: 'Welcome', showBack: false }}
         bottom={<BottomActions primaryLabel="Accept and continue" onPrimary={flow.goNext} secondaryLabel="This isn’t my home" onSecondary={notMine} />}
       >
-        <AgentCard>Hi Clara. Mesa Verde Holdings invited you to HouseCue for 1418 E Roosevelt St, Unit A, Phoenix.</AgentCard>
+        <AgentCard>Hi Clara. {company} invited you to HouseCue for 1418 E Roosevelt St, Unit A, Phoenix.</AgentCard>
         <h2 className="hc-large-bold">What you can do here</h2>
         <div>
           <ListRow title="Report an issue" description="Photos, video or voice. I send it to your landlord." />
@@ -41,7 +43,7 @@ export default function TenantInviteWelcome(_: ScreenProps) {
         <div className="hc-c83-web__title">
           <h1 className="hc-h2">Welcome to HouseCue</h1>
           <p className="hc-medium hc-muted">
-            Invited by Mesa Verde Holdings · 1418 E Roosevelt St, Unit A, Phoenix · works in your browser, no app needed
+            Invited by {company} · 1418 E Roosevelt St, Unit A, Phoenix · works in your browser, no app needed
           </p>
         </div>
         <Button variant="secondary" onClick={notMine}>
@@ -51,7 +53,7 @@ export default function TenantInviteWelcome(_: ScreenProps) {
       </header>
       <div className="hc-c83-web__cols">
         <div className="hc-c83-web__col hc-c83-web__col--left">
-          <AgentCard>Hi Clara. Mesa Verde Holdings invited you to HouseCue for 1418 E Roosevelt St, Unit A. It takes about a minute.</AgentCard>
+          <AgentCard>Hi Clara. {company} invited you to HouseCue for 1418 E Roosevelt St, Unit A. It takes about a minute.</AgentCard>
           <section className="hc-c83-card">
             <h2 className="hc-large-bold">What you can do</h2>
             <ListRow title="Report an issue" description="Photos, video or voice. The agent triages it and sends it to your landlord." />
@@ -63,7 +65,7 @@ export default function TenantInviteWelcome(_: ScreenProps) {
           <section className="hc-c83-card">
             <h2 className="hc-large-bold">Your tenancy</h2>
             <DetailRow label="Property" value="1418 E Roosevelt St, Unit A" />
-            <DetailRow label="Landlord" value="Mesa Verde Holdings" />
+            <DetailRow label="Landlord" value={company} />
             <DetailRow label="Move-in" value="Mar 1, 2026" />
             <DetailRow label="Your costs" value="None. Your landlord pays for repairs." />
           </section>

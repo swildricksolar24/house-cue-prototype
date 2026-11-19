@@ -18,6 +18,16 @@ type Story = StoryObj<typeof meta>;
 export const Horizontal: Story = { args: { type: 'horizontal' } };
 export const Symbol: Story = { args: { type: 'symbol' } };
 
+/** Review change: `fill` stretches the logo across its parent, e.g. the 216px side nav column */
+export const Fill: Story = {
+  args: { fill: true },
+  render: (args) => (
+    <div style={{ width: 216 }}>
+      <Logo {...args} />
+    </div>
+  ),
+};
+
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'grid', gap: 16 }}>

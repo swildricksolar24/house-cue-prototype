@@ -11,6 +11,7 @@ import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import { Dialog, WebCard, WebStepHeader } from './_onboarding';
+import { withCompany } from '../../prototype/portfolio';
 
 type Consent = { id: string; text: string; link: string; required: boolean };
 
@@ -147,7 +148,7 @@ export default function Consents({ variant }: ScreenProps) {
         bottom={<BottomActions primaryLabel={signUp ? 'Agree and continue' : 'Save'} onPrimary={submit} primaryDisabled={dialog || missing > 0} />}
       >
         {tenant ? (
-          <p className="hc-medium hc-muted">{TENANT_INTRO}</p>
+          <p className="hc-medium hc-muted">{withCompany(TENANT_INTRO)}</p>
         ) : (
           <>
             <h1 className="hc-h3">A few agreements</h1>
@@ -167,7 +168,7 @@ export default function Consents({ variant }: ScreenProps) {
       <WebCard>
         {signUp && <WebStepHeader step={3} />}
         <h1 className="hc-h2">{tenant ? 'Tenant agreements' : 'A few agreements'}</h1>
-        {tenant && <p className="hc-medium hc-muted">{TENANT_INTRO}</p>}
+        {tenant && <p className="hc-medium hc-muted">{withCompany(TENANT_INTRO)}</p>}
         {errorBanner}
         {rows}
         {tenantNote}

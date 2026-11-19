@@ -154,7 +154,7 @@ export default function TenantsAccess(_: ScreenProps) {
       <div className="hc-c82-web">
         <header className="hc-c82-web__head">
           <div className="hc-c82-web__title">
-            <ConsoleBreadcrumb parent={p.short} onParentClick={back} current="Tenants & access" />
+            <ConsoleBreadcrumb homeTo={screenPath('C79')} homeLabel="Portfolio" parent={p.short} onParentClick={back} current="Tenants & access" />
             <h1 className="hc-h2">Property tenants and access</h1>
             <p className="hc-medium hc-muted">{p.address} · {p.units} · invites never expire (#158); revoke any time</p>
           </div>

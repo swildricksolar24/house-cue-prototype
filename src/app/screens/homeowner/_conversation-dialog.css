@@ -1,0 +1,95 @@
+/* Messages with a tenant (_conversation-dialog.tsx, review change): C86 job details and the Conversation dialog */
+.hc-thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hc-thread__msg {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: min(560px, 80%);
+}
+.hc-thread__msg--you { align-self: flex-end; align-items: flex-end; }
+.hc-thread__msg--tenant { align-self: flex-start; }
+.hc-thread__bubble {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  margin: 0;
+  padding: var(--hc-space-3);
+  border-radius: var(--hc-radius-md);
+  color: var(--hc-text);
+}
+.hc-thread__msg--tenant .hc-thread__bubble {
+  border: 1px solid var(--hc-border);
+  border-bottom-left-radius: 4px;
+  background: var(--hc-card);
+}
+.hc-thread__msg--you .hc-thread__bubble {
+  border-bottom-right-radius: 4px;
+  background: var(--hc-primary);
+  color: var(--hc-on-primary);
+}
+.hc-thread__file {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 6px 10px;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-sm);
+  background: var(--hc-tint);
+  color: var(--hc-text);
+}
+
+/* "… is typing": three dots that pulse in turn */
+.hc-thread__dots {
+  flex-direction: row;
+  gap: 4px;
+  padding: 14px var(--hc-space-3);
+}
+.hc-thread__dots i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hc-text-muted);
+  animation: hc-thread-dot 1.2s ease-in-out infinite;
+}
+.hc-thread__dots i:nth-child(2) { animation-delay: 0.15s; }
+.hc-thread__dots i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes hc-thread-dot {
+  0%, 60%, 100% { opacity: 0.3; transform: none; }
+  30% { opacity: 1; transform: translateY(-2px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc-thread__dots i { animation: none; }
+}
+
+/* Review change: in the Conversation dialog only the messages scroll; the title, message box and buttons stay in place.
+   The panel itself doesn't scroll, and the list shrinks to fit a short window (down to 120px). */
+.hc-edit-dialog__panel:has(.hc-conversation__list) { overflow: hidden; }
+/* The dialog's message list: on the tint, up to 340px tall, then a scrollbar (always shown once it's needed) */
+.hc-conversation__list {
+  flex: 0 1 auto;
+  min-height: 120px;
+  max-height: 340px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--hc-border-strong) transparent;
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-tint);
+}
+.hc-conversation__list:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-conversation__list .hc-thread__msg { max-width: 85%; }
+/* Visible scrollbar in Chromium / Safari too (thin, rounded, darker on hover) */
+.hc-conversation__list::-webkit-scrollbar { width: 8px; }
+.hc-conversation__list::-webkit-scrollbar-track { background: transparent; margin: 6px 0; }
+.hc-conversation__list::-webkit-scrollbar-thumb { border-radius: 999px; background: var(--hc-border-strong); }
+.hc-conversation__list::-webkit-scrollbar-thumb:hover { background: var(--hc-text-muted); }

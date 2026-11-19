@@ -68,7 +68,7 @@
 .hc-c86-table__row {
   display: grid;
   /* Review changes: Property (170px) first, then Report (fills the rest), Estimate, Waiting, and the View button */
-  grid-template-columns: 170px minmax(0, 1fr) 110px 90px 64px;
+  grid-template-columns: 170px minmax(0, 1fr) 110px 90px 100px;
   gap: var(--hc-space-3);
   align-items: center;
   padding: var(--hc-space-3) var(--hc-space-4);
@@ -93,9 +93,14 @@
 .hc-c86-table__row--link { transition: background-color 0.3s ease; }
 .hc-c86-table__row--open,
 .hc-c86-table__row--open:hover { background: var(--hc-tint); }
-.hc-c86-table__toggle { justify-content: flex-end; }
-/* Review change: tiny HC/Button (24px pill); View and Hide the same width so the column doesn't jump */
-.hc-c86-table__toggle .hc-button { min-width: 48px; }
+.hc-c86-table__toggle { display: flex; align-items: center; justify-content: flex-end; gap: var(--hc-space-2); }
+/* Review change: the message icon after View is a 40px-wide pill (24px tall, like View); rows without a conversation
+   keep an empty space the same size so the View buttons stay in one straight column */
+.hc-c86-table__toggle .hc-c86-table__chat { flex: none; width: 40px; min-width: 0; padding: 3px; justify-content: center; }
+.hc-c86-table__chat--none { height: 24px; }
+/* Review change: tiny HC/Button (24px pill); View and Hide exactly the same width (52px) so the buttons form one straight
+   column, with the message icon (or an empty space the same size) after them */
+.hc-c86-table__toggle .hc-button:not(.hc-c86-table__chat) { width: 52px; justify-content: center; }
 
 /* Review change: View / Hide animate the details. The row is always there; its height slides from 0 to the content's
    height (grid rows 0fr → 1fr) while the content fades and drops in, and back again on Hide. */
@@ -173,3 +178,24 @@
 }
 /* "Approve & get quotes" is longer than the equal-width Action Card buttons allow */
 .hc-c86-action .hc-action-card__button { flex: 1 0 auto; }
+
+/* Review change: "Approval queue", the table card's name under the page title (Jobs) */
+.hc-c86-queue-title { margin: 0 0 calc(-1 * var(--hc-space-1)); }
+
+/* The job cell: its tag (the New reply tag that sat after it is removed, review change) */
+.hc-c86-table__job {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hc-space-2);
+  min-width: 0;
+}
+
+/* Review change: a job's conversation with the tenant opens in a dialog; the details show only View conversation
+   and a short summary next to it */
+.hc-c86-thread {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hc-space-3);
+}

@@ -41,3 +41,10 @@
   min-width: 0;
 }
 .hc-c29-web__col--side { flex: 0 0 440px; }
+
+/* Review change: the combined Billing page (layout from C89). History: Date, Item (wider), Amount, Status */
+.hc-c29-history .hc-c89-table__row { grid-template-columns: 120px minmax(0, 1fr) 80px 100px; }
+.hc-c29-city { white-space: nowrap; }
+.hc-c29-cancel-card { align-items: flex-start; }
+/* The Plan table: home, a plan dropdown wide enough for "Member · monthly", cost; every row the same columns */
+.hc-c89-web .hc-c29-plan .hc-c89-table__row { grid-template-columns: minmax(0, 1fr) 172px 84px; }

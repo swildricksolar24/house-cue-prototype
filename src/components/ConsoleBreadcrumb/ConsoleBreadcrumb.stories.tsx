@@ -15,6 +15,11 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = { args: { parentTo: '/support/queue' } };
 
+/** Review change: a home icon first (`homeTo`), e.g. the landlord Portfolio on the prototype's landlord pages */
+export const WithHome: Story = {
+  args: { homeTo: '/landlord/portfolio', homeLabel: 'Portfolio', parent: '5602 E Pima St', parentTo: '/landlord/portfolio', current: 'Property rules' },
+};
+
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'grid', gap: 16 }}>

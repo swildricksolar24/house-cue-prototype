@@ -1,10 +1,79 @@
-.hc-c80-modes {
+/* Review change: the two ways to add are tab cards side by side (were stacked radio OptionCards). Selected: the
+   selected fill and a 2px blue outline, like HC/Option Card; the content below is the tab panel. */
+.hc-c80-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--hc-space-3);
+}
+.hc-c80-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  min-width: 0;
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  color: var(--hc-text);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.hc-c80-tab:hover { background: var(--hc-page); }
+.hc-c80-tab:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-c80-tab--selected,
+.hc-c80-tab--selected:hover {
+  border-color: var(--hc-link);
+  box-shadow: inset 0 0 0 1px var(--hc-link);
+  background: var(--hc-selected);
+}
+.hc-c80-tab__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-tint);
+  color: var(--hc-text);
+}
+.hc-c80-tab--selected .hc-c80-tab__icon { background: var(--hc-card); color: var(--hc-link); }
+.hc-c80-tab__text { display: flex; flex-direction: column; min-width: 0; }
+/* Phone: titles only, to fit two across */
+.hc-mobile-shell .hc-c80-tab { padding: var(--hc-space-3); gap: var(--hc-space-2); }
+.hc-mobile-shell .hc-c80-tab__desc { display: none; }
+.hc-mobile-shell .hc-c80-tab__icon { width: 32px; height: 32px; }
+
+/* The selected tab's content; it fades in when the tab changes */
+.hc-c80-panel {
   display: flex;
   flex-direction: column;
   gap: var(--hc-space-4);
+  animation: hc-c80-panel-in 0.2s ease;
+}
+@keyframes hc-c80-panel-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hc-c80-panel { animation: none; }
+  .hc-c80-tab { transition: none; }
 }
 
 .hc-c80-upload { min-height: 214px; }
+/* Review change: after a file is chosen, its details stay centered in the box and the box keeps its dashed outline
+   from before the upload; HC/Upload itself left-aligns them in a solid card */
+.hc-c80-upload.hc-upload--done {
+  align-items: center;
+  text-align: center;
+}
+/* Review change: the upload box is blue (selected fill, blue dashed outline), before and after a file is chosen */
+.hc-c80-upload,
+.hc-c80-upload.hc-upload--done {
+  border: 1.5px dashed var(--hc-link);
+  background: var(--hc-selected);
+}
 
 /* Mobile: matched rows under the upload */
 .hc-c80-list {
@@ -98,3 +167,126 @@
   bottom: var(--hc-space-5);
   z-index: 10;
 }
+
+/* Review change: a line between the questions of the One property card (Address | Units | Occupied now), the same on
+   web (card) and mobile (panel). Units' own bottom line is kept and matched. */
+.hc-c80-card--form > .hc-input,
+.hc-mobile-shell .hc-c80-panel > .hc-input {
+  padding-bottom: var(--hc-space-4);
+  border-bottom: 1px solid var(--hc-border);
+}
+.hc-c80-units .hc-number-stepper { padding-top: 0; padding-bottom: 0; border-bottom: 0; }
+.hc-c80-card--form > .hc-c80-units,
+.hc-mobile-shell .hc-c80-panel > .hc-c80-units {
+  padding-bottom: var(--hc-space-4);
+  border-bottom: 1px solid var(--hc-border);
+}
+/* Review change: the doors count in the middle of the Units row (web); under the helper on a phone, where the row is
+   too narrow */
+.hc-c80-units { position: relative; }
+.hc-c80-units__doors {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - var(--hc-space-2)));
+  white-space: nowrap;
+  pointer-events: none;
+}
+.hc-mobile-shell .hc-c80-units__doors { position: static; display: block; transform: none; margin-top: var(--hc-space-1); }
+/* Review change: Plan and From next cycle in the One property card, after Occupied now, under a line */
+.hc-c80-card--form > .hc-switch,
+.hc-mobile-shell .hc-c80-panel > .hc-switch {
+  padding-bottom: var(--hc-space-4);
+  border-bottom: 1px solid var(--hc-border);
+}
+/* Plan and From next cycle: a row each, line under */
+.hc-c80-row {
+  padding-bottom: var(--hc-space-4);
+  border-bottom: 1px solid var(--hc-border);
+}
+/* Plan / Billing starts: label left, drop-down right */
+.hc-c80-row--select { display: flex; align-items: center; justify-content: space-between; gap: var(--hc-space-3); }
+.hc-c80-row__select { flex: 0 1 280px; min-width: 0; }
+.hc-mobile-shell .hc-c80-row__select { flex: 0 1 236px; }
+/* Review change: Save and Cancel where the Summary card was (web side column) */
+.hc-c80-actions { display: flex; justify-content: flex-end; gap: var(--hc-space-2); }
+
+/* Review change: CSV import. Processing: the blue dashed box with a spinner and three steps that tick off */
+.hc-c80-processing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-5);
+  border-radius: var(--hc-radius-lg);
+  text-align: center;
+}
+.hc-c80-processing p { margin: 0; }
+.hc-c80-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--hc-fill-10);
+  border-top-color: var(--hc-link);
+  border-radius: 50%;
+  animation: hc-c80-spin 0.9s linear infinite;
+}
+@keyframes hc-c80-spin { to { transform: rotate(360deg); } }
+.hc-c80-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+.hc-c80-steps li { display: flex; align-items: center; gap: var(--hc-space-2); color: var(--hc-text-muted); transition: color 0.2s ease; }
+.hc-c80-steps li.is-current { color: var(--hc-text); font-weight: 600; }
+.hc-c80-steps li.is-done { color: var(--hc-text); }
+.hc-c80-steps__mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--hc-border-strong);
+  border-radius: 50%;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.hc-c80-steps li.is-current .hc-c80-steps__mark { border-color: var(--hc-link); }
+.hc-c80-steps li.is-done .hc-c80-steps__mark { border-color: var(--hc-success); background: var(--hc-success); color: var(--hc-on-primary); }
+@media (prefers-reduced-motion: reduce) {
+  .hc-c80-spinner { animation: none; border-top-color: var(--hc-fill-10); border-right-color: var(--hc-link); }
+}
+
+/* Confirmation: note, four counts, then each home read with its result */
+.hc-c80-import { display: flex; flex-direction: column; gap: var(--hc-space-4); }
+.hc-c80-import h2 { margin: 0; }
+.hc-c80-import__counts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--hc-space-3); }
+.hc-c80-import__count { gap: var(--hc-space-1); }
+.hc-c80-import__list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  list-style: none;
+  overflow: hidden;
+}
+.hc-c80-import__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-3) var(--hc-space-4);
+}
+.hc-c80-import__row + .hc-c80-import__row { border-top: 1px solid var(--hc-border); }
+.hc-c80-import__home { display: flex; flex-direction: column; min-width: 0; }
+.hc-c80-import__result { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--hc-space-2); }
+/* Phone: two counts a row, a home's result under it */
+.hc-mobile-shell .hc-c80-import__counts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.hc-mobile-shell .hc-c80-import__row { flex-direction: column; align-items: flex-start; }
+.hc-mobile-shell .hc-c80-import__result { justify-content: flex-start; }

@@ -20,9 +20,9 @@ export const Homeowner: Story = { args: { role: 'homeowner', active: 'home' }, p
 export const Landlord: Story = { args: { role: 'landlord', active: 'portfolio' }, parameters: { design: figma('261:1042') } };
 export const Tenant: Story = { args: { role: 'tenant', active: 'home' }, parameters: { design: figma('261:1172') } };
 
-/** Tabs whose destination isn't built yet are greyed out and not clickable (the prototype's landlord Home and Plan) */
+/** Tabs whose destination isn't built yet are greyed out and not clickable (e.g. a landlord tab not in the prototype) */
 export const DisabledTabs: Story = {
-  args: { role: 'landlord', active: 'portfolio', disabled: ['home', 'plan'], disabledTitle: 'Not in the prototype yet' },
+  args: { role: 'landlord', active: 'portfolio', disabled: ['jobs'], disabledTitle: 'Not in the prototype yet' },
   parameters: { design: figma('261:1042') },
 };
 

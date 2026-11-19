@@ -24,9 +24,9 @@ export const Homeowner: Story = { args: { role: 'homeowner', active: 'home' }, d
 export const Landlord: Story = { args: { role: 'landlord', active: 'portfolio' }, decorators: frame, parameters: { design: figma('261:1276') } };
 export const Tenant: Story = { args: { role: 'tenant', active: 'home' }, decorators: frame, parameters: { design: figma('261:1466') } };
 
-/** Destinations that aren't built yet are greyed out and not clickable (the prototype's landlord nav: Home, Plan, Emergency) */
+/** Destinations that aren't built yet are greyed out and not clickable (e.g. the landlord's Emergency in the prototype) */
 export const DisabledItems: Story = {
-  args: { role: 'landlord', active: 'portfolio', disabled: ['home', 'plan'], emergencyDisabled: true, disabledTitle: 'Not in the prototype yet' },
+  args: { role: 'landlord', active: 'portfolio', disabled: ['jobs'], emergencyDisabled: true, disabledTitle: 'Not in the prototype yet' },
   decorators: frame,
   parameters: { design: figma('261:1276') },
 };

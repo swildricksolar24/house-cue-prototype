@@ -15,6 +15,7 @@ import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import './C38-multi-home-switcher.css';
+import { useCompanyName } from '../../prototype/portfolio';
 
 type SwitcherHome = {
   id: string;
@@ -197,6 +198,7 @@ function OwnerSwitcher({
 }
 
 function RolesAndPortfolio() {
+  const company = useCompanyName();
   const { device } = usePrototype();
   const flow = useFlow();
   const [selectedId, setSelectedId] = useState('roosevelt');
@@ -223,12 +225,12 @@ function RolesAndPortfolio() {
       <MobileShell header={{ title: 'Your homes' }} role="landlord" tab="portfolio" className="hc-c38-portfolio">
         {search}
         <div className="hc-c38-group-head">
-          <h2 className="hc-c38-group-title">Mesa Verde Holdings · Portfolio</h2>
+          <h2 className="hc-c38-group-title">{company} · Portfolio</h2>
           <button type="button" className="hc-c38-link" onClick={() => flow.go('C79')}>
             Open
           </button>
         </div>
-        <div className="hc-c38-list" role="radiogroup" aria-label="Mesa Verde Holdings">
+        <div className="hc-c38-list" role="radiogroup" aria-label={company}>
           {portfolioMobile.filter(match).map(card)}
         </div>
         <h2 className="hc-c38-group-title">Other homes</h2>
@@ -252,12 +254,12 @@ function RolesAndPortfolio() {
           <div className="hc-c38-web__cols">
             <div className="hc-c38-web__portfolio">
               <div className="hc-c38-group-head">
-                <h2 className="hc-large-bold">Mesa Verde Holdings · Portfolio</h2>
+                <h2 className="hc-large-bold">{company} · Portfolio</h2>
                 <button type="button" className="hc-c38-link" onClick={() => flow.go('C79')}>
                   Open portfolio
                 </button>
               </div>
-              <div className="hc-c38-list" role="radiogroup" aria-label="Mesa Verde Holdings">
+              <div className="hc-c38-list" role="radiogroup" aria-label={company}>
                 {portfolioWeb.filter(match).map(card)}
               </div>
             </div>

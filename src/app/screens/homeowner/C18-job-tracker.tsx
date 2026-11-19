@@ -14,6 +14,7 @@ import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import './C18-job-tracker.css';
+import { useCompanyName } from '../../prototype/portfolio';
 
 /*
  * C18 Job tracker — Figma batch B4 (33:6).
@@ -44,9 +45,10 @@ const WEB_STEPS: Step[] = [
   { state: 'upcoming', title: 'Completed', meta: 'You’ll check the work and sign off' },
 ];
 
-const TENANT_STEPS: Step[] = [
+/** Tenant timeline; the landlord step names the saved business name (Settings › Business name) */
+const tenantSteps = (company: string): Step[] => [
   { state: 'done', title: 'Reported', meta: 'Nov 8 · you' },
-  { state: 'done', title: 'Approved by landlord', meta: 'Nov 9 · Mesa Verde Holdings' },
+  { state: 'done', title: 'Approved by landlord', meta: `Nov 9 · ${company}` },
   { state: 'current', title: 'Scheduled', meta: 'Thu Nov 13, 8–10 AM · Bluequail Air' },
   { state: 'upcoming', title: 'In progress' },
   { state: 'upcoming', title: 'Done', meta: 'You confirm the work is complete' },
@@ -230,6 +232,7 @@ function HomeownerJobTracker() {
 /* ---------------------------------------------------------------- tenant */
 
 function TenantJobTracker() {
+  const company = useCompanyName();
   const { device } = usePrototype();
   const [branch] = useBranch();
   const costs = branch === 'costs';
@@ -238,7 +241,7 @@ function TenantJobTracker() {
     return (
       <MobileShell role="tenant" tab="jobs" header={{ title: 'Bedroom AC not cooling' }}>
         <div className="hc-c18-stack">
-          <Timeline steps={costs ? TENANT_STEPS.filter((s) => s.title !== 'In progress') : TENANT_STEPS} />
+          <Timeline steps={costs ? tenantSteps(company).filter((s) => s.title !== 'In progress') : tenantSteps(company)} />
           {costs ? (
             <>
               <MetricRow label="Approved price" value="$265.00" />
@@ -260,7 +263,7 @@ function TenantJobTracker() {
         <h2 className="hc-large-bold">Cost</h2>
         <MetricRow label="Approved price" value="$265.00" />
         <MetricRow label="Change orders" value="None" />
-        <MetricRow label="Paid by" value="Mesa Verde Holdings" />
+        <MetricRow label="Paid by" value={company} />
         <p className="hc-small hc-muted">Read-only. Quote comparisons stay with your landlord (W54).</p>
       </section>
     );
@@ -289,7 +292,7 @@ function TenantJobTracker() {
         </header>
         <div className="hc-c18-web__cols">
           <div className="hc-c18-web__tenant-main">
-            <Timeline steps={TENANT_STEPS} />
+            <Timeline steps={tenantSteps(company)} />
           </div>
           <aside className="hc-c18-web__side hc-c18-web__side--fill">{side}</aside>
         </div>

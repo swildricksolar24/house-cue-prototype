@@ -27,16 +27,15 @@ export const homeownerPaths: Record<HomeownerNavKey, string> = paths({
 
 /**
  * Review change: the landlord nav opens the landlord screens that are built: Jobs → C86 Approval queue (the landlord's
- * jobs, it highlights Jobs) and Account → C89 Portfolio billing (it highlights Account). Home and Plan have no landlord
- * screens yet (they used to open Marty's homeowner C08 / C11), so they're disabled, see navDisabled below; their paths
- * stay for the type and Back to plan.
+ * jobs, it highlights Jobs) and Account → C34 Settings with the landlord's profile and a Portfolio billing card that opens C89 (review change; was C89
+ * directly). Review change: Home and Plan are removed from the landlord nav (they had no landlord screens and were
+ * disabled; Portfolio is the landlord's home base).
  */
 export const landlordPaths: Record<LandlordNavKey, string> = paths({
   portfolio: 'C79',
-  home: 'C08',
-  plan: 'C11',
   jobs: 'C86',
-  account: 'C89',
+  // Review change: Account opens Settings (C34) with the landlord's profile and a Portfolio billing card (was C89 directly)
+  account: 'C34',
 });
 
 /** Tooltip on nav items that are disabled because their flow isn't in the prototype yet */
@@ -48,7 +47,7 @@ export const NOT_BUILT = 'Not in the prototype yet';
  */
 export const navDisabled: { homeowner: HomeownerNavKey[]; landlord: LandlordNavKey[]; tenant: TenantNavKey[] } = {
   homeowner: [],
-  landlord: ['home', 'plan'],
+  landlord: [],
   tenant: [],
 };
 

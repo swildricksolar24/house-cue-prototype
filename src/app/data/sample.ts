@@ -1,3 +1,5 @@
+import { getAddedProperties, getCompanyName } from '../prototype/portfolio';
+
 /**
  * Shared placeholder data for the prototype, taken from the Figma screens (Phoenix/Tucson addresses, invented
  * sample pros — not real Arizona companies). Screen-specific data lives in the screen file; put things here only
@@ -29,7 +31,10 @@ export const landlord = {
   firstName: 'Biff',
   lastName: 'Tannen',
   email: 'biff@example.com',
-  company: 'Mesa Verde Holdings',
+  /** Review change: the saved business name (Settings › Business name), "Mesa Verde Holdings" until renamed */
+  get company() {
+    return getCompanyName();
+  },
 };
 
 /** Landlord demo account: filled in by "Landlord Demo" on the landlord sign in (C02). Same demo code. */
@@ -197,16 +202,29 @@ export const sampleInvites: Record<InviteRole, SampleInvite> = {
   landlord: {
     role: 'landlord',
     from: 'Biff Tannen',
-    description: 'Biff Tannen (owner, Mesa Verde Holdings) invited you to help manage their rentals on HouseCue.',
-    place: 'Mesa Verde Holdings',
+    // Review change: the business name parts read the saved name (Settings › Business name)
+    get description() {
+      return `Biff Tannen (owner, ${getCompanyName()}) invited you to help manage their rentals on HouseCue.`;
+    },
+    get place() {
+      return getCompanyName();
+    },
     placeMeta: 'Your role: Co-manager · 5 properties · 9 doors · valid for 14 days',
     roleLabel: 'Co-manager',
     can: ['See every property, tenant request and job', 'Approve repairs up to $500', 'Message tenants and pros'],
     needsLabel: 'Needs Biff’s OK',
     needsOk: ['Repairs over $500', 'Add or remove properties', 'Change payment methods'],
     spend: '$500 per job',
-    signInTitle: 'Sign in to help manage Mesa Verde Holdings',
-    account: { id: 'mesa-verde', title: 'Mesa Verde Holdings', meta: 'Co-manager · 5 properties · 9 doors' },
+    get signInTitle() {
+      return `Sign in to help manage ${getCompanyName()}`;
+    },
+    account: {
+      id: 'mesa-verde',
+      get title() {
+        return getCompanyName();
+      },
+      meta: 'Co-manager · 5 properties · 9 doors',
+    },
     // The C79 Portfolio dashboard rentals
     properties: [
       { address: '1418 E Roosevelt St', city: 'Phoenix', meta: '2 units · 2 tenants · 2 open', screen: 'C82' },
@@ -218,8 +236,13 @@ export const sampleInvites: Record<InviteRole, SampleInvite> = {
   },
   tenant: {
     role: 'tenant',
-    from: 'Mesa Verde Holdings',
-    description: 'Mesa Verde Holdings (your landlord) invited you to HouseCue for your rental.',
+    // Review change: the business name parts read the saved name (Settings › Business name)
+    get from() {
+      return getCompanyName();
+    },
+    get description() {
+      return `${getCompanyName()} (your landlord) invited you to HouseCue for your rental.`;
+    },
     place: '1418 E Roosevelt St, Unit A, Phoenix',
     placeMeta: 'Your role: Tenant · invite sent today · valid for 14 days',
     roleLabel: 'Tenant',
@@ -228,8 +251,23 @@ export const sampleInvites: Record<InviteRole, SampleInvite> = {
     needsOk: ['Booking and paying pros', 'Approving quotes'],
     spend: '$0 · your landlord pays for repairs',
     signInTitle: 'Sign in to join your rental at 1418 E Roosevelt St',
-    account: { id: 'roosevelt-a', title: '1418 E Roosevelt St, Unit A', meta: 'Tenant · Phoenix · managed by Mesa Verde Holdings' },
-    properties: [{ address: '1418 E Roosevelt St, Unit A', city: 'Phoenix', meta: 'Tenant · managed by Mesa Verde Holdings', screen: 'C84' }],
+    account: {
+      id: 'roosevelt-a',
+      title: '1418 E Roosevelt St, Unit A',
+      get meta() {
+        return `Tenant · Phoenix · managed by ${getCompanyName()}`;
+      },
+    },
+    properties: [
+      {
+        address: '1418 E Roosevelt St, Unit A',
+        city: 'Phoenix',
+        get meta() {
+          return `Tenant · managed by ${getCompanyName()}`;
+        },
+        screen: 'C84',
+      },
+    ],
   },
 };
 
@@ -477,6 +515,8 @@ export type PortfolioProperty = {
   /** Approval ceilings: this property's own, or the portfolio defaults */
   rules: { routine: number; emergency: number; own: boolean };
   tenants: PropertyTenant[];
+  /** Added on Add property during this visit (review change): tagged New on the Portfolio */
+  isNew?: boolean;
 };
 
 export const portfolioProperties: PortfolioProperty[] = [
@@ -566,5 +606,19 @@ export const portfolioProperties: PortfolioProperty[] = [
   },
 ];
 
-/** The property a ?property=<id> link is about; 1418 E Roosevelt St (the journey's property) when none is given */
-export const findProperty = (id: string | null | undefined) => portfolioProperties.find((p) => p.id === id) ?? portfolioProperties[0];
+/**
+ * The property a ?property=<id> link is about, including ones added on Add property (review change); 1418 E Roosevelt St
+ * (the journey's property) when none is given
+ */
+export const findProperty = (id: string | null | undefined) =>
+  [...portfolioProperties, ...getAddedProperties()].find((p) => p.id === id) ?? portfolioProperties[0];
+
+/**
+ * Review change: the landlord's Portfolio plan invoices (invented), shared by C89 Portfolio billing and the Portfolio
+ * billing dialog on Settings (C34).
+ */
+export const portfolioInvoices = [
+  { date: 'Nov 1, 2026', doors: '8', amount: '$25.99', mobileMeta: '8 doors · Paid · Visa 4242' },
+  { date: 'Oct 1, 2026', doors: '8', amount: '$25.99', mobileMeta: '8 doors · Paid' },
+  { date: 'Sep 1, 2026', doors: '6', amount: '$21.99', mobileMeta: '6 doors · Paid' },
+];

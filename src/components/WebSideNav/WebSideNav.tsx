@@ -82,10 +82,16 @@ export type SideNavShellProps<K extends string> = {
   onSwitcherClick?: () => void;
   /** The switcher's menu is open (sets aria-expanded and flips the ▾) */
   switcherExpanded?: boolean;
+  /** Review change: leave out the switcher card (e.g. the prototype's web app nav) */
+  hideSwitcher?: boolean;
+  /** Review change: a small muted note after an item's label, after a dash, by item key (e.g. "Account – Landlord") */
+  itemNotes?: Partial<Record<K, string>>;
   /** Route of the logo link. Default "/" */
   logoTo?: string;
-  /** Row(s) above the first item (e.g. Emergency) */
+  /** Row(s) above the first item */
   lead?: ReactNode;
+  /** Review change: row(s) right after the last item, before the spacer (e.g. Emergency under Account) */
+  trail?: ReactNode;
   footer?: ReactNode;
   className?: string;
   'aria-label'?: string;
@@ -101,8 +107,11 @@ export function SideNavShell<K extends string>({
   switcherValue,
   onSwitcherClick,
   switcherExpanded,
+  hideSwitcher = false,
+  itemNotes,
   logoTo = '/',
   lead,
+  trail,
   footer,
   className,
   'aria-label': ariaLabel = 'Main',
@@ -110,20 +119,26 @@ export function SideNavShell<K extends string>({
   return (
     <nav className={['hc-side-nav', className].filter(Boolean).join(' ')} aria-label={ariaLabel}>
       <Link to={logoTo} className="hc-side-nav__logo" aria-label="HouseCue home">
-        <Logo />
+        {/* Review change: the logo stretches across the column (216px inside the padding) */}
+        <Logo fill />
       </Link>
-      <button
-        type="button"
-        className={['hc-side-nav__switcher', switcherExpanded && 'is-open'].filter(Boolean).join(' ')}
-        onClick={onSwitcherClick}
-        aria-haspopup="menu"
-        aria-expanded={switcherExpanded ?? false}
-      >
-        <span className="hc-side-nav__switcher-label">{switcherLabel}</span>
-        <span className="hc-side-nav__switcher-value">
-          {switcherValue} <span className="hc-side-nav__switcher-caret" aria-hidden>▾</span>
-        </span>
-      </button>
+      {!hideSwitcher && (
+        <button
+          type="button"
+          className={['hc-side-nav__switcher', switcherExpanded && 'is-open'].filter(Boolean).join(' ')}
+          onClick={onSwitcherClick}
+          aria-haspopup="menu"
+          aria-expanded={switcherExpanded ?? false}
+        >
+          <span className="hc-side-nav__switcher-label">{switcherLabel}</span>
+          <span className="hc-side-nav__switcher-value">
+            {switcherValue}{' '}
+            <span className="hc-side-nav__switcher-caret" aria-hidden>
+              ▾
+            </span>
+          </span>
+        </button>
+      )}
       {lead}
       <ul className="hc-side-nav__items">
         {withPaths(items, paths).map((item) => {
@@ -131,13 +146,24 @@ export function SideNavShell<K extends string>({
           const content = (
             <>
               <Icon name={item.icon} size={24} />
-              <span className="hc-side-nav__label">{item.label}</span>
+              {itemNotes?.[item.key] ? (
+                <span className="hc-side-nav__text">
+                  <span className="hc-side-nav__label">{item.label}</span>
+                  <span className="hc-side-nav__note">– {itemNotes[item.key]}</span>
+                </span>
+              ) : (
+                <span className="hc-side-nav__label">{item.label}</span>
+              )}
             </>
           );
           return (
             <li key={item.key}>
               {disabled?.includes(item.key) ? (
-                <span className="hc-side-nav__item hc-side-nav__item--disabled" aria-disabled="true" title={disabledTitle}>
+                <span
+                  className="hc-side-nav__item hc-side-nav__item--disabled"
+                  aria-disabled="true"
+                  title={disabledTitle}
+                >
                   {content}
                 </span>
               ) : (
@@ -153,6 +179,7 @@ export function SideNavShell<K extends string>({
           );
         })}
       </ul>
+      {trail}
       <div className="hc-side-nav__spacer" />
       {footer}
     </nav>
@@ -176,6 +203,8 @@ export type WebSideNavProps<R extends AppRole = AppRole> = {
   paths?: Partial<Record<RoleNavKey[R], string>>;
   /** Items shown greyed out and not clickable */
   disabled?: RoleNavKey[R][];
+  /** Review change: a small muted note after an item's label (e.g. "Account – Landlord") */
+  itemNotes?: Partial<Record<RoleNavKey[R], string>>;
   /** Tooltip on disabled items and a disabled Emergency row. Default "Not available yet" */
   disabledTitle?: string;
   /** Emergency row greyed out and not clickable */
@@ -185,6 +214,8 @@ export type WebSideNavProps<R extends AppRole = AppRole> = {
   switcherValue?: string;
   onSwitcherClick?: () => void;
   switcherExpanded?: boolean;
+  /** Review change: leave out the switcher card */
+  hideSwitcher?: boolean;
   /** Emergency row (above the first item). Default route "/emergency" */
   emergencyTo?: string;
   onEmergency?: () => void;
@@ -211,8 +242,9 @@ export function WebSideNav<R extends AppRole = 'homeowner'>({
       switcherLabel={switcherLabel ?? defaultSwitcher[r].label}
       switcherValue={switcherValue ?? defaultSwitcher[r].value}
       disabledTitle={disabledTitle}
-      /* Review change: Emergency sits above Home (Figma pins it to the bottom) */
-      lead={
+      /* Review change: Emergency sits right under the last item (Account); it was above the first item, then pinned to
+         the bottom (Figma) */
+      trail={
         <SideNavFooterItem
           label="Emergency"
           icon="caution"

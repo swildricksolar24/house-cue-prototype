@@ -1,0 +1,96 @@
+/* Sign-in & security dialog (_sign-in-dialog.tsx, review change) */
+.hc-sign-in {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-5);
+}
+.hc-sign-in__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+}
+.hc-sign-in__section + .hc-sign-in__section {
+  padding-top: var(--hc-space-5);
+  border-top: 1px solid var(--hc-border);
+}
+/* Review change: the switch row already draws a line under it, so the section after it has no second line */
+.hc-sign-in__section--check + .hc-sign-in__section { border-top: 0; }
+.hc-sign-in__section h3 { margin: 0; }
+.hc-sign-in__section .hc-status-pill { margin-left: var(--hc-space-1); vertical-align: middle; }
+
+/* Devices: name (and This device) over place · when, Sign out on the right */
+.hc-sign-in__sessions,
+.hc-sign-in__recent {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hc-sign-in__session {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-3) 0;
+  border-bottom: 1px solid var(--hc-border);
+}
+.hc-sign-in__session-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+/* Review change: the device icon in a 36px tinted circle, on the left */
+.hc-sign-in__device-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--hc-tint);
+  color: var(--hc-text);
+}
+/* Review change: on the right, under the Sign out buttons (was on the left) */
+.hc-sign-in__all { align-self: flex-end; margin-top: var(--hc-space-1); }
+
+/* Sign out of all other devices: asks first, inline */
+.hc-sign-in__confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hc-space-3);
+  margin-top: var(--hc-space-1);
+  padding: var(--hc-space-3);
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-tint);
+}
+.hc-sign-in__confirm-actions { display: flex; gap: var(--hc-space-2); }
+
+/* Review change: Recent sign-ins as a table: Method, Device, Location, When */
+.hc-sign-in__table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-md);
+  overflow: hidden;
+}
+.hc-sign-in__tr {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1.3fr) minmax(0, 1fr) 120px;
+  gap: var(--hc-space-3);
+  padding: 10px var(--hc-space-3);
+  border-top: 1px solid var(--hc-border);
+  font: 400 13px/18px var(--hc-font);
+  color: var(--hc-text);
+}
+.hc-sign-in__tr--head {
+  border-top: 0;
+  background: var(--hc-tint);
+  font: 600 12px/16px var(--hc-font);
+  color: var(--hc-text-muted);
+}
+

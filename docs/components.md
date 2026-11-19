@@ -3,8 +3,8 @@
 All HouseCue (HC/*) components in `src/components/<Name>/<Name>.tsx`. Each has stories in Storybook (`npm run storybook`, port 6008) linked to its Figma node. Read the component file when you need the exact prop types.
 
 ## Foundations
-- **Icon** `{ name: IconName, size?: 16|20|24|28|36, label? }` — 37 icons: account, calendar, caution, chat, check, checkbox, checkbox-checked, close, close-small, credit-card, dashboard, data, delete, devices, document, dollar-sign, email, error, help, home, in-process, information, location, lock, notification, orders, plus, rating-hollow, review, schedule, search, service, shield, star, success, tasks, users, visibility. Colour = currentColor.
-- **Logo** `{ type?: 'horizontal'|'symbol', color?: 'auto'|'light'|'dark'|'mono', height? }`
+- **Icon** `{ name: IconName, size?: 16|20|24|28|36, label? }` — 38 icons: account, calendar, caution, chat, check, checkbox, checkbox-checked, close, close-small, credit-card, dashboard, data, delete, devices, document, dollar-sign, email, error, help, home, in-process, information, location, lock, notification, orders, phone (review change, not in Figma), plus, rating-hollow, review, schedule, search, service, shield, star, success, tasks, users, visibility. Colour = currentColor.
+- **Logo** `{ type?: 'horizontal'|'symbol', color?: 'auto'|'light'|'dark'|'mono', height?, fill? }` (fill: full width of the parent, e.g. the side nav column)
 
 ## Forms
 - **Button** `{ variant?: 'primary'|'secondary'|'tertiary'|'destructive'|'link', size?: 'small'|'medium'|'large', leadingIcon?, trailingIcon?, icon? (icon-only, needs aria-label), loading?, fullWidth?, to? }` + button attrs. Medium 44 default; Large 52 for onboarding/hero CTAs.
@@ -28,7 +28,7 @@ All HouseCue (HC/*) components in `src/components/<Name>/<Name>.tsx`. Each has s
 - **MembersLock** `{ title?, body?, actionLabel?='Upgrade', onAction?, to? }`
 
 ## Navigation (screens normally get these through `MobileShell` / `WebShell`)
-- **StatusBar**, **HomeHeader**, **TabBar** (`role`, `active`, `paths`, `disabled`, `disabledTitle`), **VendorTabBar**, **WebTopBar** (`type: 'onboarding'|'marketing'`), **WebSideNav** (`role`, `active`, `disabled`, `emergencyDisabled`, `disabledTitle`), **VendorWebSideNav**, **ConsoleSideNav**, **ConsoleBreadcrumb** `{ parent, current }`.
+- **StatusBar**, **HomeHeader**, **TabBar** (`role`, `active`, `paths`, `disabled`, `disabledTitle`), **VendorTabBar**, **WebTopBar** (`type: 'onboarding'|'marketing'`), **WebSideNav** (`role`, `active`, `disabled`, `emergencyDisabled`, `disabledTitle`, `hideSwitcher`, `itemNotes`), **VendorWebSideNav**, **ConsoleSideNav**, **ConsoleBreadcrumb** `{ parent, current, homeTo?, homeLabel? }`.
 - **AppBar** `{ title, showBack?=true, backTo?, onBack?, step?, action?: ReactNode, progress?: 0–1 }` — onboarding steps show `step` ("2 of 7") and `progress`.
 - **BottomActions** `{ primaryLabel, primaryTo?, onPrimary?, primaryDisabled?, primaryLoading?, secondaryLabel?, onSecondary?, showHomeIndicator? }` — pass as `MobileShell bottom`.
 - **AgentFab** `{ size?: 'compact'|'extended', label?, to?, onClick? }` — landlord screens place it themselves (bottom-right).

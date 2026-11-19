@@ -14,6 +14,7 @@ import { utilityPaths } from '../../shells/navPaths';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import './C84-tenant-home.css';
+import { useCompanyName } from '../../prototype/portfolio';
 
 const requests: { title: string; status: string; tone: 'warning' | 'info' | 'success'; next: string; mobile: string; done?: boolean }[] = [
   {
@@ -40,6 +41,7 @@ const history = [
 
 /** C84 Tenant home — Figma mobile 272:34071, web 272:34961 (J1 Tenant step 3) */
 export default function TenantHome(_: ScreenProps) {
+  const company = useCompanyName();
   const { device } = usePrototype();
   const flow = useFlow();
   const navigate = useNavigate();
@@ -101,7 +103,7 @@ export default function TenantHome(_: ScreenProps) {
         <header className="hc-c84-web__head">
           <div className="hc-c84-web__title">
             <h1 className="hc-h2">Your home</h1>
-            <p className="hc-medium hc-muted">1418 E Roosevelt St, Unit A, Phoenix · managed by Mesa Verde Holdings</p>
+            <p className="hc-medium hc-muted">1418 E Roosevelt St, Unit A, Phoenix · managed by {company}</p>
           </div>
           <Button variant="secondary" onClick={() => goInJourney('C85')}>
             Access windows

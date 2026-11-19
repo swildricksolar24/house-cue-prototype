@@ -14,6 +14,7 @@ import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import './C13-request-a-service.css';
+import { useCompanyName } from '../../prototype/portfolio';
 
 const TENANT_VARIANT = 'Report an issue (tenant mode)';
 
@@ -153,6 +154,7 @@ function HomeownerRequest() {
 }
 
 function TenantReport() {
+  const company = useCompanyName();
   const { device } = usePrototype();
   const flow = useFlow();
   const [issue, setIssue] = useState('Water under the kitchen sink; cabinet floor is wet');
@@ -213,7 +215,7 @@ function TenantReport() {
           <aside className="hc-c13-web__side hc-c13-web__side--tenant">
             {upload}
             <Banner title="Goes to your landlord">
-              The agent triages it and sends it to Mesa Verde Holdings. You won’t see quotes or prices.
+              The agent triages it and sends it to {company}. You won’t see quotes or prices.
             </Banner>
             <Button fullWidth onClick={flow.goNext}>
               Send to landlord

@@ -8,6 +8,7 @@ import { Input } from '../../../components/Input/Input';
 import { SettingRow } from '../../../components/SettingRow/SettingRow';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
 import { useFlow } from '../../prototype/flow';
+import { screenPath } from '../../prototype/journeys';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
@@ -98,7 +99,7 @@ export default function AccessWindows(_: ScreenProps) {
       <div className="hc-c85-web">
         <header className="hc-c85-web__head">
           <div className="hc-c85-web__title">
-            <ConsoleBreadcrumb parent="Your home" onParentClick={flow.goBack} current="Access & entry" />
+            <ConsoleBreadcrumb homeTo={screenPath('C84')} homeLabel="Home" parent="Your home" onParentClick={flow.goBack} current="Access & entry" />
             <h1 className="hc-h2">Access windows and entry notice</h1>
             <p className="hc-medium hc-muted">
               Pros visit inside these windows. Entry needs 2 days’ notice in Arizona unless you waive it or it is an emergency.

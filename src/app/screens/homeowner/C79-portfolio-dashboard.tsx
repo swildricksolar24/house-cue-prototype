@@ -7,9 +7,11 @@ import { SkeletonCard } from '../../../components/SkeletonCard/SkeletonCard';
 import { StatTile } from '../../../components/StatTile/StatTile';
 import { StateBlock } from '../../../components/StateBlock/StateBlock';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
+import { Select } from '../../../components/Select/Select';
 import { TaskRow } from '../../../components/TaskRow/TaskRow';
 import { findProperty, portfolioProperties, portfolioTasks, type PortfolioProperty, type SpendPeriod } from '../../data/sample';
 import { useFlow } from '../../prototype/flow';
+import { BILLING_PLAN_OPTIONS, BILLING_START_OPTIONS, setBilling, useAddedProperties, useBilling, usePropertyRules, type Billing, useCompanyName } from '../../prototype/portfolio';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { screenPath } from '../../prototype/journeys';
 import { MobileShell } from '../../shells/MobileShell';
@@ -27,9 +29,8 @@ type Period = SpendPeriod;
  * (November) and this year (to date) sits in the table, against an invented maintenance budget; the list now lives in
  * data/sample.ts (portfolioProperties), shared with the property detail page, Property rules and Tenants & access.
  */
-const properties = portfolioProperties;
 
-const sum = (p: Period, key: 'spent' | 'budget') => properties.reduce((t, r) => t + r[key][p], 0);
+const sum = (list: PortfolioProperty[], p: Period, key: 'spent' | 'budget') => list.reduce((t, r) => t + r[key][p], 0);
 /** 1184 → "$1,184" */
 const usd = (n: number) => `$${n.toLocaleString('en-US')}`;
 
@@ -83,7 +84,12 @@ function PropertyDetail({ property: p, saved }: { property: Property; saved: str
         .filter(Boolean)
         .join(' · ')
     : 'No tenants · the unit is vacant (turnover)';
-  const rulesSummary = `${p.rules.own ? 'Own rules' : 'Portfolio defaults'} · routine ceiling ${usd(p.rules.routine)} · emergency ${usd(p.rules.emergency)}`;
+  // Review change: rules saved on this property's Property rules page (this visit) count as its own rules
+  const savedRules = usePropertyRules(p.id);
+  const ownRules = !!savedRules || p.rules.own;
+  const routineCeiling = savedRules?.routine ?? p.rules.routine;
+  const emergencyCeiling = savedRules?.emergency ?? p.rules.emergency;
+  const rulesSummary = `${ownRules ? 'Own rules' : 'Portfolio defaults'} · routine ceiling ${usd(routineCeiling)} · emergency ${usd(emergencyCeiling)}`;
 
   const notice =
     saved === 'rules' ? (
@@ -100,7 +106,8 @@ function PropertyDetail({ property: p, saved }: { property: Property; saved: str
       </section>
       <section className="hc-c79-card">
         <p className="hc-small hc-muted">Open</p>
-        {typeof p.open === 'string' ? <p className="hc-medium">{p.open}</p> : <StatusPill label={p.open[0]} tone={p.open[1]} />}
+        {/* Review change: Nothing open is a neutral badge too (was plain text) */}
+        {typeof p.open === 'string' ? <StatusPill label={p.open} tone="neutral" /> : <StatusPill label={p.open[0]} tone={p.open[1]} />}
       </section>
       <section className="hc-c79-card">
         <p className="hc-small hc-muted">Spent · Nov</p>
@@ -139,10 +146,63 @@ function PropertyDetail({ property: p, saved }: { property: Property; saved: str
           <p className="hc-small hc-muted">Approval ceilings, what tenants may report and what they see.</p>
           <p className="hc-small">{rulesSummary}</p>
           <Button size="small" variant="secondary" onClick={rules}>
-            {p.rules.own ? 'Edit rules' : 'Set up rules'}
+            {ownRules ? 'Edit rules' : 'Set up rules'}
           </Button>
         </section>
       </div>
+    </section>
+  );
+
+  // Review change: Plan & billing for this property, editable here (chosen on Add property for a new one; Monthly from
+  // the next cycle otherwise). A change saves straight away and the line under it says what this property costs.
+  const billing = useBilling(p.id);
+  const [billingSaved, setBillingSaved] = useState(false);
+  const doors = parseInt(p.units, 10) || 1;
+  const changeBilling = (next: Billing) => {
+    setBilling(p.id, next);
+    setBillingSaved(true);
+  };
+  const billingCard = (
+    <section className="hc-c79-card hc-c79-billing" aria-labelledby="hc-c79-billing">
+      <div className="hc-c79-billing__head">
+        <h2 id="hc-c79-billing" className="hc-large-bold">
+          Plan &amp; billing
+        </h2>
+        {billingSaved && (
+          <span className="hc-small hc-c79-billing__saved" role="status">
+            Saved
+          </span>
+        )}
+      </div>
+      <div className="hc-c79-billing__row">
+        <span className="hc-medium hc-muted">Plan</span>
+        <Select
+          label="Plan"
+          hideLabel
+          placeholder=""
+          options={BILLING_PLAN_OPTIONS}
+          value={billing.plan}
+          onValueChange={(v) => changeBilling({ ...billing, plan: v as Billing['plan'] })}
+          className="hc-c79-billing__select"
+        />
+      </div>
+      <div className="hc-c79-billing__row">
+        <span className="hc-medium hc-muted">Billing starts</span>
+        <Select
+          label="Billing starts"
+          hideLabel
+          placeholder=""
+          options={BILLING_START_OPTIONS}
+          value={billing.start}
+          onValueChange={(v) => changeBilling({ ...billing, start: v as Billing['start'] })}
+          className="hc-c79-billing__select"
+        />
+      </div>
+      <p className="hc-small hc-muted">
+        {doors} {doors === 1 ? 'door' : 'doors'} ×{' '}
+        {billing.plan === 'monthly' ? `$2 = ${usd(2 * doors)} a month` : `$20 = ${usd(20 * doors)} a year`} for this property on the Portfolio
+        plan, {billing.start === 'next' ? 'starting Dec 1' : 'starting today (prorated)'}.
+      </p>
     </section>
   );
 
@@ -166,6 +226,7 @@ function PropertyDetail({ property: p, saved }: { property: Property; saved: str
         {notice}
         {glance}
         {setUp}
+        {billingCard}
         {maintenance}
       </MobileShell>
     );
@@ -176,7 +237,7 @@ function PropertyDetail({ property: p, saved }: { property: Property; saved: str
       <div className="hc-c79-web hc-c79-detail">
         <header className="hc-c79-web__head">
           <div className="hc-c79-web__title">
-            <ConsoleBreadcrumb parent="Portfolio" onParentClick={back} current={p.short} />
+            <ConsoleBreadcrumb homeTo={screenPath('C79')} homeLabel="Portfolio" parent="Portfolio" onParentClick={back} current={p.short} />
             <h1 className="hc-h2">{p.address}</h1>
             <p className="hc-medium hc-muted">{p.mobileMeta}</p>
           </div>
@@ -184,6 +245,7 @@ function PropertyDetail({ property: p, saved }: { property: Property; saved: str
         {notice}
         {glance}
         {setUp}
+        {billingCard}
         {maintenance}
       </div>
       <AgentFab size="extended" to={screenPath('C09')} className="hc-c79-fab" />
@@ -201,11 +263,30 @@ export default function PortfolioDashboard(_: ScreenProps) {
 }
 
 function Dashboard() {
+  const company = useCompanyName();
   const { device, screenState } = usePrototype();
   const flow = useFlow();
   const [period, setPeriod] = useState<Period>('month');
+  // Review change: the portfolio's five, then any added on Add property this visit (no New badge); header counts and the
+  // total include them, and ?added=<n> confirms what was just added
+  const added = useAddedProperties();
+  const properties = [...portfolioProperties, ...added];
+  const doors = properties.reduce((t, p) => t + (parseInt(p.units, 10) || 0), 0);
+  const [params] = useSearchParams();
+  const justAdded = Number(params.get('added') ?? -1);
+  const addedNote =
+    justAdded > 0 ? (
+      <Banner tone="success" title={`Added ${justAdded} ${justAdded === 1 ? 'property' : 'properties'} to your portfolio`}>
+        {justAdded === 1 ? 'It’s' : 'They’re'} at the end of the list below. Open one to invite tenants and set its rules.
+      </Banner>
+    ) : justAdded === 0 ? (
+      <Banner tone="info" title="Already on your portfolio">
+        Those addresses were already here, so nothing new was added.
+      </Banner>
+    ) : null;
 
-  const addProperty = () => flow.go('C80');
+  // Review change: Add property is opened from here with ?from=portfolio, so saving comes back here
+  const addProperty = () => flow.go('C80', '?from=portfolio');
   // Review change: a property row opens its detail page (was a dialog; before that straight to C82 Tenants & access)
   const openProperty = (p: Property) => () => flow.go('C79', `?property=${p.id}`);
 
@@ -245,6 +326,7 @@ function Dashboard() {
   if (device === 'mobile') {
     return (
       <MobileShell header={{ title: 'Portfolio', showBack: false }} role="landlord" tab="portfolio">
+        {addedNote}
         <div className="hc-c79-stats">
           <StatTile label="Open requests" value="6" meta="2 urgent" />
           <StatTile label="Awaiting you" value="3" meta="Oldest 26 h" />
@@ -277,11 +359,14 @@ function Dashboard() {
         <header className="hc-c79-web__head">
           <div className="hc-c79-web__title">
             <h1 className="hc-h2">Portfolio dashboard</h1>
-            <p className="hc-medium hc-muted">Mesa Verde Holdings · 5 properties · 9 doors · Portfolio plan</p>
+            <p className="hc-medium hc-muted">
+              {company} · {properties.length} properties · {doors} doors · Portfolio plan
+            </p>
           </div>
           {/* Review change: Add property moved down to the Properties heading */}
           <Button onClick={() => flow.go('C86')}>Review approvals (3)</Button>
         </header>
+        {addedNote}
         <div className="hc-c79-web__stats">
           <StatTile label="Open requests" value="6" meta="2 urgent" />
           <StatTile label="Awaiting approval" value="3" meta="Oldest 26 h · C86" />
@@ -323,7 +408,8 @@ function Dashboard() {
                     <span role="cell">
                       <StatusPill label={p.tenancy[0]} tone={p.tenancy[1]} />
                     </span>
-                    <span role="cell">{typeof p.open === 'string' ? p.open : <StatusPill label={p.open[0]} tone={p.open[1]} />}</span>
+                    {/* Review change: Nothing open is a neutral badge too (was plain text) */}
+                    <span role="cell">{typeof p.open === 'string' ? <StatusPill label={p.open} tone="neutral" /> : <StatusPill label={p.open[0]} tone={p.open[1]} />}</span>
                     <span role="cell">
                       <SpendCell label={p.short} spent={p.spent[period]} budget={p.budget[period]} />
                     </span>
@@ -336,7 +422,7 @@ function Dashboard() {
                   <span role="cell" />
                   <span role="cell" />
                   <span role="cell">
-                    <SpendCell label="Portfolio total" spent={sum(period, 'spent')} budget={sum(period, 'budget')} />
+                    <SpendCell label="Portfolio total" spent={sum(properties, period, 'spent')} budget={sum(properties, period, 'budget')} />
                   </span>
                 </div>
                 {/* Review change: Add property sits at the bottom of the Properties card (was in the page header) */}

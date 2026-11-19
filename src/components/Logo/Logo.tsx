@@ -13,6 +13,11 @@ export type LogoProps = {
   color?: 'auto' | 'light' | 'dark' | 'mono';
   /** Box height in px (min 24 horizontal, 16 symbol). Default 32. */
   height?: number;
+  /**
+   * Review change: fill the parent's width instead (height follows the artwork's proportions, 143:32 horizontal),
+   * e.g. across the side nav column. `height` is ignored.
+   */
+  fill?: boolean;
   className?: string;
 };
 
@@ -22,13 +27,14 @@ const art = {
 };
 
 /** HC/Logo (Figma 145:472) */
-export function Logo({ type = 'horizontal', color = 'auto', height = 32, className }: LogoProps) {
+export function Logo({ type = 'horizontal', color = 'auto', height = 32, fill = false, className }: LogoProps) {
   const width = type === 'horizontal' ? (height * 143) / 32 : height;
-  const classes = ['hc-logo', `hc-logo--${type}`, className].filter(Boolean).join(' ');
+  const classes = ['hc-logo', `hc-logo--${type}`, fill && 'hc-logo--fill', className].filter(Boolean).join(' ');
+  const size = fill ? { width: '100%', aspectRatio: type === 'horizontal' ? '143 / 32' : '1' } : { width, height };
   const set = art[type];
 
   return (
-    <span className={classes} style={{ width, height }} role="img" aria-label="HouseCue">
+    <span className={classes} style={size} role="img" aria-label="HouseCue">
       {color === 'mono' ? (
         <span className="hc-logo__art hc-logo__mono" style={{ WebkitMaskImage: `url(${set.mono})`, maskImage: `url(${set.mono})` }} />
       ) : color === 'auto' ? (

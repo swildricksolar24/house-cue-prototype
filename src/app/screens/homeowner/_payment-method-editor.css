@@ -1,0 +1,112 @@
+/* Payment method editor (_payment-method-editor.tsx, review change): opens inside the Billing page's Payment card */
+.hc-pay-editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-3) 0;
+  border-bottom: 1px solid var(--hc-border);
+}
+.hc-pay-editor__head { display: flex; flex-direction: column; gap: 2px; }
+.hc-pay-editor__cards { display: flex; flex-direction: column; gap: var(--hc-space-2); }
+
+/* A card on file: radio, card icon, brand + last 4 (tags), expiry and name; Remove on the right */
+.hc-pay-card {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--hc-space-3) 0 0;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-card);
+}
+.hc-pay-card--selected { border: 2px solid var(--hc-link); background: var(--hc-selected); padding-right: calc(var(--hc-space-3) - 1px); }
+/* Review change: the row (radio, icon, text, Edit / Remove); an open edit form sits under it inside the card */
+.hc-pay-card__row {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-2);
+}
+.hc-pay-card__links { flex: none; display: flex; align-items: center; gap: var(--hc-space-3); }
+.hc-pay-card__edit-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-link);
+  font: 600 13px/18px var(--hc-font);
+  cursor: pointer;
+}
+.hc-pay-card__edit-link:hover { text-decoration: underline; }
+.hc-pay-card__edit-link:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-sm); }
+.hc-pay-card__edit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  margin: 0 0 var(--hc-space-3) var(--hc-space-3);
+  padding: var(--hc-space-3) 0 0;
+  border-top: 1px solid var(--hc-border);
+}
+.hc-pay-editor__row--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.hc-pay-card__pick {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-3);
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--hc-radius-md);
+}
+.hc-pay-card__pick:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-pay-card__radio {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--hc-border-strong);
+  border-radius: 50%;
+}
+.hc-pay-card--selected .hc-pay-card__radio { border: 5px solid var(--hc-link); }
+.hc-pay-card__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--hc-radius-sm);
+  background: var(--hc-tint);
+}
+.hc-pay-card__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.hc-pay-card__text .hc-status-pill { margin-left: var(--hc-space-2); vertical-align: middle; }
+.hc-pay-card__remove {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--hc-danger);
+  font: 600 13px/18px var(--hc-font);
+  cursor: pointer;
+}
+.hc-pay-card__remove:hover { text-decoration: underline; }
+.hc-pay-card__remove:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: var(--hc-radius-sm); }
+
+.hc-pay-editor__add { align-self: flex-start; }
+
+/* Add a card: name, number, then expiry / code / ZIP in a row */
+.hc-pay-editor__new {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-4);
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-tint);
+}
+.hc-pay-editor__row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--hc-space-3);
+}
+.hc-pay-editor__actions { display: flex; justify-content: flex-end; gap: var(--hc-space-2); }
+.hc-pay-editor__actions--main { padding-top: var(--hc-space-2); }

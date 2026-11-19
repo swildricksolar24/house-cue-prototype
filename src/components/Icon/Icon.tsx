@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import './Icon.css';
 
 // HC/Icon (Figma 329:1762): 37 Material-style icons exported at 24px, recolored to currentColor.
+// Review change: + phone (a smartphone outline, not in Figma), for phone sign-ins in Sign-in & security.
 const raw = import.meta.glob<string>('./svg/*.svg', { query: '?raw', import: 'default', eager: true });
 
 const icons: Record<string, string> = {};
@@ -17,7 +18,7 @@ export type IconName =
   | 'account' | 'calendar' | 'caution' | 'chat' | 'check' | 'checkbox' | 'checkbox-checked' | 'close'
   | 'close-small' | 'credit-card' | 'dashboard' | 'data' | 'delete' | 'devices' | 'document' | 'dollar-sign'
   | 'email' | 'error' | 'help' | 'home' | 'in-process' | 'information' | 'location' | 'lock' | 'notification'
-  | 'orders' | 'plus' | 'rating-hollow' | 'review' | 'schedule' | 'search' | 'service' | 'shield' | 'star'
+  | 'orders' | 'phone' | 'plus' | 'rating-hollow' | 'review' | 'schedule' | 'search' | 'service' | 'shield' | 'star'
   | 'success' | 'tasks' | 'users' | 'visibility';
 
 export type IconProps = {

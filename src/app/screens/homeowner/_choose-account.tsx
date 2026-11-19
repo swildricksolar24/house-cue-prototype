@@ -11,6 +11,7 @@ import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import { WebCard } from './_onboarding';
 import './_choose-account.css';
+import { useCompanyName, withCompany } from '../../prototype/portfolio';
 
 /**
  * A row with no `open` is disabled (review change): no flow in the prototype yet, or access that has ended. `note`
@@ -60,6 +61,8 @@ export function ChooseAccount() {
   const navigate = useNavigate();
   const { homes, setHomeId } = useCurrentHome();
   const { joined, invites: homeownerInvites, newId, signedInAs } = useAccounts();
+  // Review change: re-render when the business name changes (it appears in the landlord account and invites)
+  useCompanyName();
   const isLandlord = signedInAs === 'landlord';
   // Review change: the signed-in person, shown at the top (Marty, or Biff after the landlord sign in / Landlord Demo)
   const me = isLandlord
@@ -148,8 +151,9 @@ export function ChooseAccount() {
         return {
           id: a.id,
           role: a.role,
-          title: a.role === 'landlord' ? a.title : 'Your rental',
-          meta: a.meta,
+          // Review change: joined accounts keep a copy of their name; show the saved business name instead
+          title: a.role === 'landlord' ? withCompany(a.title) : 'Your rental',
+          meta: withCompany(a.meta),
           isNew: a.id === newId,
           // The portfolio itself stays one click away (C79)
           action: a.role === 'landlord' ? { label: 'Open portfolio', onClick: () => go(screenPath('C79', 'landlord')) } : undefined,

@@ -26,6 +26,12 @@ import {
 } from './navPaths';
 import './shells.css';
 
+/** Review change: which kind of account you're signed in as, shown under Account in the side nav (no name) */
+const signedInNote: Partial<Record<AppRole, string>> = {
+  homeowner: 'Homeowner',
+  landlord: 'Landlord',
+};
+
 const rolePaths = { homeowner: homeownerPaths, landlord: landlordPaths, tenant: tenantPaths };
 
 export type WebShellProps<R extends AppRole = 'homeowner'> = {
@@ -144,7 +150,7 @@ export function WebShell<R extends AppRole = 'homeowner'>({
           the step tracker on top, Cancel / Save at the bottom (SetupFlow.tsx) */}
       {layout === 'app' && <SetupBackButton />}
       {/* Review change: every Plan sub page starts with the same back button as the Home tab's pages, back to Plan */}
-      {planSubPage && <PageBackButton label="Back to plan" onClick={() => navigate(r === 'landlord' ? landlordPaths.plan : homeownerPaths.plan)} />}
+      {planSubPage && <PageBackButton label="Back to plan" onClick={() => navigate(homeownerPaths.plan)} />}
       {layout === 'app' && <SetupTracker variant="web" />}
       {children}
       {layout === 'app' && <SetupActions variant="web" edited={setupEdits.edited} />}
@@ -224,6 +230,12 @@ export function WebShell<R extends AppRole = 'homeowner'>({
         // switchers open C38, or Choose an account when you have more than one account (review change)
         onSwitcherClick={() => (r === 'homeowner' ? setPicking((p) => !p) : navigate(hasOthers ? '/accounts' : utilityPaths.homeSwitcher))}
         switcherExpanded={r === 'homeowner' ? picking : undefined}
+        // Review change: the account switcher card is hidden in the side nav (Account still lists the accounts; the
+        // phone-width ☰ menu keeps its home switcher)
+        hideSwitcher
+        // Review change: under Account, the kind of account you're signed in as (Homeowner or Landlord)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        itemNotes={(signedInNote[r] ? { account: signedInNote[r] } : undefined) as any}
         emergencyTo={utilityPaths.emergency}
         logoTo={logoPaths[r]}
         className="hc-web-shell__nav"

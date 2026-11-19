@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Button } from '../../../components/Button/Button';
 import type { IconName } from '../../../components/Icon/Icon';
-import { OptionCard } from '../../../components/OptionCard/OptionCard';
 import { SkeletonCard } from '../../../components/SkeletonCard/SkeletonCard';
 import { StateBlock } from '../../../components/StateBlock/StateBlock';
 import { TaskRow, type TaskRowTagTone } from '../../../components/TaskRow/TaskRow';
@@ -13,6 +12,7 @@ import { MobileShell } from '../../shells/MobileShell';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import { ReceiptsDownload } from './_c30-receipts';
+import { CardChoice, CardEditForm, expiresSoon, type CardDetails } from './_payment-method-editor';
 import './C30-payment-methods-and-history.css';
 
 type Row = { id: string; title: string; meta: string; icon: IconName; tag: string; tone: TaskRowTagTone };
@@ -33,11 +33,14 @@ const onHold: Row[] = [
   { id: 'pool', title: 'Pool pump repair · $32', meta: 'Holdback released Mar 12, 2026', icon: 'dollar-sign', tag: 'Released', tone: 'info' },
 ];
 
-type Method = { id: string; title: string; mobile: string; web: string };
+/** Review change: name on card and billing ZIP, for each card's Edit form (invented; Marty McFly, 85004 when unset) */
+type Method = { id: string; title: string; mobile: string; web: string; name?: string; zip?: string };
 
 const CARDS: Method[] = [
   { id: 'visa', title: 'Visa •• 4242', mobile: 'Default for 2218 W Palm Ln · expires 08/28', web: 'Default for 2218 W Palm Ln · expires 08/28' },
   { id: 'mc', title: 'Mastercard •• 5100', mobile: 'Expires 02/27', web: 'Default for 81 N Mesa Vista · expires 02/27' },
+  // Review change: a third card (not anyone's default) that expires soon, so Remove and Expires soon show here too
+  { id: 'amex', title: 'Amex •• 3007', mobile: 'Expires 12/26', web: 'Expires 12/26 · Marty McFly' },
 ];
 
 /**
@@ -52,6 +55,14 @@ export default function PaymentMethodsAndHistory(_: ScreenProps) {
   const [tab, setTab] = useState<'methods' | 'history'>('methods');
   const [selected, setSelected] = useState('visa');
   const [cards, setCards] = useState(CARDS);
+  // Review change: the card whose Edit form is open (name on card, expiry, billing ZIP)
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const saveCard = (c: Method, d: CardDetails) => {
+    const oldName = c.name ?? 'Marty McFly';
+    const swap = (text: string) => text.replace(/\d{2}\/\d{2}/, d.exp).split(oldName).join(d.name);
+    setCards((list) => list.map((x) => (x.id === c.id ? { ...x, name: d.name, zip: d.zip, mobile: swap(x.mobile), web: swap(x.web) } : x)));
+    setEditingId(null);
+  };
   const [adding, setAdding] = useState(false);
   // Review change: Download receipts opens the receipts dialogs (_c30-receipts.tsx)
   const [downloading, setDownloading] = useState(false);
@@ -98,19 +109,45 @@ export default function PaymentMethodsAndHistory(_: ScreenProps) {
     </div>
   );
 
+  /**
+   * Review change: each method uses the same card row as the landlord's Billing page (CardChoice): card or bank icon,
+   * "Visa ending 4242", the detail line, a Default tag for this home, Expires soon, and Remove on methods that aren't
+   * selected or anyone's default (was an Option Card).
+   */
   const methodCards = (key: 'mobile' | 'web') => (
     <div role="radiogroup" aria-label="Payment methods" className="hc-c30-cards">
-      {cards.map((c) => (
-        <OptionCard
-          key={c.id}
-          title={c.title}
-          description={c[key]}
-          selected={selected === c.id}
-          role="radio"
-          aria-checked={selected === c.id}
-          onClick={() => setSelected(c.id)}
-        />
-      ))}
+      {cards.map((c) => {
+        const exp = c[key].match(/(\d{2}\/\d{2})/)?.[1];
+        const isDefaultHere = c.web.startsWith(`Default for ${home.address}`);
+        const removable = selected !== c.id && !c.web.startsWith('Default for');
+        return (
+          <CardChoice
+            key={c.id}
+            title={c.title.replace(' •• ', ' ending ')}
+            detail={c[key].charAt(0).toUpperCase() + c[key].slice(1)}
+            icon={c[key].includes('Bank account') ? 'dollar-sign' : 'credit-card'}
+            tags={[
+              ...(isDefaultHere ? [{ label: 'Default', tone: 'neutral' as const }] : []),
+              ...(exp && expiresSoon(exp) ? [{ label: 'Expires soon', tone: 'warning' as const }] : []),
+            ]}
+            selected={selected === c.id}
+            onSelect={() => setSelected(c.id)}
+            onRemove={removable ? () => setCards((l) => l.filter((x) => x.id !== c.id)) : undefined}
+            // Review change: Edit on every card (not bank accounts) opens its form inside the row
+            onEdit={exp ? () => setEditingId(c.id) : undefined}
+            editForm={
+              editingId === c.id &&
+              exp && (
+                <CardEditForm
+                  details={{ name: c.name ?? 'Marty McFly', exp, zip: c.zip ?? '85004' }}
+                  onSave={(d) => saveCard(c, d)}
+                  onCancel={() => setEditingId(null)}
+                />
+              )
+            }
+          />
+        );
+      })}
     </div>
   );
 

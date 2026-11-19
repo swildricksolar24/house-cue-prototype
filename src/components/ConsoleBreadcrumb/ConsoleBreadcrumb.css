@@ -26,3 +26,23 @@ button.hc-console-breadcrumb__parent { cursor: pointer; }
 a.hc-console-breadcrumb__parent:hover,
 button.hc-console-breadcrumb__parent:hover { text-decoration: underline; }
 .hc-console-breadcrumb__parent:focus-visible { box-shadow: var(--hc-focus-ring); }
+
+/* Home icon link before the parent (`homeTo`, review change) */
+/* …in a small circle (review change) */
+.hc-console-breadcrumb__home {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--hc-border);
+  border-radius: 50%;
+  background: var(--hc-card);
+  color: var(--hc-primary);
+  outline: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+/* 14px icon (HC/Icon has no 14 size, so its 16px box is overridden here) so it sits centred in the 24px circle */
+.hc-console-breadcrumb__home .hc-icon { display: block; width: 14px !important; height: 14px !important; }
+.hc-console-breadcrumb__home:hover { border-color: var(--hc-link); background: var(--hc-selected); color: var(--hc-link); }
+.hc-console-breadcrumb__home:focus-visible { box-shadow: var(--hc-focus-ring); }
