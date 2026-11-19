@@ -77,7 +77,7 @@ const suggestions: Suggestion[] = [
     status: 'Accepted · credited',
     tone: 'success',
     meta: 'Tip added · accepted Nov 3',
-    note: 'Footnote on the step: “Thanks to Maria G.”',
+    note: 'Footnote on the step: “Thanks to Marty M.”',
   },
   {
     id: 'water-heater',
@@ -310,7 +310,7 @@ export default function MyContributions({ variant }: ScreenProps) {
                   <p className="hc-medium">
                     • The Care Library agent checks each suggestion for safety and accuracy; an admin approves or declines.
                   </p>
-                  <p className="hc-medium">• Accepted changes carry a footnote: “Thanks to Maria G.”</p>
+                  <p className="hc-medium">• Accepted changes carry a footnote: “Thanks to Marty M.”</p>
                   <p className="hc-medium">• If the credited text is later changed, your name comes off that footnote.</p>
                 </section>
                 <Banner tone="info">Footnote credits show your first name and last initial only.</Banner>

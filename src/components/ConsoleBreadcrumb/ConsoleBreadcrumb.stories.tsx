@@ -19,7 +19,7 @@ export const AllVariants: Story = {
   render: () => (
     <div style={{ display: 'grid', gap: 16 }}>
       <ConsoleBreadcrumb parentTo="/support/queue" />
-      <ConsoleBreadcrumb parent="People" parentTo="/admin/people" current="Maria Lopez" />
+      <ConsoleBreadcrumb parent="People" parentTo="/admin/people" current="Marty McFly" />
       <ConsoleBreadcrumb parent="Disputes" current="DSP-1042 (not linked)" />
     </div>
   ),

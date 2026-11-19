@@ -15,6 +15,23 @@ const PENDING_KEY = 'hc-pending-invite';
 const NEW_KEY = 'hc-new-account';
 const JOINED_KEY = 'hc-joined-accounts';
 const DECLINED_KEY = 'hc-declined-invites';
+const SIGNED_IN_KEY = 'hc-signed-in-as';
+
+/**
+ * Review change: who is signed in, so Choose an account can show it at the top and list that person's accounts.
+ * homeowner = Marty McFly (the demo account), landlord = Biff Tannen (the landlord demo). Set by signing in (C02) and
+ * the shortcuts panel's Homeowner / Landlord Demo; cleared by Sign out. sessionStorage, prototype only.
+ */
+export type SignedInAs = 'homeowner' | 'landlord';
+
+export function getSignedInAs(): SignedInAs {
+  return get(sessionStorage, SIGNED_IN_KEY) === 'landlord' ? 'landlord' : 'homeowner';
+}
+
+export function setSignedInAs(who: SignedInAs | null) {
+  set(sessionStorage, SIGNED_IN_KEY, who);
+  notify();
+}
 
 const listeners = new Set<() => void>();
 let version = 0;
@@ -123,5 +140,5 @@ export function useAccounts() {
   // Switch account shows when there's another account to open or an invite waiting on Choose an account (review
   // change: the shortcuts panel's invite buttons are gone, so this is the way in)
   const hasOthers = joined.length > 0 || invites.length > 0;
-  return { joined, invites, pending: getPendingInvite(), newId: get(sessionStorage, NEW_KEY), hasOthers };
+  return { joined, invites, pending: getPendingInvite(), newId: get(sessionStorage, NEW_KEY), hasOthers, signedInAs: getSignedInAs() };
 }

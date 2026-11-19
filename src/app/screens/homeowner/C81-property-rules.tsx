@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AgentFab } from '../../../components/AgentFab/AgentFab';
 import { Banner } from '../../../components/Banner/Banner';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
@@ -9,6 +10,7 @@ import { NumberStepper } from '../../../components/NumberStepper/NumberStepper';
 import { Radio } from '../../../components/Radio/Radio';
 import { SettingRow } from '../../../components/SettingRow/SettingRow';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
+import { findProperty } from '../../data/sample';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { screenPath } from '../../prototype/journeys';
@@ -40,8 +42,15 @@ const DEFAULTS = {
 export default function PropertyRules(_: ScreenProps) {
   const { device } = usePrototype();
   const flow = useFlow();
-  const [routine, setRoutine] = useState(DEFAULTS.routine);
-  const [emergency, setEmergency] = useState(DEFAULTS.emergency);
+  // Review change: the rules are for the property in ?property=<id> (from its detail page); Save and Back return there.
+  // Without it (the landlord journey) it's 1418 E Roosevelt St and Save / Back follow the journey as before.
+  const [params] = useSearchParams();
+  const fromDetail = params.has('property');
+  const p = findProperty(params.get('property'));
+  const save = fromDetail ? () => flow.go('C79', `?property=${p.id}&saved=rules`) : flow.goNext;
+  const back = fromDetail ? () => flow.go('C79', `?property=${p.id}`) : flow.goBack;
+  const [routine, setRoutine] = useState(p.rules.routine);
+  const [emergency, setEmergency] = useState(p.rules.emergency);
   const [allowed, setAllowed] = useState<string[]>(DEFAULTS.allowed);
   const [showCosts, setShowCosts] = useState(DEFAULTS.showCosts);
   const [emergencyRules, setEmergencyRules] = useState(DEFAULTS.emergencyRules);
@@ -84,10 +93,10 @@ export default function PropertyRules(_: ScreenProps) {
   if (device === 'mobile') {
     return (
       <MobileShell
-        header={{ title: 'Property rules' }}
-        bottom={<BottomActions primaryLabel="Save rules" onPrimary={flow.goNext} secondaryLabel="Use portfolio defaults" onSecondary={useDefaults} />}
+        header={{ title: 'Property rules', onBack: back }}
+        bottom={<BottomActions primaryLabel="Save rules" onPrimary={save} secondaryLabel="Use portfolio defaults" onSecondary={useDefaults} />}
       >
-        <p className="hc-medium hc-muted">1418 E Roosevelt St · overrides portfolio defaults</p>
+        <p className="hc-medium hc-muted">{p.short} · overrides portfolio defaults</p>
         {routineStepper('Default $0: you approve every report')}
         {emergencyStepper('Emergency ceiling', 'Agent books within this after 15 min with no answer')}
         <h2 className="hc-c81-label">Tenants may report</h2>
@@ -119,16 +128,16 @@ export default function PropertyRules(_: ScreenProps) {
       <div className="hc-c81-web">
         <header className="hc-c81-web__head">
           <div className="hc-c81-web__title">
-            <ConsoleBreadcrumb parent="1418 E Roosevelt St" onParentClick={flow.goBack} current="Property rules" />
+            <ConsoleBreadcrumb parent={p.short} onParentClick={back} current="Property rules" />
             <h1 className="hc-h2">Property rules</h1>
             <p className="hc-medium hc-muted">
-              1418 E Roosevelt St, Phoenix · 2 units · inherits portfolio defaults; changes here apply to this property only
+              {p.address} · {p.units} · inherits portfolio defaults; changes here apply to this property only
             </p>
           </div>
           <Button variant="secondary" onClick={useDefaults}>
             Use portfolio defaults
           </Button>
-          <Button onClick={flow.goNext}>Save rules</Button>
+          <Button onClick={save}>Save rules</Button>
         </header>
         <div className="hc-c81-web__cols">
           <div className="hc-c81-web__col hc-c81-web__col--left">

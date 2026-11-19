@@ -84,3 +84,15 @@
 .hc-choose-account__item.is-disabled .hc-choose-account__text { color: var(--hc-text-muted); }
 .hc-choose-account__item.is-disabled:hover { background: var(--hc-card); }
 .hc-choose-account__action { margin-left: auto; }
+
+/* Signed in as (review change): who's signed in, at the top of the page, on the tan tint */
+.hc-choose-account__me {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hc-space-3);
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-tint);
+}
+.hc-choose-account__me-text { flex: 1; min-width: 160px; display: flex; flex-direction: column; }

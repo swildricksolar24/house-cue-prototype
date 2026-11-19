@@ -37,6 +37,8 @@
 }
 .hc-site-menu__links > button.is-current { color: var(--hc-link); }
 .hc-site-menu__links > button:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+/* Review change: a link whose flow is not in the prototype yet (e.g. the landlord Home and Plan) */
+.hc-site-menu__links > button:disabled { opacity: 0.4; cursor: not-allowed; }
 .hc-site-menu__actions { display: flex; flex-direction: column; gap: var(--hc-space-3); margin-top: auto; padding-top: var(--hc-space-6); }
 
 /* ☰ / × */

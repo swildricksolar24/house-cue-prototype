@@ -129,8 +129,9 @@ export default function HomeProfileSetup({ variant }: ScreenProps) {
     stage !== 'address'
       ? []
       : rental
-        ? [{ label: 'Use Demo Account', onClick: () => setAddress(sampleAddress) }]
-        : [{ label: 'Use Demo Account', onClick: () => confirmAddress(sampleAddress) }],
+        ? // Review change: the landlord sign-up (rental owner) fills as the landlord demo
+          [{ label: 'Landlord Demo', onClick: () => setAddress(sampleAddress) }]
+        : [{ label: 'Homeowner Demo', onClick: () => confirmAddress(sampleAddress) }],
   );
 
   const options = (list: Option[]) => (

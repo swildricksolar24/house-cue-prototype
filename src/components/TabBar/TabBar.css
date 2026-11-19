@@ -50,6 +50,9 @@
 
 .hc-tab-bar__tab:focus-visible { box-shadow: var(--hc-focus-ring); }
 
+/* Disabled tab (`disabled` prop): greyed out, not clickable */
+.hc-tab-bar__tab--disabled { opacity: 0.4; cursor: not-allowed; }
+
 .hc-tab-bar__home-indicator {
   display: flex;
   align-items: center;

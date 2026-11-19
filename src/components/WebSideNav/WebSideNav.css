@@ -108,3 +108,7 @@
 .hc-side-nav__footer-item--emergency:hover { background: var(--hc-danger-bg); }
 
 .hc-side-nav__footer-item--danger-icon .hc-icon { color: var(--hc-danger); }
+
+/* Disabled item (`disabled` / `emergencyDisabled` props): greyed out, not clickable, no hover */
+.hc-side-nav__item--disabled { opacity: 0.4; cursor: not-allowed; }
+.hc-side-nav__item--disabled:hover { background: transparent; }

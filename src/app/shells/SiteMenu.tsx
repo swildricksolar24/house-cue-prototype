@@ -11,7 +11,8 @@ import './SiteMenu.css';
  * position: fixed covers the phone frame (DeviceFrame) on mobile, or the window on web.
  * Not a screen and not an HC component (there's no HC menu yet).
  */
-export type SiteMenuLink = { label: string; onClick: () => void; current?: boolean; icon?: ReactNode };
+/** `disabled`: greyed out and not clickable (a destination that isn't in the prototype yet) */
+export type SiteMenuLink = { label: string; onClick: () => void; current?: boolean; icon?: ReactNode; disabled?: boolean };
 
 export function SiteMenu({
   id,
@@ -68,6 +69,8 @@ export function SiteMenu({
             type="button"
             className={l.current ? 'is-current' : undefined}
             aria-current={l.current ? 'page' : undefined}
+            disabled={l.disabled}
+            title={l.disabled ? 'Not in the prototype yet' : undefined}
             onClick={() => {
               onClose();
               l.onClick();

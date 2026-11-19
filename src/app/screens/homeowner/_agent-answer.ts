@@ -26,7 +26,8 @@ function quoteFor(trade: string, what: string, address: string) {
   };
 }
 
-export function answerFor(question: string, address: string): AgentAnswer {
+/** `firstName`: who the agent greets. Review change: Biff on the landlord view, Marty (the homeowner) otherwise */
+export function answerFor(question: string, address: string, firstName: string = homeowner.firstName): AgentAnswer {
   const q = question.toLowerCase().trim();
   const problem = has(q, PROBLEM);
 
@@ -127,7 +128,7 @@ export function answerFor(question: string, address: string): AgentAnswer {
 
   // Small talk
   if (has(q, /^(hi|hello|hey|yo|good (morning|afternoon|evening))\b/)) {
-    return { text: `Hi ${homeowner.firstName}! I look after ${address}. Ask me about a repair, what’s due on your plan, or what something will cost.` };
+    return { text: `Hi ${firstName}! I look after ${address}. Ask me about a repair, what’s due on your plan, or what something will cost.` };
   }
   if (has(q, /thank|thanks|thx|great|perfect|ok\b|okay/)) {
     return { text: 'You’re welcome. I’ll keep an eye on things and check with you before anything is booked.' };

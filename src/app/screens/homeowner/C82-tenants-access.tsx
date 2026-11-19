@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { AgentFab } from '../../../components/AgentFab/AgentFab';
 import { Banner } from '../../../components/Banner/Banner';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
@@ -10,6 +11,7 @@ import { ListRow } from '../../../components/ListRow/ListRow';
 import { SkeletonCard } from '../../../components/SkeletonCard/SkeletonCard';
 import { StateBlock } from '../../../components/StateBlock/StateBlock';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
+import { findProperty, type PropertyTenant } from '../../data/sample';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { screenPath } from '../../prototype/journeys';
@@ -18,53 +20,7 @@ import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import './C82-tenants-access.css';
 
-type Tenant = {
-  id: string;
-  name: string;
-  unit: string;
-  status: string;
-  tone: 'success' | 'warning';
-  windows: string;
-  since: string;
-  mobileTitle: string;
-  mobileMeta: string;
-};
-
-const tenants: Tenant[] = [
-  {
-    id: 'marisol',
-    name: 'Marisol Ortega',
-    unit: 'A',
-    status: 'Active',
-    tone: 'success',
-    windows: 'Weekdays 7–9 AM',
-    since: 'Mar 1, 2026',
-    mobileTitle: 'Unit A · Marisol Ortega',
-    mobileMeta: 'Active since Mar 1, 2026 · access windows set',
-  },
-  {
-    id: 'theo',
-    name: 'Theo Brandt',
-    unit: 'B',
-    status: 'Moving out Nov 30',
-    tone: 'warning',
-    windows: 'Evenings',
-    since: 'Aug 15, 2025',
-    mobileTitle: 'Unit B · Theo Brandt',
-    mobileMeta: 'Active since Aug 15, 2025 · moving out Nov 30',
-  },
-  {
-    id: 'lena',
-    name: 'Lena Brandt (co-tenant)',
-    unit: 'B',
-    status: 'Invite pending',
-    tone: 'warning',
-    windows: 'Not set yet',
-    since: 'Sent Nov 7',
-    mobileTitle: 'Unit B · Lena Brandt (co-tenant)',
-    mobileMeta: 'Invite pending · sent Nov 7 · never expires',
-  },
-];
+type Tenant = PropertyTenant;
 
 const SEES_BODY = 'Report categories you allow, status only (costs hidden), and prior maintenance jobs. Never earlier tenants’ requests (#189).';
 
@@ -72,16 +28,46 @@ const SEES_BODY = 'Report categories you allow, status only (costs hidden), and 
 export default function TenantsAccess(_: ScreenProps) {
   const { device, screenState } = usePrototype();
   const flow = useFlow();
+  // Review change: the tenants are those of the property in ?property=<id> (from its detail page); Back returns there and
+  // Send invite adds a pending invite here. Without it (the landlord journey) it's 1418 E Roosevelt St, as before.
+  const [params] = useSearchParams();
+  const fromDetail = params.has('property');
+  const p = findProperty(params.get('property'));
+  const tenants: Tenant[] = p.tenants;
+  const back = fromDetail ? () => flow.go('C79', `?property=${p.id}`) : flow.goBack;
+  const [invited, setInvited] = useState<Tenant[]>([]);
   const [inviting, setInviting] = useState(false);
-  const [name, setName] = useState('Ana Lucero');
-  const [contact, setContact] = useState('ana.lucero@example.com');
+  const [name, setName] = useState('Otis Peabody');
+  const [contact, setContact] = useState('otis.peabody@example.com');
   const [moveIn, setMoveIn] = useState('Dec 1, 2026');
   const [coTenant, setCoTenant] = useState(false);
   const [revoked, setRevoked] = useState(false);
   const [resent, setResent] = useState(false);
 
+  // Move-out (C87) is built for 1418 E Roosevelt St's Unit B only
+  const canMoveOut = p.id === 'roosevelt';
   const moveOut = () => flow.go('C87');
-  const shown = tenants.filter((t) => !(revoked && t.id === 'lena'));
+  // The invite Resend / Revoke act on (the property's pending one)
+  const pendingId = tenants.find((t) => t.status === 'Invite pending')?.id;
+  const shown = [...tenants.filter((t) => !(revoked && t.id === pendingId)), ...invited];
+  const sendInvite = () => {
+    if (!fromDetail) return flow.goNext();
+    const who = name.trim() || 'New tenant';
+    setInvited((list) => [...list, { id: `invite-${list.length}`, name: who, unit: '—', status: 'Invite pending', tone: 'warning', windows: 'Not set yet', since: 'Sent today', mobileMeta: 'Invite pending · sent today · never expires' }]);
+    setSentTo(who);
+    setInviting(false);
+  };
+  const [sentTo, setSentTo] = useState<string | null>(null);
+  const sentBanner = sentTo && (
+    <Banner tone="success" title={`Invite sent to ${sentTo}`}>
+      It shows as pending below until they accept. Invites never expire; revoke any time.
+    </Banner>
+  );
+  // Review change: a property with no tenants (3315 E Fairmount Ave, vacant) says so
+  const noTenants =
+    shown.length === 0 ? (
+    <StateBlock title="No tenants yet" body={`No one lives at ${p.short} right now (${p.mobileMeta}). Invite the next tenant when it’s ready.`} actionLabel={device === 'mobile' ? 'Invite a tenant' : undefined} onAction={device === 'mobile' ? () => setInviting(true) : undefined} />
+    ) : null;
 
   const stateBlock = (rows: number) => {
     if (screenState === 'loading') {
@@ -129,26 +115,29 @@ export default function TenantsAccess(_: ScreenProps) {
   if (device === 'mobile') {
     return (
       <MobileShell
-        header={{ title: 'Tenants & access' }}
+        header={{ title: 'Tenants & access', onBack: back }}
         bottom={
           inviting ? (
-            <BottomActions primaryLabel="Send invite" onPrimary={flow.goNext} secondaryLabel="Cancel" onSecondary={() => setInviting(false)} />
+            <BottomActions primaryLabel="Send invite" onPrimary={sendInvite} secondaryLabel="Cancel" onSecondary={() => setInviting(false)} />
           ) : (
-            <BottomActions primaryLabel="Invite tenant" onPrimary={() => setInviting(true)} secondaryLabel="Move out a tenant" onSecondary={moveOut} />
+            <BottomActions primaryLabel="Invite tenant" onPrimary={() => setInviting(true)} secondaryLabel={canMoveOut ? 'Move out a tenant' : undefined} onSecondary={canMoveOut ? moveOut : undefined} />
           )
         }
       >
-        <p className="hc-medium hc-muted">1418 E Roosevelt St, Phoenix · 2 units</p>
+        <p className="hc-medium hc-muted">
+          {p.address} · {p.units}
+        </p>
+        {sentBanner}
         {inviting ? (
           <section className="hc-c82-stack">
             <h2 className="hc-large-bold">Invite a tenant</h2>
             {inviteFields}
           </section>
         ) : (
-          (stateBlock(3) ?? (
+          (stateBlock(3) ?? noTenants ?? (
             <div>
               {shown.map((t) => (
-                <ListRow key={t.id} title={t.mobileTitle} description={t.mobileMeta} />
+                <ListRow key={t.id} title={t.unit === '—' ? t.name : `Unit ${t.unit} · ${t.name}`} description={t.mobileMeta} />
               ))}
             </div>
           ))
@@ -165,17 +154,20 @@ export default function TenantsAccess(_: ScreenProps) {
       <div className="hc-c82-web">
         <header className="hc-c82-web__head">
           <div className="hc-c82-web__title">
-            <ConsoleBreadcrumb parent="1418 E Roosevelt St" parentTo={screenPath('C79')} current="Tenants & access" />
+            <ConsoleBreadcrumb parent={p.short} onParentClick={back} current="Tenants & access" />
             <h1 className="hc-h2">Property tenants and access</h1>
-            <p className="hc-medium hc-muted">1418 E Roosevelt St, Phoenix · 2 units · invites never expire (#158); revoke any time</p>
+            <p className="hc-medium hc-muted">{p.address} · {p.units} · invites never expire (#158); revoke any time</p>
           </div>
-          <Button variant="secondary" onClick={moveOut}>
-            Move out a tenant
-          </Button>
+          {canMoveOut && (
+            <Button variant="secondary" onClick={moveOut}>
+              Move out a tenant
+            </Button>
+          )}
         </header>
         <div className="hc-c82-web__cols">
           <div className="hc-c82-web__main">
-            {stateBlock(3) ?? (
+            {sentBanner}
+            {stateBlock(3) ?? noTenants ?? (
               <>
                 <div className="hc-c82-table" role="table" aria-label="Tenants">
                   <div className="hc-c82-table__row hc-c82-table__row--head" role="row">
@@ -195,11 +187,11 @@ export default function TenantsAccess(_: ScreenProps) {
                         <StatusPill label={t.status} tone={t.tone} />
                       </span>
                       <span role="cell">{t.windows}</span>
-                      <span role="cell">{t.id === 'lena' && resent ? 'Sent today' : t.since}</span>
+                      <span role="cell">{t.id === pendingId && resent ? 'Sent today' : t.since}</span>
                     </div>
                   ))}
                 </div>
-                {!revoked && (
+                {pendingId && !revoked && (
                   <div className="hc-c82-buttons">
                     <Button variant="secondary" onClick={() => setResent(true)}>
                       Resend invite
@@ -216,7 +208,7 @@ export default function TenantsAccess(_: ScreenProps) {
             <section className="hc-c82-card">
               <h2 className="hc-large-bold">Invite a tenant</h2>
               {inviteFields}
-              <Button fullWidth onClick={flow.goNext}>
+              <Button fullWidth onClick={sendInvite}>
                 Send invite
               </Button>
             </section>

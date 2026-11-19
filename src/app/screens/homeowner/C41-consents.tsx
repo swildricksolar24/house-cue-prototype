@@ -74,7 +74,8 @@ export default function Consents({ variant }: ScreenProps) {
   // Demo card shortcut (prototype only): tick every required agreement, clear the error and dialog
   useDemoActions([
     {
-      label: 'Use Demo Account',
+      // Review change: on the landlord sign-up it's the landlord demo's button
+      label: flow.journey.slug === 'landlord-portfolio' ? 'Landlord Demo' : 'Homeowner Demo',
       onClick: () => {
         setChecked((s) => ({ ...s, ...Object.fromEntries(items.filter((c) => c.required).map((c) => [c.id, true])) }));
         setDialog(false);

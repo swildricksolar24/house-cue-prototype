@@ -19,15 +19,28 @@ export type SideNavFooterItemProps = {
   iconTone?: 'text' | 'danger';
   to?: string;
   onClick?: () => void;
+  /** Greyed out and not clickable; `disabledTitle` is its tooltip */
+  disabled?: boolean;
+  disabledTitle?: string;
 };
 
 /** Pinned bottom row (Emergency / Help / Sign out). */
-export function SideNavFooterItem({ label, icon, tone = 'default', iconTone = 'text', to, onClick }: SideNavFooterItemProps) {
+export function SideNavFooterItem({
+  label,
+  icon,
+  tone = 'default',
+  iconTone = 'text',
+  to,
+  onClick,
+  disabled = false,
+  disabledTitle = 'Not available yet',
+}: SideNavFooterItemProps) {
   const className = [
     'hc-side-nav__item',
     'hc-side-nav__footer-item',
     `hc-side-nav__footer-item--${tone}`,
     iconTone === 'danger' && 'hc-side-nav__footer-item--danger-icon',
+    disabled && 'hc-side-nav__item--disabled',
   ]
     .filter(Boolean)
     .join(' ');
@@ -37,6 +50,12 @@ export function SideNavFooterItem({ label, icon, tone = 'default', iconTone = 't
       <span className="hc-side-nav__label">{label}</span>
     </>
   );
+  if (disabled)
+    return (
+      <span className={className} aria-disabled="true" title={disabledTitle}>
+        {content}
+      </span>
+    );
   return to ? (
     <Link to={to} className={className} onClick={onClick}>
       {content}
@@ -52,6 +71,10 @@ export type SideNavShellProps<K extends string> = {
   items: NavItem<K>[];
   active?: K;
   paths?: Partial<Record<K, string>>;
+  /** Items shown greyed out and not clickable (e.g. a destination that isn't built yet) */
+  disabled?: K[];
+  /** Tooltip on disabled items. Default "Not available yet" */
+  disabledTitle?: string;
   /** Small muted line in the switcher card (e.g. "Home", "Business") */
   switcherLabel: string;
   /** Main switcher line; a ▾ is appended */
@@ -72,6 +95,8 @@ export function SideNavShell<K extends string>({
   items,
   active,
   paths,
+  disabled,
+  disabledTitle = 'Not available yet',
   switcherLabel,
   switcherValue,
   onSwitcherClick,
@@ -103,16 +128,27 @@ export function SideNavShell<K extends string>({
       <ul className="hc-side-nav__items">
         {withPaths(items, paths).map((item) => {
           const isActive = item.key === active;
+          const content = (
+            <>
+              <Icon name={item.icon} size={24} />
+              <span className="hc-side-nav__label">{item.label}</span>
+            </>
+          );
           return (
             <li key={item.key}>
-              <Link
-                to={item.to}
-                className={['hc-side-nav__item', isActive && 'hc-side-nav__item--active'].filter(Boolean).join(' ')}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                <Icon name={item.icon} size={24} />
-                <span className="hc-side-nav__label">{item.label}</span>
-              </Link>
+              {disabled?.includes(item.key) ? (
+                <span className="hc-side-nav__item hc-side-nav__item--disabled" aria-disabled="true" title={disabledTitle}>
+                  {content}
+                </span>
+              ) : (
+                <Link
+                  to={item.to}
+                  className={['hc-side-nav__item', isActive && 'hc-side-nav__item--active'].filter(Boolean).join(' ')}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {content}
+                </Link>
+              )}
             </li>
           );
         })}
@@ -138,6 +174,12 @@ export type WebSideNavProps<R extends AppRole = AppRole> = {
   active?: RoleNavKey[R];
   /** Override the `to` route per item key */
   paths?: Partial<Record<RoleNavKey[R], string>>;
+  /** Items shown greyed out and not clickable */
+  disabled?: RoleNavKey[R][];
+  /** Tooltip on disabled items and a disabled Emergency row. Default "Not available yet" */
+  disabledTitle?: string;
+  /** Emergency row greyed out and not clickable */
+  emergencyDisabled?: boolean;
   /** Switcher card text; defaults per role from Figma */
   switcherLabel?: string;
   switcherValue?: string;
@@ -157,6 +199,8 @@ export function WebSideNav<R extends AppRole = 'homeowner'>({
   switcherValue,
   emergencyTo = '/emergency',
   onEmergency,
+  emergencyDisabled = false,
+  disabledTitle,
   ...props
 }: WebSideNavProps<R>) {
   const r = (role ?? 'homeowner') as AppRole;
@@ -166,8 +210,19 @@ export function WebSideNav<R extends AppRole = 'homeowner'>({
       items={items}
       switcherLabel={switcherLabel ?? defaultSwitcher[r].label}
       switcherValue={switcherValue ?? defaultSwitcher[r].value}
+      disabledTitle={disabledTitle}
       /* Review change: Emergency sits above Home (Figma pins it to the bottom) */
-      lead={<SideNavFooterItem label="Emergency" icon="caution" tone="emergency" to={emergencyTo} onClick={onEmergency} />}
+      lead={
+        <SideNavFooterItem
+          label="Emergency"
+          icon="caution"
+          tone="emergency"
+          to={emergencyTo}
+          onClick={onEmergency}
+          disabled={emergencyDisabled}
+          disabledTitle={disabledTitle}
+        />
+      }
       {...props}
     />
   );

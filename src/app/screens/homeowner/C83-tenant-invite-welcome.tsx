@@ -23,7 +23,7 @@ export default function TenantInviteWelcome(_: ScreenProps) {
         header={{ title: 'Welcome', showBack: false }}
         bottom={<BottomActions primaryLabel="Accept and continue" onPrimary={flow.goNext} secondaryLabel="This isn’t my home" onSecondary={notMine} />}
       >
-        <AgentCard>Hi Marisol. Mesa Verde Holdings invited you to HouseCue for 1418 E Roosevelt St, Unit A, Phoenix.</AgentCard>
+        <AgentCard>Hi Clara. Mesa Verde Holdings invited you to HouseCue for 1418 E Roosevelt St, Unit A, Phoenix.</AgentCard>
         <h2 className="hc-large-bold">What you can do here</h2>
         <div>
           <ListRow title="Report an issue" description="Photos, video or voice. I send it to your landlord." />
@@ -51,7 +51,7 @@ export default function TenantInviteWelcome(_: ScreenProps) {
       </header>
       <div className="hc-c83-web__cols">
         <div className="hc-c83-web__col hc-c83-web__col--left">
-          <AgentCard>Hi Marisol. Mesa Verde Holdings invited you to HouseCue for 1418 E Roosevelt St, Unit A. It takes about a minute.</AgentCard>
+          <AgentCard>Hi Clara. Mesa Verde Holdings invited you to HouseCue for 1418 E Roosevelt St, Unit A. It takes about a minute.</AgentCard>
           <section className="hc-c83-card">
             <h2 className="hc-large-bold">What you can do</h2>
             <ListRow title="Report an issue" description="Photos, video or voice. The agent triages it and sends it to your landlord." />

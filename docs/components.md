@@ -28,7 +28,7 @@ All HouseCue (HC/*) components in `src/components/<Name>/<Name>.tsx`. Each has s
 - **MembersLock** `{ title?, body?, actionLabel?='Upgrade', onAction?, to? }`
 
 ## Navigation (screens normally get these through `MobileShell` / `WebShell`)
-- **StatusBar**, **HomeHeader**, **TabBar** (`role`, `active`, `paths`), **VendorTabBar**, **WebTopBar** (`type: 'onboarding'|'marketing'`), **WebSideNav** (`role`, `active`), **VendorWebSideNav**, **ConsoleSideNav**, **ConsoleBreadcrumb** `{ parent, current }`.
+- **StatusBar**, **HomeHeader**, **TabBar** (`role`, `active`, `paths`, `disabled`, `disabledTitle`), **VendorTabBar**, **WebTopBar** (`type: 'onboarding'|'marketing'`), **WebSideNav** (`role`, `active`, `disabled`, `emergencyDisabled`, `disabledTitle`), **VendorWebSideNav**, **ConsoleSideNav**, **ConsoleBreadcrumb** `{ parent, current }`.
 - **AppBar** `{ title, showBack?=true, backTo?, onBack?, step?, action?: ReactNode, progress?: 0–1 }` — onboarding steps show `step` ("2 of 7") and `progress`.
 - **BottomActions** `{ primaryLabel, primaryTo?, onPrimary?, primaryDisabled?, primaryLoading?, secondaryLabel?, onSecondary?, showHomeIndicator? }` — pass as `MobileShell bottom`.
 - **AgentFab** `{ size?: 'compact'|'extended', label?, to?, onClick? }` — landlord screens place it themselves (bottom-right).

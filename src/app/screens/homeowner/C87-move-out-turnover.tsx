@@ -63,7 +63,7 @@ export default function MoveOutTurnover(_: ScreenProps) {
         header={{ title: 'Move-out' }}
         bottom={<BottomActions primaryLabel={endLabel} onPrimary={endTenancy} secondaryLabel="Cancel" onSecondary={flow.goBack} />}
       >
-        <DetailRow label="Tenant" value="Theo Brandt · Unit B" />
+        <DetailRow label="Tenant" value="Sam Baines · Unit B" />
         {dateRow}
         <h2 className="hc-c87-label">Open items</h2>
         <ListRow title="Visit Dec 2 · smoke alarm test" description="Reassign to you as the contact" />
@@ -87,7 +87,7 @@ export default function MoveOutTurnover(_: ScreenProps) {
           <div className="hc-c87-web__title">
             <ConsoleBreadcrumb parent="Tenants & access" parentTo={screenPath('C82')} current="Move-out" />
             <h1 className="hc-h2">Move-out and turnover</h1>
-            <p className="hc-medium hc-muted">1418 E Roosevelt St, Unit B · Theo Brandt (and co-tenant Lena Brandt)</p>
+            <p className="hc-medium hc-muted">1418 E Roosevelt St, Unit B · Sam Baines (and co-tenant Stella Baines)</p>
           </div>
           <Button variant="secondary" onClick={flow.goBack}>
             Cancel

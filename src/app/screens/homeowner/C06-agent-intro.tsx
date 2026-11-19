@@ -44,7 +44,7 @@ export default function AgentIntro(_: ScreenProps) {
   const [autoBook, setAutoBook] = useState(!mobile);
   const [contact, setContact] = useState(false);
 
-  useDemoActions([{ label: 'Use Demo Account', onClick: () => setContact(true) }]);
+  useDemoActions([{ label: 'Homeowner Demo', onClick: () => setContact(true) }]);
 
   // The abilities as cards (earlier review change; Figma draws list rows), stacked now that there are three
   const list = (

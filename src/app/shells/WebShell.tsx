@@ -13,7 +13,17 @@ import { HomePicker } from './HomePicker';
 import { ReceivedInvite } from './ReceivedInvite';
 import { PageBackButton, SetupActions, SetupBackButton, SetupTracker, useSetupEdits, useSetupFlow, useSetupTitle } from './SetupFlow';
 import { MenuButton, SiteMenu, type SiteMenuLink } from './SiteMenu';
-import { homeownerPaths, landlordPaths, tenantPaths, topBarPaths, utilityPaths } from './navPaths';
+import {
+  emergencyDisabled,
+  homeownerPaths,
+  landlordPaths,
+  logoPaths,
+  navDisabled,
+  NOT_BUILT,
+  tenantPaths,
+  topBarPaths,
+  utilityPaths,
+} from './navPaths';
 import './shells.css';
 
 const rolePaths = { homeowner: homeownerPaths, landlord: landlordPaths, tenant: tenantPaths };
@@ -185,9 +195,13 @@ export function WebShell<R extends AppRole = 'homeowner'>({
     );
   }
 
+  // Review change: nav items whose flow isn't built for this role (navDisabled, e.g. the landlord's Home and Plan) and a
+  // landlord's Emergency are greyed out and can't be clicked, here and in the ☰ menu
+  const disabledNav = navDisabled[r] as string[];
   const appLinks: SiteMenuLink[] = (roleNavItems[r] as { key: string; label: string }[]).map((item) => ({
     label: item.label,
     current: item.key === activeNav,
+    disabled: disabledNav.includes(item.key),
     onClick: () => navigate((rolePaths[r] as Record<string, string>)[item.key]),
   }));
   if (hasOthers) appLinks.push({ label: 'Switch account', onClick: () => navigate('/accounts') });
@@ -201,17 +215,21 @@ export function WebShell<R extends AppRole = 'homeowner'>({
         active={activeNav as any}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         paths={rolePaths[r] as any}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        disabled={disabledNav as any}
+        disabledTitle={NOT_BUILT}
+        emergencyDisabled={emergencyDisabled[r]}
         switcherValue={r === 'homeowner' ? `${home.address}, ${home.city}` : undefined}
         // Homeowner: pick from the account's homes (dropdown under the card; the card toggles it); landlord / tenant
         // switchers open C38, or Choose an account when you have more than one account (review change)
         onSwitcherClick={() => (r === 'homeowner' ? setPicking((p) => !p) : navigate(hasOthers ? '/accounts' : utilityPaths.homeSwitcher))}
         switcherExpanded={r === 'homeowner' ? picking : undefined}
         emergencyTo={utilityPaths.emergency}
-        logoTo={rolePaths[r].home}
+        logoTo={logoPaths[r]}
         className="hc-web-shell__nav"
       />
       <div className="hc-web-shell__mbar">
-        <Link to={rolePaths[r].home} className="hc-web-shell__mbar-logo" aria-label="HouseCue home">
+        <Link to={logoPaths[r]} className="hc-web-shell__mbar-logo" aria-label="HouseCue home">
           <Logo />
         </Link>
         <MenuButton open={menuOpen} onClick={() => setMenuOpen(true)} controls="hc-shell-menu" />
@@ -232,7 +250,16 @@ export function WebShell<R extends AppRole = 'homeowner'>({
           }
           links={appLinks}
           actions={
-            <Button variant="secondary" size="large" fullWidth className="hc-site-menu__emergency" leadingIcon="caution" onClick={() => navigate(utilityPaths.emergency)}>
+            <Button
+              variant="secondary"
+              size="large"
+              fullWidth
+              className="hc-site-menu__emergency"
+              leadingIcon="caution"
+              disabled={emergencyDisabled[r]}
+              title={emergencyDisabled[r] ? NOT_BUILT : undefined}
+              onClick={() => navigate(utilityPaths.emergency)}
+            >
               Emergency
             </Button>
           }

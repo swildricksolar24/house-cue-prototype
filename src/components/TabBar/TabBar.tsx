@@ -60,6 +60,10 @@ type TabBarBaseProps<K extends string> = {
   active?: K;
   /** Override the `to` route per tab key */
   paths?: Partial<Record<K, string>>;
+  /** Tabs shown greyed out and not clickable (e.g. a destination that isn't built yet) */
+  disabled?: K[];
+  /** Tooltip on disabled tabs. Default "Not available yet" */
+  disabledTitle?: string;
   /** iOS home indicator strip (34pt). Default true. */
   showHomeIndicator?: boolean;
   className?: string;
@@ -76,6 +80,8 @@ export function TabBarList<K extends string>({
   items,
   active,
   paths,
+  disabled,
+  disabledTitle = 'Not available yet',
   showHomeIndicator = true,
   className,
   'aria-label': ariaLabel = 'Main',
@@ -85,16 +91,27 @@ export function TabBarList<K extends string>({
       <ul className="hc-tab-bar__tabs">
         {withPaths(items, paths).map((item) => {
           const isActive = item.key === active;
+          const content = (
+            <>
+              <Icon name={item.icon} size={24} />
+              <span className="hc-tab-bar__label">{item.label}</span>
+            </>
+          );
           return (
             <li key={item.key} className="hc-tab-bar__cell">
-              <Link
-                to={item.to}
-                className={['hc-tab-bar__tab', isActive && 'hc-tab-bar__tab--active'].filter(Boolean).join(' ')}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                <Icon name={item.icon} size={24} />
-                <span className="hc-tab-bar__label">{item.label}</span>
-              </Link>
+              {disabled?.includes(item.key) ? (
+                <span className="hc-tab-bar__tab hc-tab-bar__tab--disabled" aria-disabled="true" title={disabledTitle}>
+                  {content}
+                </span>
+              ) : (
+                <Link
+                  to={item.to}
+                  className={['hc-tab-bar__tab', isActive && 'hc-tab-bar__tab--active'].filter(Boolean).join(' ')}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {content}
+                </Link>
+              )}
             </li>
           );
         })}

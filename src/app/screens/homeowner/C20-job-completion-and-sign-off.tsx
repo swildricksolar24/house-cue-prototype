@@ -145,7 +145,7 @@ function LandlordSignOff() {
         }
       >
         <Banner tone="success" title="Tenant confirmed">
-          Marisol confirmed the repair Nov 13, 10:42 AM. Auto-approves in 72 h.
+          Clara confirmed the repair Nov 13, 10:42 AM. Auto-approves in 72 h.
         </Banner>
         <MetricRow label="Kitchen sink · Copperwick Pipe Co." value="$214.00" />
         <Banner tone="warning" title="Likely tenant-caused">
@@ -166,7 +166,7 @@ function LandlordSignOff() {
         <div className="hc-c20-web__cols hc-c20-web__cols--landlord">
           <div className="hc-c20-web__col540">
             <Banner tone="success" title="Tenant confirmed">
-              Marisol Ortega confirmed the repair Nov 13, 10:42 AM. Auto-approves in 72 h if you don’t act.
+              Clara Clayton confirmed the repair Nov 13, 10:42 AM. Auto-approves in 72 h if you don’t act.
             </Banner>
             <section className="hc-c20-card hc-c20-card--compact">
               <h2 className="hc-large-bold">Invoice · Copperwick Pipe Co.</h2>

@@ -21,6 +21,24 @@ export const demoAccount = {
   code: '123456',
 };
 
+/**
+ * Review change: the landlord demo is its own person, not Marty. Biff Tannen (fictional Back to the Future name) owns
+ * Mesa Verde Holdings, the portfolio the landlord screens (C79…) show and the one he invites Marty to co-manage.
+ */
+export const landlord = {
+  firstName: 'Biff',
+  lastName: 'Tannen',
+  email: 'biff@example.com',
+  company: 'Mesa Verde Holdings',
+};
+
+/** Landlord demo account: filled in by "Landlord Demo" on the landlord sign in (C02). Same demo code. */
+export const landlordDemoAccount = {
+  email: landlord.email,
+  phone: '(602) 555-0187',
+  code: demoAccount.code,
+};
+
 export type Home = { id: string; address: string; city: string; label: string; role: 'owner' | 'landlord' | 'tenant' };
 
 export const homes: Home[] = [
@@ -193,8 +211,8 @@ export const sampleInvites: Record<InviteRole, SampleInvite> = {
     properties: [
       { address: '1418 E Roosevelt St', city: 'Phoenix', meta: '2 units · 2 tenants · 2 open', screen: 'C82' },
       { address: '5602 E Pima St', city: 'Tucson', meta: '4 units · 3 tenants · 1 vacant' },
-      { address: '2207 N 9th Ave', city: 'Phoenix', meta: '1 unit · Priya H. · 1 open' },
-      { address: '812 S 4th Ave', city: 'Tucson', meta: '1 unit · Jonah W. · nothing open' },
+      { address: '2207 N 9th Ave', city: 'Phoenix', meta: '1 unit · Goldie W. · 1 open' },
+      { address: '812 S 4th Ave', city: 'Tucson', meta: '1 unit · Marvin B. · nothing open' },
       { address: '3315 E Fairmount Ave', city: 'Phoenix', meta: 'Vacant · turnover 2 of 5 done' },
     ],
   },
@@ -369,3 +387,184 @@ export const planTaskDetails: Record<string, PlanTaskDetail> = {
     safety: 'Stay on the ground. Don’t climb onto the roof; a pro can take a closer look if needed.',
   },
 };
+
+/**
+ * Review change: Mesa Verde Holdings' upcoming DIY maintenance (invented details). Listed on the landlord Portfolio
+ * dashboard's Upcoming maintenance card (C79) and as rows on the landlord Jobs page (C86 Approval queue), where the
+ * card's tasks open.
+ */
+export type PortfolioTask = {
+  id: string;
+  title: string;
+  /** Portfolio card line, e.g. "HVAC filter swap · 5602 E Pima (4 units)" */
+  cardTitle: string;
+  property: string;
+  units: string;
+  due: string;
+  /** Who to ask about access */
+  tenant: string;
+  time: string;
+  cost: string;
+  access: string;
+  /** Ask the tenant's starting message */
+  askDraft: string;
+};
+
+export const portfolioTasks: PortfolioTask[] = [
+  {
+    id: 'hvac-filters',
+    title: 'HVAC filter swap',
+    cardTitle: 'HVAC filter swap · 5602 E Pima (4 units)',
+    property: '5602 E Pima',
+    units: '4 units',
+    due: 'Due Nov 18',
+    tenant: 'Units 1–4 tenants',
+    time: 'About 10 min per unit',
+    cost: '4 filters · about $48',
+    access: '24 h entry notice to each unit',
+    askDraft: 'Hi, we’re changing the HVAC filters on Tue, Nov 18. Is 10 AM–noon OK for someone to come in for about 10 minutes?',
+  },
+  {
+    id: 'smoke-alarms',
+    title: 'Smoke alarm test',
+    cardTitle: 'Smoke alarm test · 2207 N 9th Ave',
+    property: '2207 N 9th Ave',
+    units: '1 unit',
+    due: 'Due Nov 24',
+    tenant: 'Goldie W.',
+    time: 'About 5 min',
+    cost: 'A 9V battery if one chirps · about $5',
+    access: 'Ask Goldie for a time',
+    askDraft: 'Hi Goldie, it’s time for the yearly smoke alarm test. When could someone stop by for about 5 minutes before Nov 24?',
+  },
+];
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* Review change: Mesa Verde Holdings' rentals, shared by the Portfolio dashboard (C79), its property detail page        */
+/* (C79 ?property=<id>), Property rules (C81 ?property=) and Tenants & access (C82 ?property=). Was local to C79.        */
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+type PillTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
+export type SpendPeriod = 'month' | 'year';
+
+/** A tenant (or invite, or empty unit) on Tenants & access. Invented Back to the Future names except Clara and the Baineses from Figma's roles. */
+export type PropertyTenant = {
+  id: string;
+  name: string;
+  unit: string;
+  status: string;
+  tone: PillTone;
+  windows: string;
+  since: string;
+  /** Mobile list line under the name */
+  mobileMeta: string;
+};
+
+export type PortfolioProperty = {
+  id: string;
+  address: string;
+  short: string;
+  city: string;
+  units: string;
+  /** Units and tenants in one line (mobile list, detail page) */
+  mobileMeta: string;
+  tenancy: [string, PillTone];
+  open: [string, PillTone] | string;
+  /** Spent this month (November) and this year to date, against an invented maintenance budget */
+  spent: Record<SpendPeriod, number>;
+  budget: Record<SpendPeriod, number>;
+  allClear?: boolean;
+  /** Approval ceilings: this property's own, or the portfolio defaults */
+  rules: { routine: number; emergency: number; own: boolean };
+  tenants: PropertyTenant[];
+};
+
+export const portfolioProperties: PortfolioProperty[] = [
+  {
+    id: 'roosevelt',
+    address: '1418 E Roosevelt St, Phoenix',
+    short: '1418 E Roosevelt St',
+    city: 'Phoenix',
+    units: '2 units',
+    mobileMeta: '2 units · 2 tenants · 2 open',
+    tenancy: ['2 active', 'success'],
+    open: ['1 awaiting you', 'warning'],
+    spent: { month: 412, year: 3210 },
+    budget: { month: 500, year: 6000 },
+    rules: { routine: 150, emergency: 600, own: true },
+    tenants: [
+      { id: 'clara', name: 'Clara Clayton', unit: 'A', status: 'Active', tone: 'success', windows: 'Weekdays 7–9 AM', since: 'Mar 1, 2026', mobileMeta: 'Active since Mar 1, 2026 · access windows set' },
+      { id: 'sam', name: 'Sam Baines', unit: 'B', status: 'Moving out Nov 30', tone: 'warning', windows: 'Evenings', since: 'Aug 15, 2025', mobileMeta: 'Active since Aug 15, 2025 · moving out Nov 30' },
+      { id: 'stella', name: 'Stella Baines (co-tenant)', unit: 'B', status: 'Invite pending', tone: 'warning', windows: 'Not set yet', since: 'Sent Nov 7', mobileMeta: 'Invite pending · sent Nov 7 · never expires' },
+    ],
+  },
+  {
+    id: 'pima',
+    address: '5602 E Pima St, Tucson',
+    short: '5602 E Pima St',
+    city: 'Tucson',
+    units: '4 units',
+    mobileMeta: '4 units · 3 tenants · 1 vacant',
+    tenancy: ['3 active', 'success'],
+    open: ['1 scheduled', 'info'],
+    spent: { month: 368, year: 2940 },
+    budget: { month: 600, year: 7200 },
+    rules: { routine: 100, emergency: 600, own: false },
+    tenants: [
+      { id: 'lou', name: 'Lou Caruthers', unit: '1', status: 'Active', tone: 'success', windows: 'Weekdays 9 AM–noon', since: 'Jan 5, 2026', mobileMeta: 'Active since Jan 5, 2026 · access windows set' },
+      { id: 'gerald', name: 'Gerald Strickland', unit: '2', status: 'Active', tone: 'success', windows: 'Any weekday', since: 'Jun 1, 2025', mobileMeta: 'Active since Jun 1, 2025 · access windows set' },
+      { id: 'douglas', name: 'Douglas Needles', unit: '3', status: 'Active', tone: 'success', windows: 'Weekends', since: 'Sep 12, 2025', mobileMeta: 'Active since Sep 12, 2025 · access windows set' },
+      { id: 'pima-4', name: 'No tenant', unit: '4', status: 'Vacant', tone: 'neutral', windows: '—', since: 'Since Oct 31', mobileMeta: 'Vacant since Oct 31 · ready to list' },
+    ],
+  },
+  {
+    id: 'ninth',
+    address: '2207 N 9th Ave, Phoenix',
+    short: '2207 N 9th Ave',
+    city: 'Phoenix',
+    units: '1 unit',
+    mobileMeta: '1 unit · Goldie W. · 1 open',
+    tenancy: ['Active', 'success'],
+    open: ['1 awaiting you', 'warning'],
+    spent: { month: 96, year: 1090 },
+    budget: { month: 200, year: 2400 },
+    rules: { routine: 100, emergency: 600, own: false },
+    tenants: [
+      { id: 'goldie', name: 'Goldie Wilson', unit: '—', status: 'Active', tone: 'success', windows: 'Weekdays after 5 PM', since: 'Apr 1, 2024', mobileMeta: 'Active since Apr 1, 2024 · access windows set' },
+    ],
+  },
+  {
+    id: 'fourth',
+    address: '812 S 4th Ave, Tucson',
+    short: '812 S 4th Ave',
+    city: 'Tucson',
+    units: '1 unit',
+    mobileMeta: '1 unit · Marvin B. · nothing open',
+    tenancy: ['Invite pending', 'warning'],
+    open: 'Nothing open',
+    spent: { month: 0, year: 0 },
+    budget: { month: 150, year: 1800 },
+    allClear: true,
+    rules: { routine: 100, emergency: 600, own: false },
+    tenants: [
+      { id: 'marvin', name: 'Marvin Berry', unit: '—', status: 'Invite pending', tone: 'warning', windows: 'Not set yet', since: 'Sent Nov 10', mobileMeta: 'Invite pending · sent Nov 10 · never expires' },
+    ],
+  },
+  {
+    id: 'fairmount',
+    address: '3315 E Fairmount Ave, Phoenix',
+    short: '3315 E Fairmount Ave',
+    city: 'Phoenix',
+    units: '1 unit',
+    mobileMeta: 'Vacant · turnover 2 of 5 done',
+    tenancy: ['Vacant · turnover', 'neutral'],
+    open: ['2 make-ready', 'info'],
+    spent: { month: 308, year: 2180 },
+    budget: { month: 300, year: 3600 },
+    rules: { routine: 100, emergency: 600, own: false },
+    tenants: [],
+  },
+];
+
+/** The property a ?property=<id> link is about; 1418 E Roosevelt St (the journey's property) when none is given */
+export const findProperty = (id: string | null | undefined) => portfolioProperties.find((p) => p.id === id) ?? portfolioProperties[0];

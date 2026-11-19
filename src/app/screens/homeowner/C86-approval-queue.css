@@ -55,33 +55,6 @@
   flex-wrap: wrap;
   gap: var(--hc-space-2);
 }
-.hc-c86-web__cols {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--hc-space-5);
-}
-.hc-c86-web__main {
-  flex: 0 1 620px;
-  min-width: 0;
-}
-.hc-c86-web__side {
-  flex: 0 0 452px;
-}
-
-.hc-c86-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--hc-space-2);
-  padding: var(--hc-space-4);
-  border: 1px solid var(--hc-border);
-  border-radius: var(--hc-radius-lg);
-  background: var(--hc-card);
-}
-.hc-c86-buttons {
-  display: flex;
-  gap: var(--hc-space-3);
-}
-.hc-c86-buttons > * { flex: 1; }
 
 .hc-c86-table {
   display: flex;
@@ -94,7 +67,8 @@
 }
 .hc-c86-table__row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 170px 110px 70px;
+  /* Review changes: Property (170px) first, then Report (fills the rest), Estimate, Waiting, and the View button */
+  grid-template-columns: 170px minmax(0, 1fr) 110px 90px 64px;
   gap: var(--hc-space-3);
   align-items: center;
   padding: var(--hc-space-3) var(--hc-space-4);
@@ -110,8 +84,92 @@
 }
 .hc-c86-table__row--link { cursor: pointer; }
 .hc-c86-table__row--link:hover { background: var(--hc-page); }
-.hc-c86-table__row--selected,
-.hc-c86-table__row--selected:hover { background: var(--hc-selected); }
 .hc-c86-table__row--link:focus-visible { outline: 2px solid var(--hc-info); outline-offset: -2px; }
+
+/* Accordion (review change): the open job's row is highlighted and its View button reads Hide (filled); its details
+   sit right under it */
+/* Review change: the open job (its row and the details under it) uses the tan tint, like the Portfolio total row
+   (was the light blue selected colour) */
+.hc-c86-table__row--link { transition: background-color 0.3s ease; }
+.hc-c86-table__row--open,
+.hc-c86-table__row--open:hover { background: var(--hc-tint); }
+.hc-c86-table__toggle { justify-content: flex-end; }
+/* Review change: tiny HC/Button (24px pill); View and Hide the same width so the column doesn't jump */
+.hc-c86-table__toggle .hc-button { min-width: 48px; }
+
+/* Review change: View / Hide animate the details. The row is always there; its height slides from 0 to the content's
+   height (grid rows 0fr → 1fr) while the content fades and drops in, and back again on Hide. */
+.hc-c86-details {
+  display: grid;
+  grid-template-rows: 0fr;
+  background: var(--hc-tint);
+  transition: grid-template-rows 0.3s ease;
+}
+.hc-c86-details--open { grid-template-rows: 1fr; }
+/* Review change: in dark mode the open job (row and details) uses the dark brown a row turns on hover (page colour,
+   #1a1714) instead of the tint, so the detail cards sit lighter on a darker band. Light mode keeps the tan tint. */
+[data-theme='dark'] .hc-c86-details,
+[data-theme='dark'] .hc-c86-table__row--open,
+[data-theme='dark'] .hc-c86-table__row--open:hover { background: var(--hc-page); }
+.hc-c86-details__clip {
+  min-height: 0;
+  overflow: hidden;
+}
+/* Review change: the buttons sit along the bottom of the card, under the details (were a column on the right) */
+.hc-c86-details__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+  /* Review change: no card of its own (white box, border); the details sit straight on the open row's tint */
+  padding: var(--hc-space-4) var(--hc-space-4) var(--hc-space-4);
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.3s ease;
+}
+.hc-c86-details--open .hc-c86-details__body {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.25s ease 0.08s, transform 0.3s ease;
+}
+.hc-c86-details__facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--hc-space-3);
+  margin: 0;
+}
+/* Review change: each detail is a small white card on the open row's tint */
+.hc-c86-fact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  padding: var(--hc-space-3);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-card);
+}
+.hc-c86-fact dd { margin: 0; color: var(--hc-text); }
+.hc-c86-details__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+  padding-top: var(--hc-space-4);
+  border-top: 1px solid var(--hc-border);
+}
+.hc-c86-details__group {
+  display: flex;
+  gap: var(--hc-space-2);
+}
+/* Decline on the left; the approvals and Ask the tenant stay together on the right (they wrap as a group) */
+.hc-c86-details__group--end { margin-left: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .hc-c86-details,
+  .hc-c86-details__body,
+  .hc-c86-details--open .hc-c86-details__body,
+  .hc-c86-table__row--link { transition: none; }
+}
+/* Narrow windows: two columns of details */
+@media (max-width: 900px) {
+  .hc-c86-details__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 /* "Approve & get quotes" is longer than the equal-width Action Card buttons allow */
 .hc-c86-action .hc-action-card__button { flex: 1 0 auto; }

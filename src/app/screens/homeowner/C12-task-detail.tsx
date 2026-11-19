@@ -32,7 +32,7 @@ const guideSteps: GuideStep[] = [
   { text: 'Turn the system off at the thermostat.' },
   {
     text: 'Open the filter door by the return vent in the hallway. Press the door in before turning the latch; it sticks on older units.',
-    fn: { mark: '¹', credit: 'Thanks to Maria G.' },
+    fn: { mark: '¹', credit: 'Thanks to Marty M.' },
   },
   { text: 'Note the airflow arrow, then slide the old filter out.' },
   {
@@ -352,7 +352,7 @@ function SuggestChange({ device, onSend, onCancel }: { device: 'mobile' | 'web';
       </div>
       <Input label="Your change" type="multiline" value={text} onValueChange={setText} />
       <p className="hc-small hc-muted">
-        If approved, a footnote on this step thanks you as “Maria G.” If the step text changes later, your name comes off.
+        If approved, a footnote on this step thanks you as “Marty M.” If the step text changes later, your name comes off.
         {web && ' You can follow it in My contributions.'}
       </p>
     </>

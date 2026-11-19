@@ -8,7 +8,7 @@ import { useCurrentHome } from '../prototype/HomeContext';
 import { HomePicker } from './HomePicker';
 import { ReceivedInvite } from './ReceivedInvite';
 import { SetupActions, SetupTracker, useSetupEdits, useSetupFlow, useSetupTitle } from './SetupFlow';
-import { homeownerPaths, landlordPaths, tenantPaths, utilityPaths } from './navPaths';
+import { homeownerPaths, landlordPaths, NOT_BUILT, navDisabled, tenantPaths, utilityPaths } from './navPaths';
 import './shells.css';
 
 const rolePaths = { homeowner: homeownerPaths, landlord: landlordPaths, tenant: tenantPaths };
@@ -91,7 +91,7 @@ export function MobileShell<R extends AppRole = 'homeowner'>({
       {fromSetup ? <SetupActions variant="mobile" edited={setupEdits.edited} /> : bottom}
       {!fromSetup && !bottom && tab && (
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        <TabBar role={r as any} active={tab as any} paths={rolePaths[r] as any} />
+        <TabBar role={r as any} active={tab as any} paths={rolePaths[r] as any} disabled={navDisabled[r] as any} disabledTitle={NOT_BUILT} />
       )}
       {picking && <HomePicker variant="sheet" onClose={() => setPicking(false)} />}
       {/* Review change: an invite from another home's owner (prototype shortcuts → Receive an invite) */}

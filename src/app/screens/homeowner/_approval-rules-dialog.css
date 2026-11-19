@@ -1,0 +1,8 @@
+/* Approval rules dialog (_approval-rules-dialog.tsx, review change) */
+.hc-approval-rules {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-4);
+}
+.hc-approval-rules__money .hc-number-stepper__value::before { content: '$'; }
+.hc-approval-rules__money .hc-number-stepper__value { width: auto; min-width: 32px; }

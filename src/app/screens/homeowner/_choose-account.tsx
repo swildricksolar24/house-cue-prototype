@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { Icon, type IconName } from '../../../components/Icon/Icon';
 import { Button } from '../../../components/Button/Button';
 import { StatusPill, type StatusTone } from '../../../components/StatusPill/StatusPill';
-import { accountHomes, expiredHouseholdHome, homeowner, sampleInvites, type InviteRole } from '../../data/sample';
-import { acceptInvite, clearNewAccount, declineInvite, useAccounts } from '../../prototype/accounts';
+import { accountHomes, expiredHouseholdHome, homeowner, landlord, sampleInvites, type InviteRole } from '../../data/sample';
+import { acceptInvite, clearNewAccount, declineInvite, setSignedInAs, useAccounts } from '../../prototype/accounts';
 import { useCurrentHome } from '../../prototype/HomeContext';
 import { screenPath } from '../../prototype/journeys';
 import { usePrototype } from '../../prototype/PrototypeContext';
@@ -59,7 +59,18 @@ export function ChooseAccount() {
   const { device } = usePrototype();
   const navigate = useNavigate();
   const { homes, setHomeId } = useCurrentHome();
-  const { joined, invites, newId } = useAccounts();
+  const { joined, invites: homeownerInvites, newId, signedInAs } = useAccounts();
+  const isLandlord = signedInAs === 'landlord';
+  // Review change: the signed-in person, shown at the top (Marty, or Biff after the landlord sign in / Landlord Demo)
+  const me = isLandlord
+    ? { first: landlord.firstName, last: landlord.lastName, email: landlord.email, role: `Landlord · owner of ${landlord.company}` }
+    : { first: homeowner.firstName, last: homeowner.lastName, email: homeowner.email, role: 'Homeowner' };
+  // Invites are Marty's (Biff sent the landlord one)
+  const invites = isLandlord ? [] : homeownerInvites;
+  const signOut = () => {
+    setSignedInAs(null);
+    navigate(screenPath('C39', 'homeowner'));
+  };
 
   const go = (path: string, homeId?: string) => {
     clearNewAccount();
@@ -73,13 +84,34 @@ export function ChooseAccount() {
   const joinedHomes = homes.filter((h) => !accountHomes.some((a) => a.id === h.id));
   const expired = expiredHouseholdHome;
 
-  const groups: Group[] = [
+  // Review change: Biff (landlord demo) has one account, his own portfolio; each rental opens its screen or is disabled
+  const landlordGroups: Group[] = [
+    {
+      id: 'biff-portfolio',
+      role: 'landlord',
+      title: landlord.company,
+      meta: 'Your portfolio · owner · 5 properties · 9 doors',
+      isNew: false,
+      action: { label: 'Open portfolio', onClick: () => go(screenPath('C79', 'landlord')) },
+      rows: sampleInvites.landlord.properties.map((p) => {
+        const screen = p.screen;
+        return {
+          id: `biff-${p.address}`,
+          address: `${p.address}, ${p.city}`,
+          meta: p.meta,
+          open: screen ? () => go(screenPath(screen, 'landlord')) : undefined,
+        };
+      }),
+    },
+  ];
+
+  const homeownerGroups: Group[] = [
     {
       id: 'own',
       role: 'homeowner',
-      title: `${homeowner.firstName} ${homeowner.lastName}`,
-      avatar: `${homeowner.firstName[0]}${homeowner.lastName[0]}`,
-      meta: `Your account · ${ownHomes.length} homes`,
+      // Review change: the person (name, avatar) moved to the "Signed in as" card at the top
+      title: 'Your homes',
+      meta: `${ownHomes.length} homes you own`,
       isNew: false,
       rows: ownHomes.map((h) => ({ id: h.id, address: `${h.address}, ${h.city}`, meta: h.meta, open: toHome(h.id) })),
     },
@@ -135,6 +167,30 @@ export function ChooseAccount() {
         };
       }),
   ];
+  const groups = isLandlord ? landlordGroups : homeownerGroups;
+
+  // Review change: who's signed in, at the top of the page: avatar, name, email and role, a Signed in tag, Sign out
+  const signedIn = (
+    <section className="hc-choose-account__me" aria-label="Signed in">
+      <span className="hc-choose-account__avatar" aria-hidden>
+        {me.first[0]}
+        {me.last[0]}
+      </span>
+      <div className="hc-choose-account__me-text">
+        <p className="hc-small hc-muted">Signed in as</p>
+        <p className="hc-medium-semibold">
+          {me.first} {me.last}
+        </p>
+        <p className="hc-small hc-muted">
+          {me.email} · {me.role}
+        </p>
+      </div>
+      <StatusPill label="Signed in" tone="success" />
+      <Button variant="link" size="small" onClick={signOut}>
+        Sign out
+      </Button>
+    </section>
+  );
 
   // Review change: one section per kind of account, in this order; a kind you have no account for isn't shown
   const list = ROLES.filter((role) => groups.some((g) => g.role === role) || invites.includes(role)).map((role) => (
@@ -249,6 +305,7 @@ export function ChooseAccount() {
   if (device === 'mobile') {
     return (
       <MobileShell header={{ title: 'Choose an account', showBack: false }} className="hc-onb-mobile hc-choose-account">
+        {signedIn}
         <h1 className="hc-h3">Where do you want to go?</h1>
         <p className="hc-medium hc-muted">{intro}</p>
         {list}
@@ -259,6 +316,7 @@ export function ChooseAccount() {
   return (
     <WebShell layout="onboarding" className="hc-onb-web hc-choose-account">
       <WebCard>
+        {signedIn}
         <h1 className="hc-h2">Choose an account</h1>
         <p className="hc-large hc-muted">{intro}</p>
         {list}

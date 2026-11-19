@@ -6,6 +6,7 @@ import { currentHome, demoAccount, homeowner } from '../../data/sample';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { MobileShell } from '../../shells/MobileShell';
+import { setSignedInAs } from '../../prototype/accounts';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import { EditableRow, isEmail, isPhone, maskEmail, maskPhone } from './_editable-row';
@@ -72,7 +73,14 @@ export default function Settings(_: ScreenProps) {
   );
   // Review change: Log out at the bottom of the Account stack; returns to the landing page (C39)
   const logOut = (
-    <Button variant="secondary" fullWidth onClick={() => flow.go('C39')}>
+    <Button
+      variant="secondary"
+      fullWidth
+      onClick={() => {
+        setSignedInAs(null);
+        flow.go('C39');
+      }}
+    >
       Log out
     </Button>
   );

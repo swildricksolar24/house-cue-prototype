@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Banner } from '../../../components/Banner/Banner';
 import { BottomActions } from '../../../components/BottomActions/BottomActions';
 import { Button } from '../../../components/Button/Button';
 import { Input } from '../../../components/Input/Input';
 import { legalPdf } from '../../data/legal';
-import { useNavigate } from 'react-router-dom';
-import { demoAccount, sampleInvites } from '../../data/sample';
-import { completePendingInvite, useAccounts } from '../../prototype/accounts';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { demoAccount, landlordDemoAccount, sampleInvites } from '../../data/sample';
+import { completePendingInvite, setSignedInAs, useAccounts } from '../../prototype/accounts';
 import { useDemoActions } from '../../prototype/DemoTools';
 import { useFlow } from '../../prototype/flow';
 import { useCurrentHome } from '../../prototype/HomeContext';
@@ -43,9 +43,14 @@ type Mode = 'signup' | 'signin';
  * Review change (invites): after Accept invite (prototype shortcuts) sign in shows a note about the invite on top, and
  * signing in goes to Choose an account (/accounts) with the new account added, instead of Home.
  */
-/** The one existing account in the prototype (sign in works only with it) and the email the sign-up demo fills in */
-const EXISTING_EMAIL = demoAccount.email;
-const NEW_EMAIL = 'new.homeowner@example.com';
+/**
+ * The existing account per journey (sign in works only with it) and the email the sign-up demo fills in. Review change:
+ * the landlord sign-up / sign in uses its own demo person, Biff Tannen (biff@example.com), not Marty.
+ */
+const ACCOUNTS = {
+  homeowner: { demo: demoAccount, newEmail: 'new.homeowner@example.com', label: 'Homeowner Demo' },
+  landlord: { demo: landlordDemoAccount, newEmail: 'new.landlord@example.com', label: 'Landlord Demo' },
+};
 export default function SignUp(_: ScreenProps) {
   const { device, screenState } = usePrototype();
   const flow = useFlow();
@@ -57,6 +62,9 @@ export default function SignUp(_: ScreenProps) {
   // Homeowner onboarding is 3 steps with the agreement line here; the landlord sign-up keeps its 6 steps and C41
   const shortFlow = flow.journey.slug === 'onboarding';
   const total = shortFlow ? 3 : 6;
+  const account = ACCOUNTS[flow.journey.slug === 'landlord-portfolio' ? 'landlord' : 'homeowner'];
+  const EXISTING_EMAIL = account.demo.email;
+  const NEW_EMAIL = account.newEmail;
   const [stage, setStage] = useState<Stage>(wrongCode ? 'code' : 'email');
   const branch = screenState as string;
   // Email mistakes caught on Send code: 'unknown' (sign in, no account) or 'taken' (sign up, account exists)
@@ -64,6 +72,19 @@ export default function SignUp(_: ScreenProps) {
     branch === 'no-account' ? 'unknown' : branch === 'email-taken' ? 'taken' : null,
   );
   const [email, setEmail] = useState(branch === 'no-account' ? 'marty@exmaple.com' : branch === 'email-taken' ? EXISTING_EMAIL : '');
+  // Review change: Homeowner / Landlord Demo on the shortcuts panel open this sign in with ?demo=1: that account's email
+  // is filled in, and you go through Send code, the code and Verify yourself (also when switching between the two)
+  const [params] = useSearchParams();
+  const demo = params.get('demo') === '1';
+  useEffect(() => {
+    if (!demo) return;
+    setMode('signin');
+    setStage('email');
+    setEmail(EXISTING_EMAIL);
+    setEmailError(null);
+    setCode('');
+    setCodeError(false);
+  }, [demo, EXISTING_EMAIL]);
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState(wrongCode ? '482913' : '');
   const [codeError, setCodeError] = useState(wrongCode);
@@ -83,6 +104,9 @@ export default function SignUp(_: ScreenProps) {
    * invite waiting, sign in adds its account and goes to Choose an account instead.
    */
   const done = () => {
+    // Review change: remember who signed in (Choose an account shows it at the top): Biff on the landlord journey,
+    // Marty otherwise
+    setSignedInAs(flow.journey.slug === 'landlord-portfolio' ? 'landlord' : 'homeowner');
     if (invite) {
       const joined = completePendingInvite();
       if (joined?.home) addHome(joined.home);
@@ -112,24 +136,24 @@ export default function SignUp(_: ScreenProps) {
 
   // Prototype shortcuts (not in Figma), like hub360: fill in the demo account / demo code.
   // Only the demo code verifies; any other 6 digits show "That code didn't match".
-  const verify = () => (code === demoAccount.code ? done() : setCodeError(true));
+  const verify = () => (code === account.demo.code ? done() : setCodeError(true));
   useDemoActions(
     stage === 'email'
       ? [
           {
-            label: 'Use Demo Account',
+            label: account.label,
             onClick: () => {
               // Sign in: the existing demo account. Sign up: a new email (the demo account is already registered)
               changeEmail(signIn ? EXISTING_EMAIL : NEW_EMAIL);
-              setPhone(demoAccount.phone);
+              setPhone(account.demo.phone);
             },
           },
         ]
       : [
           {
-            label: 'Use Demo Account',
+            label: account.label,
             onClick: () => {
-              setCode(demoAccount.code);
+              setCode(account.demo.code);
               setCodeError(false);
             },
           },

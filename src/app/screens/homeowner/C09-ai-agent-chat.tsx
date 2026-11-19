@@ -6,12 +6,12 @@ import { PushCard } from '../../../components/PushCard/PushCard';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
 import { TabBar } from '../../../components/TabBar/TabBar';
 import { UserBubble } from '../../../components/UserBubble/UserBubble';
-import { agent, currentHome, money, systems } from '../../data/sample';
+import { agent, currentHome, landlord as landlordPerson, money, systems } from '../../data/sample';
 import { useFlow } from '../../prototype/flow';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { DialogClose } from '../../shells/DialogClose';
 import { MobileShell } from '../../shells/MobileShell';
-import { homeownerPaths, landlordPaths } from '../../shells/navPaths';
+import { homeownerPaths, landlordPaths, NOT_BUILT, navDisabled } from '../../shells/navPaths';
 import { WebShell } from '../../shells/WebShell';
 import type { ScreenProps } from '../registry';
 import { answerFor, type AgentAnswer } from './_agent-answer';
@@ -79,7 +79,10 @@ export default function AiAgentChat(_: ScreenProps) {
     setMessages((m) => [...m, { id: Date.now(), from: 'user', text }]);
     setDraft('');
     // Review change: the agent answers what you asked (topic from keywords, answer from the home's data)
-    const answer = answerFor(text, home.address);
+    // Review change: on the landlord view the agent talks to Biff Tannen about Mesa Verde Holdings' rentals
+    const answer = landlord
+      ? answerFor(text, `${landlordPerson.company}’ rentals`, landlordPerson.firstName)
+      : answerFor(text, home.address);
     window.setTimeout(() => setMessages((m) => [...m, { id: Date.now() + 1, from: 'agent', text: answer.text, quote: answer.quote }]), 600);
   };
 
@@ -89,7 +92,7 @@ export default function AiAgentChat(_: ScreenProps) {
     thread = (
       <>
         <AgentCard>
-          Marisol (1418 E Roosevelt, Unit A) reported a kitchen sink leak. My estimate is $180–$260, over your $150 ceiling.
+          Clara (1418 E Roosevelt, Unit A) reported a kitchen sink leak. My estimate is $180–$260, over your $150 ceiling.
         </AgentCard>
         {cardDone ? null : (
           <ActionCard
@@ -101,12 +104,12 @@ export default function AiAgentChat(_: ScreenProps) {
             rejectLabel="Decline"
             onApprove={() => {
               setCardDone('approved');
-              addAgentReply('Approved. I’ll ask 3 plumbers for quotes and keep Marisol posted.');
+              addAgentReply('Approved. I’ll ask 3 plumbers for quotes and keep Clara posted.');
             }}
-            onEdit={() => addAgentReply('I asked Marisol for a closer photo of the P-trap. I’ll update you when she replies.')}
+            onEdit={() => addAgentReply('I asked Clara for a closer photo of the P-trap. I’ll update you when she replies.')}
             onReject={() => {
               setCardDone('rejected');
-              addAgentReply('Declined. I let Marisol know you’ll handle it another way.');
+              addAgentReply('Declined. I let Clara know you’ll handle it another way.');
             }}
           />
         )}
@@ -120,7 +123,7 @@ export default function AiAgentChat(_: ScreenProps) {
           className="hc-c09-push"
           meta="HouseCue · 2:14 AM"
           title="Emergency at 2207 N 9th Ave"
-          body="Priya reported no cooling, 96°F inside. Dispatch pings sent."
+          body="Goldie reported no cooling, 96°F inside. Dispatch pings sent."
         />
         <AgentCard>
           No answer from you or Corinne in 15 minutes, so I booked Bluequail Air Service at $480, within your $600 emergency
@@ -132,11 +135,11 @@ export default function AiAgentChat(_: ScreenProps) {
             <span className="hc-small hc-muted">Agent · 2:31 AM</span>
           </div>
           <p className="hc-medium-semibold">Emergency booked</p>
-          <p className="hc-small">Bluequail Air Service · $480 total incl. after-hours surcharge · Priya will let them in.</p>
+          <p className="hc-small">Bluequail Air Service · $480 total incl. after-hours surcharge · Goldie will let them in.</p>
           <div className="hc-c09-booked__actions">
             <Button onClick={() => flow.go('C18')}>View job</Button>
-            <Button variant="secondary" onClick={() => addAgentReply('Calling Priya now from your HouseCue number.')}>
-              Call Priya
+            <Button variant="secondary" onClick={() => addAgentReply('Calling Goldie now from your HouseCue number.')}>
+              Call Goldie
             </Button>
           </div>
         </section>
@@ -263,7 +266,7 @@ export default function AiAgentChat(_: ScreenProps) {
             <>
               {composer}
               {landlord ? (
-                <TabBar role="landlord" active="portfolio" paths={landlordPaths} />
+                <TabBar role="landlord" active="portfolio" paths={landlordPaths} disabled={navDisabled.landlord} disabledTitle={NOT_BUILT} />
               ) : (
                 <TabBar role="homeowner" active="agent" paths={homeownerPaths} />
               )}

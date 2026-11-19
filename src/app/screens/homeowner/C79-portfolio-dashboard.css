@@ -131,10 +131,15 @@
 }
 .hc-c79-table__row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 48px 150px 120px 90px;
+  /* Review change: no Doors column (was 48px after Property); the Spent column holds "spent of budget" and its bar */
+  /* Review changes: Tenancy starts 40px further left than it did, and Open sits right after it (Tenancy is 120px, just
+     over its widest pill "Vacant · turnover", then the 12px gap; each row is its own grid, so the width is fixed). The
+     space that frees goes to Spent of budget (wider bars), so Property and Tenancy stay where they are. */
+  grid-template-columns: minmax(0, 1fr) 120px 120px 230px;
   gap: var(--hc-space-3);
   align-items: center;
-  padding: var(--hc-space-3) var(--hc-space-4);
+  /* Review change: more room between rows, 20px top and bottom (was 12px); the heading row keeps its own 10px */
+  padding: 20px var(--hc-space-4);
   border-top: 1px solid var(--hc-border);
   font: 400 14px/20px var(--hc-font);
   color: var(--hc-text);
@@ -149,3 +154,92 @@
 .hc-c79-table__row--link { cursor: pointer; }
 .hc-c79-table__row--link:hover { background: var(--hc-page); }
 .hc-c79-table__row--link:focus-visible { outline: 2px solid var(--hc-info); outline-offset: -2px; }
+
+/* Property address (review change): smaller, 12px Small at semibold weight (was 14px Medium Semibold) */
+.hc-c79-table__address { font: 600 12px/18px var(--hc-font); }
+
+/* Total row under the properties (review change): stronger line above, not clickable */
+.hc-c79-table__row--total { border-top-color: var(--hc-border-strong); }
+/* …on a darker background (review change): the tan tint in light mode; in dark mode the page brown, since the tint
+   is lighter than the card there. The table's bottom padding goes so the shading reaches the rounded corner. */
+.hc-c79-table:has(> .hc-c79-table__row--total) { padding-bottom: 0; }
+/* Review change: Add property at the bottom of the Properties card, under the total, on the right */
+.hc-c79-table__foot {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border-top: 1px solid var(--hc-border);
+}
+.hc-c79-table__row--total { background: var(--hc-tint); }
+[data-theme='dark'] .hc-c79-table__row--total { background: var(--hc-page); }
+
+/* Spent of budget cell (review change, Properties + Spent by property combined): "$412 of $500" with a bar of the
+   budget used under it, red with "Over by …" past the budget */
+.hc-c79-spend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-1);
+  width: 100%;
+}
+.hc-c79-spend__line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--hc-space-2);
+  white-space: nowrap;
+}
+.hc-c79-spend__bar {
+  height: 6px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-fill-10);
+  overflow: hidden;
+}
+.hc-c79-spend__bar > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--hc-link);
+  transition: width 0.3s ease;
+}
+.hc-c79-spend--over .hc-c79-spend__bar > span { background: var(--hc-danger); }
+.hc-c79-spend__over { color: var(--hc-danger); font-weight: 600; }
+
+/* Property detail page (C79 ?property=, review change): glance cards, Set up (Tenants & access, Property rules),
+   Upcoming maintenance */
+.hc-c79-detail__glance {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--hc-space-3);
+}
+.hc-c79-detail__glance > .hc-c79-card { align-items: flex-start; }
+.hc-c79-detail__glance > .hc-c79-card > .hc-c79-spend { align-self: stretch; }
+.hc-c79-detail__setup { display: flex; flex-direction: column; gap: var(--hc-space-3); }
+.hc-c79-detail__setup h2,
+.hc-c79-detail__setup h3,
+.hc-c79-detail p { margin: 0; }
+.hc-c79-detail__setup-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--hc-space-3);
+}
+.hc-c79-detail__setup-card { align-items: flex-start; }
+.hc-c79-detail__setup-card .hc-button { margin-top: auto; }
+.hc-c79-detail__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-selected);
+  color: var(--hc-link);
+}
+/* Mobile and narrow windows: two glance cards a row, set-up cards stacked */
+.hc-mobile-shell .hc-c79-detail__glance { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.hc-mobile-shell .hc-c79-detail__setup-cards { grid-template-columns: 1fr; }
+.hc-mobile-shell .hc-c79-detail__setup h2,
+.hc-mobile-shell .hc-c79-detail__setup h3,
+.hc-mobile-shell p { margin: 0; }
+@media (max-width: 900px) {
+  .hc-c79-detail__glance { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

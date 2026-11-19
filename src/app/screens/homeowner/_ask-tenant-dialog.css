@@ -1,0 +1,11 @@
+/* Ask the tenant dialog (_ask-tenant-dialog.tsx, review change) */
+.hc-ask-tenant {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+}
+.hc-ask-tenant__quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+}

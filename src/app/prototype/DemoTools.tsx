@@ -11,16 +11,23 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Button/Button';
 import { Icon } from '../../components/Icon/Icon';
 import { Switch } from '../../components/Switch/Switch';
+import { setSignedInAs, type SignedInAs } from './accounts';
 import { setConnectFail, useConnectFailSwitch } from './connectFail';
 import { useOptionalFlow } from './flow';
 import { screenPath } from './journeys';
 import { usePrototype } from './PrototypeContext';
 
-/** Review change: every button on the shortcuts panel looks like Use Demo Account (primary, default size, full width) */
+/** Review change: the demo accounts on the shortcuts panel, always listed in this order; each opens its own sign in */
+const DEMO_ACCOUNTS: { label: string; who: SignedInAs }[] = [
+  { label: 'Homeowner Demo', who: 'homeowner' },
+  { label: 'Landlord Demo', who: 'landlord' },
+];
+
+/** Review change: every button on the shortcuts panel looks like Homeowner Demo (primary, default size, full width) */
 const PANEL_BUTTON = { fullWidth: true } as const;
 
 /**
@@ -90,7 +97,7 @@ export function useDemoActions(actions: DemoAction[]) {
 /**
  * The card (review change): a floating panel you can drag anywhere by its header, with × to close it; when closed, a
  * small tab on the left edge brings it back. Open/closed and where you left it are remembered for the session.
- * "Use Demo Account" shows on steps that offer a shortcut; the Dark mode switch is always there; "Connections fail"
+ * "Homeowner Demo" (was Use Demo Account) shows on steps that offer a shortcut; the Dark mode switch is always there; "Connections fail"
  * shows on screens that connect something (connectFail.ts). All buttons share one style. (Review change: the invite
  * buttons were removed; invites now show on Choose an account.)
  * Rendered into <body> so it floats over the page (and beside the phone frame on mobile).
@@ -127,7 +134,16 @@ function clamp(p: Pos, el: HTMLElement | null): Pos {
 function DemoCard({ actionsRef, labels }: { actionsRef: MutableRefObject<DemoAction[]>; labels: string[] }) {
   const { device, theme, setTheme } = usePrototype();
   const navigate = useNavigate();
-  const onLanding = useOptionalFlow()?.step.code === 'C39';
+  // Review change: Sign out is disabled on every signed-out page: the landing page (C39, incl. How it works / For
+  // Pros), sign in (C02), the top bar's Membership and Help (C28 / C32 ?visitor=1) and the public account deletion
+  // request (X10)
+  const code = useOptionalFlow()?.step.code;
+  const { search } = useLocation();
+  const signedOut =
+    code === 'C39' ||
+    code === 'C02' ||
+    code === 'X10' ||
+    ((code === 'C28' || code === 'C32') && new URLSearchParams(search).get('visitor') === '1');
   const failSwitch = useConnectFailSwitch();
   const [open, setOpenState] = useState<boolean>(() => read('hc-proto-demo-open', true));
   const [pos, setPos] = useState<Pos | null>(() => read<Pos | null>('hc-proto-demo-pos', null));
@@ -256,24 +272,50 @@ function DemoCard({ actionsRef, labels }: { actionsRef: MutableRefObject<DemoAct
         {/* Always at the bottom: fills in what this step needs (disabled when there's nothing to fill); the
             screen's own button moves on */}
         <div className="hc-proto-demo__actions">
-          {labels.length > 0 ? (
-            labels.map((label, i) => (
+          {/* Review change: every demo account is always listed, in this order. Each button:
+              - fills in this step when the screen offers it under that name (sign in on C02, Your home, Agreements…)
+              - otherwise, on a signed-out page, starts that account's sign in (review change: was signing straight in):
+                C02 in sign-in mode with the demo email filled in (?demo=1); you go on with Send code, the demo code
+                (this button again) and Verify, which lands on Home (Marty) or Portfolio (Biff)
+              - otherwise (you're signed in) it's disabled: sign out first to switch accounts */}
+          {DEMO_ACCOUNTS.map((account) => {
+            const i = labels.indexOf(account.label);
+            if (i >= 0)
+              return (
+                <Button key={account.label} {...PANEL_BUTTON} onClick={() => actionsRef.current[i]?.onClick()}>
+                  {account.label}
+                </Button>
+              );
+            return (
+              <Button
+                key={account.label}
+                {...PANEL_BUTTON}
+                disabled={!signedOut}
+                title={signedOut ? undefined : 'You’re signed in. Sign out to use another demo account.'}
+                onClick={() => navigate(`${screenPath('C02', account.who)}?state=signin&demo=1`)}
+              >
+                {account.label}
+              </Button>
+            );
+          })}
+          {/* Any other shortcut a screen offers (none at the moment) */}
+          {labels.map((label, i) =>
+            DEMO_ACCOUNTS.some((a) => a.label === label) ? null : (
               <Button key={label} {...PANEL_BUTTON} onClick={() => actionsRef.current[i]?.onClick()}>
                 {label}
               </Button>
-            ))
-          ) : (
-            <Button {...PANEL_BUTTON} disabled title="Nothing to fill in on this step">
-              Use Demo Account
-            </Button>
+            ),
           )}
           {/* Review change: sign out from anywhere, back to the landing page (C39), like Settings' Log out. Disabled
-              on the landing page itself. */}
+              whenever you're not signed in (see signedOut above). */}
           <Button
             {...PANEL_BUTTON}
-            disabled={onLanding}
-            title={onLanding ? 'You’re already signed out' : undefined}
-            onClick={() => navigate(screenPath('C39', 'homeowner'))}
+            disabled={signedOut}
+            title={signedOut ? 'You’re not signed in' : undefined}
+            onClick={() => {
+              setSignedInAs(null);
+              navigate(screenPath('C39', 'homeowner'));
+            }}
           >
             Sign out
           </Button>
