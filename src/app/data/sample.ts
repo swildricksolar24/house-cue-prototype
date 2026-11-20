@@ -479,7 +479,7 @@ export const portfolioTasks: PortfolioTask[] = [
 
 /* ------------------------------------------------------------------------------------------------------------------ */
 /* Review change: Mesa Verde Holdings' rentals, shared by the Portfolio dashboard (C79), its property detail page        */
-/* (C79 ?property=<id>), Property rules (C81 ?property=) and Tenants & access (C82 ?property=). Was local to C79.        */
+/* (C79 ?property=<id>), its Property rules card and Tenants & access (C82 ?property=). Was local to C79.        */
 /* ------------------------------------------------------------------------------------------------------------------ */
 
 type PillTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
@@ -489,6 +489,9 @@ export type SpendPeriod = 'month' | 'year';
 export type PropertyTenant = {
   id: string;
   name: string;
+  /** Review change: their email and phone (invented), shown in the Tenants & access dialog */
+  email?: string;
+  phone?: string;
   unit: string;
   status: string;
   tone: PillTone;
@@ -517,6 +520,8 @@ export type PortfolioProperty = {
   tenants: PropertyTenant[];
   /** Added on Add property during this visit (review change): tagged New on the Portfolio */
   isNew?: boolean;
+  /** Review change: an added property's doors (unit name and tenancy), each a row tagged New on the Portfolio table */
+  doors?: { unit: string; tenancy: 'vacant' | 'occupied'; tenant?: string }[];
 };
 
 export const portfolioProperties: PortfolioProperty[] = [
@@ -533,9 +538,8 @@ export const portfolioProperties: PortfolioProperty[] = [
     budget: { month: 500, year: 6000 },
     rules: { routine: 150, emergency: 600, own: true },
     tenants: [
-      { id: 'clara', name: 'Clara Clayton', unit: 'A', status: 'Active', tone: 'success', windows: 'Weekdays 7–9 AM', since: 'Mar 1, 2026', mobileMeta: 'Active since Mar 1, 2026 · access windows set' },
-      { id: 'sam', name: 'Sam Baines', unit: 'B', status: 'Moving out Nov 30', tone: 'warning', windows: 'Evenings', since: 'Aug 15, 2025', mobileMeta: 'Active since Aug 15, 2025 · moving out Nov 30' },
-      { id: 'stella', name: 'Stella Baines (co-tenant)', unit: 'B', status: 'Invite pending', tone: 'warning', windows: 'Not set yet', since: 'Sent Nov 7', mobileMeta: 'Invite pending · sent Nov 7 · never expires' },
+      { id: 'clara', name: 'Clara Clayton', email: 'clara.clayton@example.com', unit: 'A', status: 'Active', tone: 'success', windows: 'Weekdays 7–9 AM', since: 'Mar 1, 2026', mobileMeta: 'Active since Mar 1, 2026 · access windows set' },
+      { id: 'sam', name: 'Sam Baines', email: 'sam.baines@example.com', unit: 'B', status: 'Moving out Nov 30', tone: 'warning', windows: 'Evenings', since: 'Aug 15, 2025', mobileMeta: 'Active since Aug 15, 2025 · moving out Nov 30' },
     ],
   },
   {
@@ -551,9 +555,9 @@ export const portfolioProperties: PortfolioProperty[] = [
     budget: { month: 600, year: 7200 },
     rules: { routine: 100, emergency: 600, own: false },
     tenants: [
-      { id: 'lou', name: 'Lou Caruthers', unit: '1', status: 'Active', tone: 'success', windows: 'Weekdays 9 AM–noon', since: 'Jan 5, 2026', mobileMeta: 'Active since Jan 5, 2026 · access windows set' },
-      { id: 'gerald', name: 'Gerald Strickland', unit: '2', status: 'Active', tone: 'success', windows: 'Any weekday', since: 'Jun 1, 2025', mobileMeta: 'Active since Jun 1, 2025 · access windows set' },
-      { id: 'douglas', name: 'Douglas Needles', unit: '3', status: 'Active', tone: 'success', windows: 'Weekends', since: 'Sep 12, 2025', mobileMeta: 'Active since Sep 12, 2025 · access windows set' },
+      { id: 'lou', name: 'Lou Caruthers', email: 'lou.caruthers@example.com', unit: '1', status: 'Active', tone: 'success', windows: 'Weekdays 9 AM–noon', since: 'Jan 5, 2026', mobileMeta: 'Active since Jan 5, 2026 · access windows set' },
+      { id: 'gerald', name: 'Gerald Strickland', email: 'gerald.strickland@example.com', unit: '2', status: 'Active', tone: 'success', windows: 'Any weekday', since: 'Jun 1, 2025', mobileMeta: 'Active since Jun 1, 2025 · access windows set' },
+      { id: 'douglas', name: 'Douglas Needles', email: 'douglas.needles@example.com', unit: '3', status: 'Active', tone: 'success', windows: 'Weekends', since: 'Sep 12, 2025', mobileMeta: 'Active since Sep 12, 2025 · access windows set' },
       { id: 'pima-4', name: 'No tenant', unit: '4', status: 'Vacant', tone: 'neutral', windows: '—', since: 'Since Oct 31', mobileMeta: 'Vacant since Oct 31 · ready to list' },
     ],
   },
@@ -570,7 +574,7 @@ export const portfolioProperties: PortfolioProperty[] = [
     budget: { month: 200, year: 2400 },
     rules: { routine: 100, emergency: 600, own: false },
     tenants: [
-      { id: 'goldie', name: 'Goldie Wilson', unit: '—', status: 'Active', tone: 'success', windows: 'Weekdays after 5 PM', since: 'Apr 1, 2024', mobileMeta: 'Active since Apr 1, 2024 · access windows set' },
+      { id: 'goldie', name: 'Goldie Wilson', email: 'goldie.wilson@example.com', unit: '—', status: 'Active', tone: 'success', windows: 'Weekdays after 5 PM', since: 'Apr 1, 2024', mobileMeta: 'Active since Apr 1, 2024 · access windows set' },
     ],
   },
   {
@@ -587,7 +591,7 @@ export const portfolioProperties: PortfolioProperty[] = [
     allClear: true,
     rules: { routine: 100, emergency: 600, own: false },
     tenants: [
-      { id: 'marvin', name: 'Marvin Berry', unit: '—', status: 'Invite pending', tone: 'warning', windows: 'Not set yet', since: 'Sent Nov 10', mobileMeta: 'Invite pending · sent Nov 10 · never expires' },
+      { id: 'marvin', name: 'Marvin Berry', email: 'marvin.berry@example.com', unit: '—', status: 'Invite pending', tone: 'warning', windows: 'Not set yet', since: 'Sent Nov 10', mobileMeta: 'Invite pending · sent Nov 10 · never expires' },
     ],
   },
   {

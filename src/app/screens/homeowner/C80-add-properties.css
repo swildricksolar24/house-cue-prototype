@@ -290,3 +290,64 @@
 .hc-mobile-shell .hc-c80-import__counts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .hc-mobile-shell .hc-c80-import__row { flex-direction: column; align-items: flex-start; }
 .hc-mobile-shell .hc-c80-import__result { justify-content: flex-start; }
+
+/* Review change: the Doors table under the form card, built like the Portfolio's Properties table: a heading, then a
+   card with a muted heading row, the property's row and an indented, tinted row per door (20px padding) */
+.hc-c80-doors-section { display: flex; flex-direction: column; gap: var(--hc-space-3); }
+.hc-c80-doors {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  overflow: hidden;
+}
+.hc-c80-doors__row {
+  display: grid;
+  /* Review change: Property and Tenancy only (no Status column); Tenancy on the right */
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--hc-space-3);
+  padding: 20px;
+  border-top: 1px solid var(--hc-border);
+  font: 400 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+.hc-c80-doors__row > span { display: flex; min-width: 0; }
+/* Review change: Tenancy hugs the right edge, so every row has the same 20px on the left and the right */
+.hc-c80-doors__row > span:last-child { justify-content: flex-end; }
+.hc-c80-doors__row--head {
+  padding-block: 10px;
+  border-top: 0;
+  font: 600 12px/18px var(--hc-font);
+  color: var(--hc-text-muted);
+}
+.hc-c80-doors__address { font: 600 12px/18px var(--hc-font); }
+/* Door rows: tinted and indented like the Portfolio's unit rows; the drop-down sits where the tenancy tag would */
+.hc-c80-doors__row--unit { padding-block: 12px; background: color-mix(in srgb, var(--hc-tint) 40%, transparent); }
+.hc-c80-doors__unit { /* review change: centred, so the Edit pill lines up with the text */ align-items: center; gap: var(--hc-space-2); padding-left: var(--hc-space-4); }
+.hc-c80-doors__unit-name { font: 600 12px/18px var(--hc-font); white-space: nowrap; }
+.hc-c80-doors__unit-tenant { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hc-c80-doors__select { width: 200px; max-width: 100%; }
+.hc-mobile-shell .hc-c80-doors__select { width: 112px; }
+.hc-mobile-shell .hc-c80-doors__row { grid-template-columns: minmax(0, 1fr) auto; gap: var(--hc-space-2); padding-inline: var(--hc-space-3); }
+.hc-mobile-shell .hc-c80-doors__unit { flex-direction: column; align-items: flex-start; gap: 0; padding-left: var(--hc-space-2); }
+
+/* Review change: Monthly budget's label with the per-unit split under it */
+.hc-c80-budget { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+/* Review change: Edit after an occupied door's tenant line (adds the tenant and emails an invite) */
+.hc-c80-doors__edit {
+  flex: none;
+  display: inline-flex;
+  align-self: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: none;
+  cursor: pointer;
+}
+.hc-c80-doors__edit:hover .hc-status-pill { filter: brightness(0.95); }
+:root[data-theme='dark'] .hc-c80-doors__edit:hover .hc-status-pill { filter: brightness(1.2); }
+.hc-c80-doors__edit:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-mobile-shell .hc-c80-doors__edit { align-self: flex-start; }

@@ -1,0 +1,77 @@
+/* Review change: the Property details section (Add property, a property's page) */
+.hc-pd { display: flex; flex-direction: column; gap: var(--hc-space-3); }
+.hc-pd h2,
+.hc-pd p { margin: 0; }
+.hc-pd__head { display: flex; flex-direction: column; gap: var(--hc-space-1); }
+.hc-pd__optional { font-weight: 400; margin-left: var(--hc-space-1); }
+.hc-pd__import {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--hc-space-2);
+  padding: var(--hc-space-3) var(--hc-space-4);
+  border: 1px dashed var(--hc-border-strong);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+.hc-pd__import > span { flex: 1 1 200px; min-width: 0; }
+.hc-pd__note { color: var(--hc-success); font-weight: 600; }
+
+/* Groups: a card each, opened and closed by its heading row */
+.hc-pd__groups { display: flex; flex-direction: column; border: 1px solid var(--hc-border); border-radius: var(--hc-radius-lg); background: var(--hc-card); overflow: hidden; }
+.hc-pd__group + .hc-pd__group { border-top: 1px solid var(--hc-border); }
+.hc-pd__group-head {
+  display: flex;
+  align-items: center;
+  gap: var(--hc-space-3);
+  width: 100%;
+  padding: 16px 20px;
+  border: 0;
+  background: none;
+  color: var(--hc-text);
+  text-align: left;
+  cursor: pointer;
+}
+.hc-pd__group-head:hover { background: color-mix(in srgb, var(--hc-tint) 40%, transparent); }
+.hc-pd__group-head:focus-visible { outline: 2px solid var(--hc-info); outline-offset: -2px; }
+.hc-pd__group-head > .hc-medium-semibold { flex: 1; }
+.hc-pd__chevron {
+  width: 20px;
+  height: 20px;
+  background: var(--hc-text-muted);
+  -webkit-mask: url('../../../components/Select/assets/chevron-down.svg') center / 20px 20px no-repeat;
+  mask: url('../../../components/Select/assets/chevron-down.svg') center / 20px 20px no-repeat;
+  transition: transform 0.15s ease;
+}
+.hc-pd__group.is-open .hc-pd__chevron { transform: rotate(180deg); }
+.hc-pd__group-body { display: flex; flex-direction: column; gap: var(--hc-space-3); padding: 4px 20px 20px; }
+
+.hc-pd__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--hc-space-3) var(--hc-space-4); align-items: start; }
+.hc-pd__stepper .hc-number-stepper { padding-top: 0; border-bottom: 0; }
+.hc-pd__label { display: inline-flex; align-items: center; gap: var(--hc-space-2); }
+.hc-pd__maps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--hc-space-3); }
+
+/* Lists (appliances, jobs, vendors): a row of fields with a remove button */
+.hc-pd__list { display: flex; flex-direction: column; gap: var(--hc-space-3); }
+.hc-pd__rows { display: flex; flex-direction: column; gap: var(--hc-space-2); }
+.hc-pd__row { display: grid; gap: var(--hc-space-2); align-items: end; }
+.hc-pd__remove { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: var(--hc-radius-lg); background: none; color: var(--hc-text-muted); cursor: pointer; }
+.hc-pd__remove:hover { background: var(--hc-tint); color: var(--hc-danger); }
+.hc-pd__remove:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-pd__list-actions { display: flex; flex-wrap: wrap; gap: var(--hc-space-2); }
+.hc-pd__suggest { display: flex; align-items: center; flex-wrap: wrap; gap: var(--hc-space-2); }
+.hc-pd__chip { display: inline-flex; padding: 0; border: 0; border-radius: var(--hc-radius-pill); background: none; cursor: pointer; }
+.hc-pd__chip:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+/* A phone: one column; list rows stack their fields */
+.hc-mobile-shell .hc-pd__grid,
+.hc-mobile-shell .hc-pd__maps { grid-template-columns: 1fr; }
+.hc-mobile-shell .hc-pd__row { grid-template-columns: 1fr auto !important; }
+.hc-mobile-shell .hc-pd__row > .hc-input { grid-column: 1; }
+.hc-mobile-shell .hc-pd__row > .hc-input .hc-input__label--hidden { position: static; width: auto; height: auto; margin: 0; clip: auto; }
+.hc-mobile-shell .hc-pd__remove { grid-column: 2; grid-row: 1; }
+.hc-mobile-shell .hc-pd__rows { gap: var(--hc-space-4); }
+.hc-mobile-shell .hc-pd__group-head,
+.hc-mobile-shell .hc-pd__group-body { padding-inline: var(--hc-space-3); }
+/* An import tag on its own line (Appliances) hugs its text */
+.hc-pd__group-body > .hc-status-pill { align-self: flex-start; }

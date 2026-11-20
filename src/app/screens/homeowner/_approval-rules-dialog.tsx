@@ -14,7 +14,7 @@ export const DEFAULT_APPROVAL_RULES: ApprovalRules = { routine: 100, emergency: 
  * Review change: "Approval rules" on C86 Approval queue opens this dialog over the queue instead of going to C81
  * Property rules. It holds the approval part of the rules as portfolio defaults: the routine auto-approve ceiling, the
  * emergency ceiling and emergency rules, plus the cap order note from C81. Save keeps the changes (for this visit) and
- * closes; Cancel, × or Esc closes without changes. "Rules for one property" opens C81 for a single property's overrides.
+ * closes; Cancel, × or Esc closes without changes. "Rules for one property" calls onPropertyRules (C81 is removed; a property's rules are on its page).
  */
 export function ApprovalRulesDialog({
   rules,

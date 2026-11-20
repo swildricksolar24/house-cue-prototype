@@ -73,9 +73,12 @@
 }
 .hc-c79-web__stats {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  /* Review change: three tiles on the bottom row (Open requests, Awaiting approval, Upcoming maintenance) */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--hc-space-3);
 }
+/* Review change: Spent and Occupancy on the top row, two across */
+.hc-c79-web__stats--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .hc-c79-chips {
   display: flex;
   flex-wrap: wrap;
@@ -103,6 +106,7 @@
   flex-direction: column;
   gap: var(--hc-space-4);
 }
+.hc-c79-web__cols--full .hc-c79-web__main { flex: 1 1 auto; }
 .hc-c79-web__side {
   flex: 0 0 372px;
   display: flex;
@@ -135,19 +139,21 @@
   /* Review changes: Tenancy starts 40px further left than it did, and Open sits right after it (Tenancy is 120px, just
      over its widest pill "Vacant · turnover", then the 12px gap; each row is its own grid, so the width is fixed). The
      space that frees goes to Spent of budget (wider bars), so Property and Tenancy stay where they are. */
-  grid-template-columns: minmax(0, 1fr) 120px 120px 230px;
-  gap: var(--hc-space-3);
+  /* Review change: Property, Tenancy, Spent of budget (no Open column). Property is just wider than the longest
+     address (200px), so Tenancy sits close to it on the left; Spent of budget takes the rest */
+  /* Review change: Property 176px (longest address 174px), Tenancy 124px, Status takes the rest, Spent of budget 277px;
+     8px between columns so the Status tags fit */
+  grid-template-columns: 176px 124px minmax(0, 1fr) 277px;
+  gap: var(--hc-space-3) var(--hc-space-2);
   align-items: center;
   /* Review change: more room between rows, 20px top and bottom (was 12px); the heading row keeps its own 10px */
-  padding: 20px var(--hc-space-4);
+  /* Review change: 20px padding on every side of a row (sides were 16px) */
+  padding: 20px;
   border-top: 1px solid var(--hc-border);
   font: 400 14px/20px var(--hc-font);
   color: var(--hc-text);
 }
 .hc-c79-table__row > span { display: flex; min-width: 0; }
-/* Review change: the Tenancy and Open columns (their headings and badges) are centred */
-.hc-c79-table__row > span:nth-child(2),
-.hc-c79-table__row > span:nth-child(3) { justify-content: center; text-align: center; }
 .hc-c79-table__row--head {
   padding-block: 10px;
   border-top: 0;
@@ -216,13 +222,17 @@
 }
 .hc-c79-detail__glance > .hc-c79-card { align-items: flex-start; }
 .hc-c79-detail__glance > .hc-c79-card > .hc-c79-spend { align-self: stretch; }
+/* Review change: the one Spent card (Month / Year) takes the width the two spend cards had */
+.hc-c79-detail__spent { grid-column: span 2; }
+.hc-c79-detail__spent > p { align-self: stretch; }
 .hc-c79-detail__setup { display: flex; flex-direction: column; gap: var(--hc-space-3); }
 .hc-c79-detail__setup h2,
 .hc-c79-detail__setup h3,
 .hc-c79-detail p { margin: 0; }
 .hc-c79-detail__setup-cards {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Review change: one card (Property rules) since Tenants & access left, so it takes the full width (was 2 columns) */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--hc-space-3);
 }
 .hc-c79-detail__setup-card { align-items: flex-start; }
@@ -262,3 +272,329 @@
 }
 .hc-c79-billing__select { flex: 0 1 280px; min-width: 0; }
 .hc-mobile-shell .hc-c79-billing__select { flex-basis: 220px; }
+
+/* Review change: unit rows under a multi-unit building: indented, tighter, on a slightly tinted band */
+.hc-c79-table__row--unit { /* review change: 20px like the building rows (was 10px top and bottom) */ background: color-mix(in srgb, var(--hc-tint) 40%, transparent); }
+.hc-c79-table__unit { display: flex; align-items: baseline; gap: var(--hc-space-2); padding-left: var(--hc-space-4); }
+.hc-c79-table__unit-name { font: 600 12px/18px var(--hc-font); white-space: nowrap; }
+.hc-c79-table__unit-tenant { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+
+/* Review change: Spent of budget is 40px narrower (heading, amounts and bars end 40px before the row's edge) */
+.hc-c79-table__row > span:nth-child(4) { padding-right: 20px; } /* review change: 20px (was 40px) */
+/* Review change: no padding on the right side of a row (was 20px); the 20px above keeps the bars off the edge */
+.hc-c79-table__row { padding-right: 0; }
+/* Review change: Spent of budget is 50px narrower than it was (277px column: 257px of amounts and bars, then its 20px right gap; was
+   307px of amounts and bars) and stays on the right; the space it gave up sits between Tenancy and it (empty third column) */
+/* Review change: the third column is now Status (it fills the space between Tenancy and Spent of budget) */
+
+/* Review change: Status column: just a coloured dot (amber needs you, red urgent) in a soft ring of the same colour; hover
+   shows the issue */
+.hc-c79-issue {
+  display: inline-grid;
+  place-items: center;
+  /* Review change: half size (11px ring, was 22px) */
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  cursor: default;
+}
+.hc-c79-issue__dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.hc-c79-issue--warning { background: var(--hc-warning-bg); color: var(--hc-warning); }
+.hc-c79-issue--danger { background: var(--hc-danger-bg); color: var(--hc-danger); }
+/* Review change: New (a property or door just added) */
+.hc-c79-issue--info { background: var(--hc-info-bg); color: var(--hc-info); }
+/* the issue's full text, for screen readers only */
+.hc-c79-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* Review change: the Status column (heading and dots) is centred */
+.hc-c79-table__row > span:nth-child(3) { justify-content: center; text-align: center; }
+/* Review change: the Tenancy column (heading and tags) is centred (was left-aligned) */
+.hc-c79-table__row > span:nth-child(2) { justify-content: center; text-align: center; }
+/* Review change: the Status column's heading and dots sit 20px left of the column's centre */
+.hc-c79-table__row > span:nth-child(3) { padding-right: 40px; }
+/* Review change: Month / Year sits in the heading row right after "Spent of budget · Nov" */
+.hc-c79-table__spent-head { align-items: center; gap: var(--hc-space-2); white-space: nowrap; }
+.hc-c79-chips--head { display: inline-flex; gap: 4px; margin-left: auto; } /* review change: right-aligned, so it stays put when the label changes */
+
+/* Review change: the status dot's tooltip: a small dark card to the right of the dot, centred on it, shown on hover or
+   keyboard focus; the status in bold, then what it's about */
+.hc-c79-issue { position: relative; outline: none; }
+.hc-c79-issue:focus-visible { box-shadow: var(--hc-focus-ring); }
+.hc-c79-tip {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: max-content;
+  max-width: 240px;
+  padding: 8px 10px;
+  border-radius: var(--hc-radius-md);
+  background: var(--hc-text);
+  color: var(--hc-page);
+  font: 400 12px/16px var(--hc-font);
+  text-align: left;
+  white-space: normal;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.25);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-4px, -50%);
+  transition: opacity 0.12s ease, transform 0.12s ease, visibility 0.12s;
+  pointer-events: none;
+}
+.hc-c79-tip::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  transform: translateY(-50%) rotate(45deg);
+}
+.hc-c79-tip__title { font-weight: 600; }
+.hc-c79-tip__detail { white-space: pre-line; } /* a building's issues, one per line */
+.hc-c79-issue:hover .hc-c79-tip,
+.hc-c79-issue:focus-visible .hc-c79-tip { opacity: 1; visibility: visible; transform: translate(0, -50%); }
+@media (prefers-reduced-motion: reduce) { .hc-c79-tip { transition: none; } }
+
+/* Review change: Month / Year option in the Spent tile, right-aligned in its label row */
+.hc-c79-spent-tile__head { display: flex; align-items: center; gap: var(--hc-space-2); min-height: 24px; }
+
+/* Review change: the property page's Plan row: the account's plan as text with a Change in Billing link */
+.hc-c79-billing__plan { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; }
+
+/* Review change: the Tenants table on a property's page, built like the Doors table on Add property: a heading, then a
+   card with a muted heading row, the property's row and an indented, tinted row per tenant (20px padding both sides) */
+.hc-c79-tenants { display: flex; flex-direction: column; gap: var(--hc-space-3); }
+.hc-c79-tenants h2 { margin: 0; }
+.hc-c79-tenants__table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  overflow: hidden;
+}
+.hc-c79-tenants__row {
+  display: grid;
+  /* Review change: Property, Access windows, Tenancy */
+  grid-template-columns: minmax(0, 1fr) 160px 104px;
+  align-items: center;
+  gap: var(--hc-space-3);
+  padding: 20px;
+  border-top: 1px solid var(--hc-border);
+  font: 400 14px/20px var(--hc-font);
+  color: var(--hc-text);
+}
+.hc-c79-tenants__row > span { display: flex; min-width: 0; }
+.hc-c79-tenants__row > span:last-child { justify-content: flex-end; }
+.hc-c79-tenants__row--head { padding-block: 10px; border-top: 0; font: 600 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+.hc-c79-tenants__address { font: 600 12px/18px var(--hc-font); }
+.hc-c79-tenants__row--unit { padding-block: 12px; background: color-mix(in srgb, var(--hc-tint) 40%, transparent); }
+.hc-c79-tenants__unit { align-items: center; gap: var(--hc-space-2); padding-left: var(--hc-space-4); }
+.hc-c79-tenants__unit-name { font: 600 12px/18px var(--hc-font); white-space: nowrap; }
+.hc-c79-tenants__unit-tenant { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hc-mobile-shell .hc-c79-tenants__row { padding-inline: var(--hc-space-3); }
+.hc-mobile-shell .hc-c79-tenants__unit { padding-left: var(--hc-space-2); }
+
+/* Review change: Edit pill on each unit in the Tenants table (opens its Tenants & access dialog) */
+.hc-c79-tenants__edit { flex: none; display: inline-flex; padding: 0; border: 0; border-radius: var(--hc-radius-pill); background: none; cursor: pointer; }
+.hc-c79-tenants__edit:hover .hc-status-pill { filter: brightness(0.95); }
+:root[data-theme='dark'] .hc-c79-tenants__edit:hover .hc-status-pill { filter: brightness(1.2); }
+.hc-c79-tenants__edit:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+/* Review change: the Property rules card's heading row: icon, title, Show rules / Hide rules on the right */
+.hc-c79-detail__setup-head { display: flex; align-items: center; gap: var(--hc-space-3); align-self: stretch; }
+.hc-c79-detail__setup-head h2 { flex: 1; margin: 0; }
+.hc-c79-detail__rules-body { display: flex; flex-direction: column; gap: var(--hc-space-2); align-self: stretch; padding-top: var(--hc-space-2); }
+/* Review change: Show rules / Hide rules centred in the heading row (no leftover top margin from the setup card) */
+.hc-c79-detail__setup-head .hc-button { margin-top: 0; }
+
+/* Review change: the Property rules card animates open and closed: the rules' height slides between 0 and their own
+   height (set by Collapse) and they fade in */
+.hc-c79-detail__rules-wrap { align-self: stretch; overflow: hidden; opacity: 0; transition: height 0.28s ease, opacity 0.2s ease; }
+.hc-c79-detail__rules-wrap.is-open { opacity: 1; }
+/* The card's gap would leave space under the heading row while closed; the open body adds its own top padding */
+.hc-c79-detail__rules-card { gap: 0; }
+.hc-c79-detail__rules-card .hc-c79-detail__rules-body { padding-top: var(--hc-space-3); }
+@media (prefers-reduced-motion: reduce) {
+  .hc-c79-detail__rules-wrap { transition: none; }
+}
+/* The page column is a fixed-height flex column: don't let it squeeze a collapsible section (its clipped content has
+   no minimum height) */
+.hc-c79-detail > section { flex-shrink: 0; }
+
+/* Review change: the Jobs card on a property's page: groups like the Jobs page, a row per job (opens it on Jobs) */
+.hc-c79-jobs { gap: var(--hc-space-3); }
+.hc-c79-jobs h2,
+.hc-c79-jobs h3 { margin: 0; }
+.hc-c79-jobs__head { display: flex; align-items: center; justify-content: space-between; gap: var(--hc-space-3); }
+.hc-c79-jobs__group { display: flex; flex-direction: column; gap: var(--hc-space-2); }
+.hc-c79-jobs__group-title { padding-bottom: var(--hc-space-1); font-weight: 600; }
+
+/* Review change: the Jobs page's sections inside the property page's Jobs card */
+.hc-c79-jobs .hc-c86-embedded { display: flex; flex-direction: column; gap: var(--hc-space-5); }
+
+/* Review change: the address row with a single tenant's name and Edit after it */
+.hc-c79-tenants__address { align-items: center; gap: var(--hc-space-2); }
+.hc-c79-tenants__address .hc-c79-tenants__unit-tenant { font-weight: 400; }
+
+/* Review change: the Access windows column (12px, muted when not set) */
+.hc-c79-tenants__windows { font: 400 12px/18px var(--hc-font); color: var(--hc-text-muted); white-space: nowrap; }
+/* A phone has no room for it */
+.hc-mobile-shell .hc-c79-tenants__row { grid-template-columns: minmax(0, 1fr) auto; }
+.hc-mobile-shell .hc-c79-tenants__row > :nth-child(2) { display: none; }
+/* Review change: a unit's page (View on a tenant): the tenant card and the phone jobs list */
+.hc-c79-unit__tenant { gap: var(--hc-space-3); }
+.hc-c79-unit__tenant h2 { margin: 0; }
+.hc-c79-unit__tenant > .hc-tenants-access__view,
+.hc-c79-unit__tenant > p { align-self: stretch; }
+.hc-c79-unit__job { display: flex; align-items: center; justify-content: space-between; gap: var(--hc-space-3); padding: 12px 0; border: 0; border-top: 1px solid var(--hc-border); background: none; color: var(--hc-text); text-align: left; cursor: pointer; }
+/* Review change: the Show / Hide buttons on the property page's collapsible cards are all one width, so they line up */
+.hc-c79-detail__setup-head .hc-button { min-width: 132px; justify-content: center; }
+
+/* Review change: the property page's sections as tabs under the dashboard cards: a row of tabs across the page (the
+   chosen one underlined), then that tab's content, fading in */
+.hc-c79-tabs {
+  display: flex;
+  gap: var(--hc-space-1);
+  border-bottom: 1px solid var(--hc-border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.hc-c79-tabs::-webkit-scrollbar { display: none; }
+.hc-c79-tab {
+  flex: 1 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hc-space-2);
+  padding: 12px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  background: none;
+  color: var(--hc-text-muted);
+  font: 600 14px/20px var(--hc-font);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.hc-c79-tab:hover { color: var(--hc-text); }
+.hc-c79-tab.is-selected { color: var(--hc-text); border-bottom-color: var(--hc-primary); }
+.hc-c79-tab:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: 6px 6px 0 0; }
+.hc-c79-tab__count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-tint);
+  color: var(--hc-text-muted);
+  font: 600 12px/20px var(--hc-font);
+  text-align: center;
+}
+.hc-c79-tab.is-selected .hc-c79-tab__count { background: var(--hc-info-bg); color: var(--hc-info); }
+.hc-c79-tabpanel { display: flex; flex-direction: column; gap: var(--hc-space-3); animation: hc-c79-tab-in 0.2s ease; }
+@keyframes hc-c79-tab-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .hc-c79-tabpanel { animation: none; } }
+.hc-c79-tabcard { gap: var(--hc-space-3); }
+.hc-c79-tabcard > p { margin: 0; }
+.hc-mobile-shell .hc-c79-tab { flex: 0 0 auto; padding-inline: 10px; }
+/* All six tabs fit across the page: tighter padding, and they share the width */
+.hc-c79-tabs { gap: 0; }
+.hc-c79-tab { flex: 1 1 auto; padding: 12px 8px; gap: 6px; }
+
+/* Review change: folder-style tabs. The selected tab has the card colour and the card's border on three sides, and joins
+   the content card right under it (the content sits in one card whose top edge is the tab row's line). */
+.hc-c79-tabs { align-items: flex-end; border-bottom-color: var(--hc-border); }
+.hc-c79-tab {
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: var(--hc-radius-lg) var(--hc-radius-lg) 0 0;
+  margin-bottom: 0;
+}
+.hc-c79-tab.is-selected {
+  position: relative;
+  border-color: var(--hc-border);
+  background: var(--hc-card);
+}
+/* Covers the tab row's line under the selected tab, so tab and card read as one */
+.hc-c79-tab.is-selected::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--hc-card);
+}
+.hc-c79-tab:hover:not(.is-selected) { background: color-mix(in srgb, var(--hc-card) 50%, transparent); }
+/* The content card: right under the tabs (no page gap), no top border (the tab row's line is its top edge) */
+.hc-c79-tabpanel {
+  margin-top: calc(-1 * var(--hc-space-4));
+  padding: var(--hc-space-4);
+  border: 1px solid var(--hc-border);
+  border-top: 0;
+  border-radius: 0 0 var(--hc-radius-lg) var(--hc-radius-lg);
+  background: var(--hc-card);
+}
+/* The sections inside no longer need their own card */
+.hc-c79-tabpanel > .hc-c79-card { padding: 0; border: 0; border-radius: 0; background: none; }
+/* Review change: no line under the active tab. The tab row's line is drawn inside the row (an inset shadow) so the
+   active tab's own background sits on top of it and hides it there; elsewhere it's the content card's top edge. */
+.hc-c79-tabs { border-bottom: 0; box-shadow: inset 0 -1px 0 var(--hc-border); }
+.hc-c79-tab.is-selected::after { content: none; }
+/* Review change: the content card has the same 12px radius on all four corners. Its own top border is the line under
+   the tabs; the tabs start 12px in (clear of the rounded corner) and sit on top of that border by 1px, so the active
+   tab's background hides the border under it and joins the card. */
+.hc-c79-tabs { position: relative; z-index: 1; padding: 0 var(--hc-radius-lg); box-shadow: none; }
+.hc-c79-tabpanel {
+  border-top: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  margin-top: calc(-1 * var(--hc-space-4) - 1px);
+}
+/* Review change: more room inside the tab content card (24px, was 16px) */
+.hc-c79-tabpanel { padding: var(--hc-space-5); }
+.hc-mobile-shell .hc-c79-tabpanel { padding: var(--hc-space-4); }
+/* Review change: the tab row is detached from the content card: tabs sit on their own (no line under the row), the
+   chosen one is a rounded card-coloured chip with a full border, and the content card sits below with the page's
+   normal gap and its own full border */
+.hc-c79-tabs { padding: 0; gap: var(--hc-space-1); box-shadow: none; border-bottom: 0; align-items: center; }
+.hc-c79-tab { border: 1px solid transparent; border-radius: var(--hc-radius-lg); padding: 10px 12px; }
+.hc-c79-tab.is-selected { border-color: var(--hc-border); }
+.hc-c79-tabpanel { margin-top: 0; border-top: 1px solid var(--hc-border); }
+.hc-c79-tabs { gap: 2px; }
+.hc-c79-tab { padding: 10px 8px; }
+/* Review change: the tabs animate subtly: colour, background and border ease in on hover and selection, a hovered
+   tab lifts 1px, and a click presses it in slightly. Off for people who prefer reduced motion. */
+.hc-c79-tab {
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, transform 0.12s ease;
+}
+.hc-c79-tab:hover:not(.is-selected) { transform: translateY(-1px); }
+.hc-c79-tab:active { transform: scale(0.97); }
+.hc-c79-tab__count { transition: background-color 0.15s ease, color 0.15s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .hc-c79-tab,
+  .hc-c79-tab__count { transition: none; }
+  .hc-c79-tab:hover:not(.is-selected),
+  .hc-c79-tab:active { transform: none; }
+}
+/* Review change: going from one tab to another, the card-coloured chip fades out of the old tab and fades into the
+   new one (background, border and label colour ease over 0.3s) */
+.hc-c79-tab { transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, transform 0.12s ease; }
+.hc-c79-tab__count { transition: background-color 0.3s ease, color 0.3s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .hc-c79-tab,
+  .hc-c79-tab__count { transition: none; }
+}
+/* Review change: a tenant row in the Tenants tab opens its unit's page */
+.hc-c79-tenants__row--link { cursor: pointer; }
+.hc-c79-tenants__row--link:hover { background: color-mix(in srgb, var(--hc-tint) 70%, transparent); }
+.hc-c79-tenants__row--link:focus-visible { outline: 2px solid var(--hc-info); outline-offset: -2px; }
+
+/* Review change: Remove property at the very bottom of a property's page, on the left, under a line */
+.hc-c79-remove { display: flex; justify-content: flex-start; padding-top: var(--hc-space-4); border-top: 1px solid var(--hc-border); }
+
+/* Review change: Remove property sits at the bottom of the Details tab, on the right */
+.hc-c79-remove { justify-content: flex-end; align-self: stretch; margin-top: var(--hc-space-2); }

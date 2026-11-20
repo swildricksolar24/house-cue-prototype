@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent, type R
 import { Button } from '../../components/Button/Button';
 import { Input } from '../../components/Input/Input';
 import { Select } from '../../components/Select/Select';
+import { DatePicker } from '../../components/DatePicker/DatePicker';
 import { usePrototype } from '../prototype/PrototypeContext';
 import { DialogClose } from './DialogClose';
 import './EditDialog.css';
@@ -11,6 +12,8 @@ const FIELD_SELECTOR = 'input:not([type=file]), select, textarea';
 
 export type EditField =
   | { kind: 'select'; options: string[] }
+  /** Review change: a day from the HC/Date Picker calendar; its value is YYYY-MM-DD */
+  | { kind: 'date'; placeholder?: string }
   | { kind: 'text' | 'number' | 'email' | 'password'; placeholder?: string };
 
 export type FormDialogField = {
@@ -84,7 +87,7 @@ export function FormDialog({ title, description, fields, values, submitLabel = '
     const clean = Object.fromEntries(fields.map((f) => [f.key, (draft[f.key] ?? '').trim()]));
     const missing: Record<string, string> = {};
     for (const f of fields) {
-      if (!f.optional && !clean[f.key]) missing[f.key] = f.field.kind === 'select' ? 'Choose an option.' : 'Enter a value.';
+      if (!f.optional && !clean[f.key]) missing[f.key] = f.field.kind === 'select' ? 'Choose an option.' : f.field.kind === 'date' ? 'Choose a date.' : 'Enter a value.';
       else if (clean[f.key] && f.validate) {
         const err = f.validate(clean[f.key]);
         if (err) missing[f.key] = err;
@@ -139,7 +142,16 @@ export function FormDialog({ title, description, fields, values, submitLabel = '
         </div>
         {children}
         {fields.map((f) =>
-          f.field.kind === 'select' ? (
+          f.field.kind === 'date' ? (
+            <DatePicker
+              key={f.key}
+              label={f.optional ? `${f.label} (optional)` : f.label}
+              placeholder={f.field.placeholder}
+              value={draft[f.key] ?? ''}
+              onValueChange={change(f.key)}
+              error={errors[f.key]}
+            />
+          ) : f.field.kind === 'select' ? (
             <Select
               key={f.key}
               label={f.optional ? `${f.label} (optional)` : f.label}

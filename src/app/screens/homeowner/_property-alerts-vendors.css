@@ -1,0 +1,52 @@
+/* Review change: Alerts and Vendors & Contractors cards on a property's page */
+.hc-pav { gap: var(--hc-space-3); }
+.hc-pav h2,
+.hc-pav h3,
+.hc-pav p { margin: 0; }
+.hc-pav__head { display: flex; align-items: center; gap: var(--hc-space-3); align-self: stretch; }
+.hc-pav__head h2 { flex: none; }
+.hc-pav__list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; align-self: stretch; }
+.hc-pav__row { display: flex; align-items: center; gap: var(--hc-space-3); padding: 12px 0; border-top: 1px solid var(--hc-border); }
+.hc-pav__row > .hc-status-pill:first-child { flex: none; min-width: 84px; justify-content: center; }
+.hc-pav__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.hc-pav__action { flex: none; display: inline-flex; padding: 0; border: 0; border-radius: var(--hc-radius-pill); background: none; cursor: pointer; }
+.hc-pav__action:hover .hc-status-pill { filter: brightness(0.95); }
+:root[data-theme='dark'] .hc-pav__action:hover .hc-status-pill { filter: brightness(1.2); }
+.hc-pav__action:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+/* Vendors: name and what they did, then trade, rating and phone in fixed columns */
+.hc-pav__group { display: flex; flex-direction: column; gap: var(--hc-space-1); align-self: stretch; }
+.hc-pav__group-title { font-weight: 600; }
+.hc-pav__row--vendor { display: grid; grid-template-columns: minmax(0, 1fr) 104px 48px 120px; }
+.hc-pav__row--vendor > .hc-status-pill { justify-self: start; }
+.hc-pav__meta { color: var(--hc-text-muted); white-space: nowrap; }
+.hc-pav__meta:last-child { text-align: right; }
+.hc-mobile-shell .hc-pav__row { flex-wrap: wrap; }
+.hc-mobile-shell .hc-pav__row--vendor { grid-template-columns: minmax(0, 1fr) auto; }
+.hc-mobile-shell .hc-pav__row--vendor > .hc-pav__meta { grid-column: 1 / -1; text-align: left; }
+
+/* Review change: Show / Hide on the right of the heading row */
+.hc-pav__toggle { margin-left: auto; }
+.hc-pav .hc-c79-detail__rules-body { gap: var(--hc-space-3); }
+/* Review change: no extra space under the last row of an open card (the card's own padding is enough) */
+.hc-pav__list > .hc-pav__row:last-child { padding-bottom: 0; }
+.hc-pav__toggle { min-width: 132px; justify-content: center; }
+/* Review change: as tab content (no card of its own), the notices / vendor groups stack with space between them */
+.hc-pav { display: flex; flex-direction: column; gap: var(--hc-space-4); align-self: stretch; }
+
+/* Review change: Lifecycle Notices and Vendors as tables with a header row, like the Tenants and Jobs tabs */
+.hc-pav__table { display: flex; flex-direction: column; border: 1px solid var(--hc-border); border-radius: var(--hc-radius-lg); overflow: hidden; }
+.hc-pav__table > .hc-pav__row { display: grid; align-items: center; gap: var(--hc-space-3); padding: 12px 16px; border-top: 1px solid var(--hc-border); }
+.hc-pav__table > .hc-pav__row:last-child { padding-bottom: 12px; }
+.hc-pav__table > .hc-pav__row--head { border-top: 0; padding-block: 10px; font: 600 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+.hc-pav__table > .hc-pav__row > span { display: flex; min-width: 0; }
+.hc-pav__table > .hc-pav__row--notice { grid-template-columns: 96px minmax(0, 1fr) 96px; }
+.hc-pav__table > .hc-pav__row--notice > :last-child { justify-content: flex-end; }
+.hc-pav__table > .hc-pav__row--vendor { grid-template-columns: minmax(0, 1fr) 112px 56px 120px; }
+.hc-pav__table > .hc-pav__row--vendor > :last-child { justify-content: flex-end; }
+.hc-pav__table > .hc-pav__row--group { display: block; padding-block: 8px; background: color-mix(in srgb, var(--hc-tint) 40%, transparent); font-weight: 600; }
+.hc-pav__table .hc-pav__text { flex-direction: column; }
+.hc-mobile-shell .hc-pav__table > .hc-pav__row--notice { grid-template-columns: auto minmax(0, 1fr); }
+.hc-mobile-shell .hc-pav__table > .hc-pav__row--notice > :last-child { grid-column: 2; justify-content: flex-start; }
+.hc-mobile-shell .hc-pav__table > .hc-pav__row--vendor { grid-template-columns: minmax(0, 1fr) auto; }
+.hc-mobile-shell .hc-pav__table > .hc-pav__row--vendor > :nth-child(n + 3) { grid-column: 1 / -1; justify-content: flex-start; }
+.hc-mobile-shell .hc-pav__table > .hc-pav__row--head > :nth-child(n + 3) { display: none; }

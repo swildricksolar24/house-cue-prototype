@@ -21,7 +21,7 @@ type KnownVendor = {
   nextShort: string;
 };
 
-const KNOWN_VENDORS: Record<KnownVendorTrade, KnownVendor[]> = {
+export const KNOWN_VENDORS: Record<KnownVendorTrade, KnownVendor[]> = {
   Plumbing: [
     { id: 'sonoran', name: 'Sonoran Plumbing Co.', rating: 4.8, jobs: 3, usual: '$160–$240', next: 'Tomorrow · 10 AM–noon', nextShort: 'tomorrow 10 AM–noon' },
     { id: 'roadrunner', name: 'Roadrunner Rooter', rating: 4.6, jobs: 1, usual: '$190–$280', next: 'Thu · 1–3 PM', nextShort: 'Thursday 1–3 PM' },

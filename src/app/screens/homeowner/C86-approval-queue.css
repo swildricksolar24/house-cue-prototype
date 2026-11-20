@@ -68,7 +68,12 @@
 .hc-c86-table__row {
   display: grid;
   /* Review changes: Property (170px) first, then Report (fills the rest), Estimate, Waiting, and the View button */
-  grid-template-columns: 170px minmax(0, 1fr) 110px 90px 100px;
+  /* Review change: Property, Job, Status, When, and the message icon on the right (no View column: click a row) */
+  /* Review change: Property takes all the spare width; the other columns are as narrow as their content allows */
+  /* Review change: each column is as wide as its widest content (property 140px, job tag 172px, status tag 122px,
+     When 124px, icon 36px) and the spare width is shared out evenly between the columns, so the spacing is equal */
+  grid-template-columns: 140px 172px 122px 124px 36px;
+  justify-content: space-between;
   gap: var(--hc-space-3);
   align-items: center;
   padding: var(--hc-space-3) var(--hc-space-4);
@@ -173,7 +178,7 @@
   .hc-c86-table__row--link { transition: none; }
 }
 /* Narrow windows: two columns of details */
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .hc-c86-details__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 /* "Approve & get quotes" is longer than the equal-width Action Card buttons allow */
@@ -197,5 +202,57 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  /* Review change: the conversation line sits on the right, under the message icon's column */
+  justify-content: flex-end;
   gap: var(--hc-space-3);
 }
+
+/* Review change: the jobs in four sections down the page, each with a heading, a count, a short note and its table */
+.hc-c86-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-3);
+  margin-top: var(--hc-space-2);
+}
+.hc-c86-section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--hc-space-2) var(--hc-space-3);
+}
+.hc-c86-section__count {
+  display: inline-block;
+  min-width: 24px;
+  margin-left: var(--hc-space-1);
+  padding: 0 8px;
+  border-radius: var(--hc-radius-pill);
+  background: var(--hc-tint);
+  color: var(--hc-text-muted);
+  font: 600 13px/22px var(--hc-font);
+  text-align: center;
+  vertical-align: 2px;
+}
+.hc-c86-section__note { flex: 1; min-width: 200px; }
+.hc-c86-section__head .hc-button { align-self: center; }
+.hc-c86-section__empty {
+  margin: 0;
+  padding: var(--hc-space-4);
+  border: 1px dashed var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+}
+
+/* Review change: the When column is smaller than the rest of the row (12px, was 14px) */
+.hc-c86-table__when { font-size: 12px; line-height: 16px; white-space: nowrap; }
+/* Review change: tags and property names never wrap, so every row is the same height */
+.hc-c86-table__row--link > :first-child,
+.hc-c86-table__row--link .hc-status-pill { white-space: nowrap; }
+
+/* Review change: the message icon, alone in the last column on the right (36px wide pill) */
+.hc-c86-table__chat-cell { display: flex; justify-content: flex-end; }
+.hc-c86-table__chat-cell .hc-c86-table__chat { flex: none; width: 36px; min-width: 0; padding: 3px; justify-content: center; }
+/* Review change: on a property's page (no header row) the first job has no divider line above it, and the list has no
+   extra space at the top */
+.hc-c86-embedded .hc-c86-table > .hc-c86-table__row:first-child { border-top: 0; }
+/* Review change: a job's address (Property cell) uses the same style as addresses in the Portfolio and Tenants tables:
+   12px semibold (was 14px regular). On the Jobs page and on a property's page. */
+.hc-c86-table__row--link > :first-child { font: 600 12px/18px var(--hc-font); }

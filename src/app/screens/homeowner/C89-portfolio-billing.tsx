@@ -21,7 +21,7 @@ import { EditableRow, isEmail } from './_editable-row';
 import { cardLabel, PaymentMethodEditor, SAMPLE_CARDS } from './_payment-method-editor';
 import { DetailRow } from '../../../components/DetailRow/DetailRow';
 import './C89-portfolio-billing.css';
-import { useCompanyName } from '../../prototype/portfolio';
+import { setPortfolioPlan, useCompanyName, usePortfolioPlan } from '../../prototype/portfolio';
 
 /**
  * Review change: the Plan table's items are dropdowns: the plan (Portfolio monthly or yearly) and how many doors are
@@ -54,7 +54,9 @@ export default function PortfolioBilling(_: ScreenProps) {
   // Review change: opened from Settings' Portfolio billing card (?from=settings): Back returns there
   const fromSettings = useSearchParams()[0].get('from') === 'settings';
   // Review change: the plan and doors chosen in the Plan table
-  const [planKey, setPlanKey] = useState<PlanKey>('monthly');
+  // Review change: the plan is the account's (shared with Add property and the property pages, which link here to change it)
+  const planKey: PlanKey = usePortfolioPlan();
+  const setPlanKey = setPortfolioPlan;
   const [doors, setDoors] = useState(9);
   const plan = PLANS[planKey];
   const money = planKey === 'monthly' ? usd2 : usd;

@@ -327,9 +327,8 @@ html { scrollbar-gutter: stable; }
   color: var(--hc-success);
 }
 
-/* Review change: every page title is in ALL CAPS (each screen's h1, including the mobile header's title). Done in CSS,
-   so the copy stays in sentence case in the code and screen readers read it normally; a little tracking for caps. */
+/* Review change: every page title is in Title Case, each word capitalised (each screen's h1, including the mobile
+   header's title; was ALL CAPS). Done in CSS, so the copy stays in sentence case in the code. */
 h1 {
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  text-transform: capitalize;
 }

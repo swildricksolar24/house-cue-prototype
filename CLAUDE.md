@@ -9,7 +9,7 @@ House Cue is a clickable design prototype of HouseCue.ai, built from the Figma f
 - Figma source: [Claude — House Cue](https://www.figma.com/design/6kMDFUNggxvrwZN0ccl7FG/Claude--House-Cue), file key `6kMDFUNggxvrwZN0ccl7FG`. Pages: 00 Cover & Index (screen inventory and batch table), 01 Foundations (tokens, type, grids, HC/* components), Brand — Logo, batch pages B1–B16 / W2 / W3 (every screen: Mobile/Web × Light/Dark plus state frames), journey pages J1–J5 (screens in workflow order).
 - Git remote: `origin` → https://github.com/swildricksolar24/house-cue-prototype (public), branch `main`
 - Live site: every push to `main` runs `.github/workflows/pages.yml` (type check, then build) and publishes to GitHub Pages — prototype at https://swildricksolar24.github.io/house-cue-prototype/ (built with `APP_BASE=/house-cue-prototype/`; a copy of `index.html` is `404.html`, so deep links load) and Storybook at https://swildricksolar24.github.io/house-cue-prototype/storybook/. A type error stops the deploy.
-- Built so far: all 49 HC components and every J1 Homeowner journey step (14 journeys, 106 steps, 92 screens) in mobile and web. J2 Vendor, J3 Support, J4 Admin, J5 Cross-role and Waves W2/W3 outside J1 are not built.
+- Built so far: all 49 HC components and every J1 Homeowner journey step (14 journeys, 105 steps, 91 screens; C81 Property rules was removed, its rules live on the property page) in mobile and web. J2 Vendor, J3 Support, J4 Admin, J5 Cross-role and Waves W2/W3 outside J1 are not built.
 
 ## Commands
 

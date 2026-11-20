@@ -21,10 +21,11 @@ import { useOptionalFlow } from './flow';
 import { screenPath } from './journeys';
 import { usePrototype } from './PrototypeContext';
 
-/** Review change: the demo accounts on the shortcuts panel, always listed in this order; each opens its own sign in */
+/** Review change: the demo accounts on the shortcuts panel, always listed in this order (Landlord first, review change);
+ *  each opens its own sign in */
 const DEMO_ACCOUNTS: { label: string; who: SignedInAs }[] = [
-  { label: 'Homeowner Demo', who: 'homeowner' },
   { label: 'Landlord Demo', who: 'landlord' },
+  { label: 'Homeowner Demo', who: 'homeowner' },
 ];
 
 /** Review change: every button on the shortcuts panel looks like Homeowner Demo (primary, default size, full width) */

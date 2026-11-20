@@ -10,6 +10,7 @@ All HouseCue (HC/*) components in `src/components/<Name>/<Name>.tsx`. Each has s
 - **Button** `{ variant?: 'primary'|'secondary'|'tertiary'|'destructive'|'link', size?: 'small'|'medium'|'large', leadingIcon?, trailingIcon?, icon? (icon-only, needs aria-label), loading?, fullWidth?, to? }` + button attrs. Medium 44 default; Large 52 for onboarding/hero CTAs.
 - **Input** `{ label, hideLabel?, type?: 'text'|'email'|'phone'|'number'|'code'|'search'|'multiline', size?: 'medium'|'large', helper?, error?, value?/defaultValue?, onValueChange?, leadingIcon?, trailingAction?, rows? }` + input attrs (readOnly, disabled).
 - **Select** `{ label, hideLabel?, options: {value,label,disabled?}[], placeholder?, value?/defaultValue?, onValueChange?, size?, helper?, error? }`
+- **DatePicker** `{ label, hideLabel?, value? (YYYY-MM-DD), onValueChange?, placeholder?, helper?, error?, disabled?, today? }` — HC/Input field that opens a month calendar (no Figma frame yet); helpers `formatIsoDate`, `parseDisplayDate`. FormDialog fields take `kind: 'date'`.
 - **CodeEntry** `{ label?, helper?, error?, length?=6, value?/defaultValue?, onValueChange?, onComplete? }`
 - **Checkbox** `{ label?, hideLabel?, indeterminate?, error? }` + checkbox attrs
 - **Radio** `{ label?, error? }` + radio attrs (group with `name`)

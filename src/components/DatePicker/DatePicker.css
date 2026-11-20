@@ -1,0 +1,80 @@
+/* HC/Date Picker (review change) — the HC/Input field as a button, with a month calendar under it */
+.hc-date-picker { position: relative; }
+.hc-date-picker__field {
+  width: 100%;
+  font: 400 14px/20px var(--hc-font);
+  text-align: left;
+  cursor: pointer;
+}
+.hc-date-picker__field:focus-visible {
+  outline: none;
+  border-color: var(--hc-primary);
+  box-shadow: inset 0 0 0 1px var(--hc-primary);
+}
+.hc-date-picker__value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hc-date-picker__value--placeholder { color: var(--hc-text-muted); }
+
+/* The calendar: a card under the field, above what follows it */
+.hc-date-picker__popover {
+  position: absolute;
+  top: calc(100% + var(--hc-space-1));
+  left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hc-space-2);
+  width: 296px;
+  padding: var(--hc-space-3);
+  border: 1px solid var(--hc-border);
+  border-radius: var(--hc-radius-lg);
+  background: var(--hc-card);
+  box-shadow: 0 8px 24px color-mix(in srgb, #000 18%, transparent);
+}
+/* With helper or error text under the field, the calendar opens right under the field itself */
+.hc-date-picker:has(.hc-input__helper, .hc-input__error) .hc-date-picker__popover { top: calc(20px + 6px + 44px + var(--hc-space-1)); }
+.hc-date-picker__head { display: flex; align-items: center; justify-content: space-between; }
+.hc-date-picker__month { font: 600 14px/20px var(--hc-font); color: var(--hc-text); }
+.hc-date-picker__nav {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+}
+.hc-date-picker__nav::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  background: var(--hc-text);
+  -webkit-mask: url('../Select/assets/chevron-down.svg') center / 20px 20px no-repeat;
+  mask: url('../Select/assets/chevron-down.svg') center / 20px 20px no-repeat;
+}
+.hc-date-picker__nav--prev::before { transform: rotate(90deg); }
+.hc-date-picker__nav--next::before { transform: rotate(-90deg); }
+.hc-date-picker__nav:hover { background: var(--hc-tint); }
+.hc-date-picker__nav:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+
+.hc-date-picker__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.hc-date-picker__dow { display: flex; justify-content: center; padding-block: 4px; font: 600 12px/18px var(--hc-font); color: var(--hc-text-muted); }
+.hc-date-picker__day {
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--hc-radius-pill);
+  background: transparent;
+  color: var(--hc-text);
+  font: 400 14px/20px var(--hc-font);
+  cursor: pointer;
+}
+.hc-date-picker__day:hover { background: var(--hc-tint); }
+.hc-date-picker__day:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); }
+.hc-date-picker__day.is-today { box-shadow: inset 0 0 0 1px var(--hc-border-strong); font-weight: 600; }
+.hc-date-picker__day.is-chosen,
+.hc-date-picker__day.is-chosen:hover { background: var(--hc-primary); color: var(--hc-on-primary); font-weight: 600; }
+
+.hc-date-picker__foot { display: flex; justify-content: space-between; padding-top: var(--hc-space-1); border-top: 1px solid var(--hc-border); }
+.hc-date-picker__link { padding: 4px 0; border: 0; background: none; color: var(--hc-info); font: 600 12px/18px var(--hc-font); cursor: pointer; }
+.hc-date-picker__link:focus-visible { outline: none; box-shadow: var(--hc-focus-ring); border-radius: 4px; }

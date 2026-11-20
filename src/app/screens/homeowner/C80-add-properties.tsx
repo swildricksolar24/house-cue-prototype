@@ -10,12 +10,13 @@ import { NumberStepper } from '../../../components/NumberStepper/NumberStepper';
 import { Icon, type IconName } from '../../../components/Icon/Icon';
 import { StatusPill } from '../../../components/StatusPill/StatusPill';
 import { Select } from '../../../components/Select/Select';
-import { Switch } from '../../../components/Switch/Switch';
 import { Upload } from '../../../components/Upload/Upload';
 import { useDemoActions } from '../../prototype/DemoTools';
 import { portfolioProperties } from '../../data/sample';
 import { useFlow } from '../../prototype/flow';
-import { addProperties, BILLING_PLAN_OPTIONS, BILLING_START_OPTIONS, splitAddress } from '../../prototype/portfolio';
+import { addProperties, BILLING_START_OPTIONS, doorName, EMPTY_DETAILS, resizeDoors, splitAddress, usePortfolioPlan, type DoorTenancy, type Invitee, type PropertyDetails } from '../../prototype/portfolio';
+import { PropertyDetailsEditor } from './_property-details';
+import { isEmail } from './_editable-row';
 import { usePrototype } from '../../prototype/PrototypeContext';
 import { screenPath } from '../../prototype/journeys';
 import { MobileShell } from '../../shells/MobileShell';
@@ -41,7 +42,6 @@ const nextCycle = (units: number) => `$${(9.99 + 2 * (PORTFOLIO_DOORS + units)).
 type BillingPlan = 'monthly' | 'yearly';
 type BillingStart = 'next' | 'today';
 // The options are shared with the property detail page (prototype/portfolio.ts)
-const PLAN_OPTIONS = BILLING_PLAN_OPTIONS;
 const START_OPTIONS = BILLING_START_OPTIONS;
 /** Option label ↔ value, for the Fix this address dialog's drop-downs (FormDialog selects work on labels) */
 const labelOf = (options: { value: string; label: string }[], value: string) => options.find((o) => o.value === value)?.label ?? options[0].label;
@@ -79,7 +79,7 @@ const csvRows = [
  * Review change: what a CSV import "reads" (invented Phoenix-area homes, the same six whatever the file holds). Five
  * import; the Glendale row has no street number and needs a fix (Fix this address opens it on One property).
  */
-type ImportedHome = { address: string; city: string; units: number; occupied: string; fix?: string; fixed?: boolean; plan?: BillingPlan; start?: BillingStart };
+type ImportedHome = { address: string; city: string; units: number; occupied: string; fix?: string; fixed?: boolean; start?: BillingStart };
 const IMPORTED_HOMES: ImportedHome[] = [
   { address: '4521 N 44th St', city: 'Phoenix', units: 1, occupied: 'Yes' },
   { address: '1902 E Apache Blvd', city: 'Tempe', units: 4, occupied: '3 of 4' },
@@ -87,6 +87,26 @@ const IMPORTED_HOMES: ImportedHome[] = [
   { address: '2650 S Arizona Ave', city: 'Chandler', units: 1, occupied: 'No' },
   { address: '8130 E Indian School Rd', city: 'Scottsdale', units: 3, occupied: 'Yes' },
   { address: '59th Ave & Bell', city: 'Glendale', units: 1, occupied: '—', fix: 'No street number' },
+];
+/** An imported row's "Occupied" (Yes, No, "3 of 4") as door tenancy: the first n doors occupied */
+const doorsFromFile = (units: number, occupied: string): DoorTenancy[] => {
+  const n = occupied === 'Yes' ? units : /^(\d+) of/.test(occupied) ? Number(occupied.match(/^(\d+)/)![1]) : 0;
+  return Array.from({ length: units }, (_, i) => (i < n ? 'occupied' : 'vacant'));
+};
+/** Review change: the Monthly budget drop-down (invented amounts); the current value is added if it isn't one of them */
+const BUDGETS = [100, 150, 200, 250, 300, 400, 500, 600, 800, 1000, 1500, 2000];
+const budgetOptions = (current: number) =>
+  [...new Set([...BUDGETS, current])].sort((a, b) => a - b).map((n) => ({ value: String(n), label: `$${n.toLocaleString('en-US')} a month` }));
+/** $500 → "$500"; a unit's share: $500 / 3 → "$166.67" (whole dollars when it divides evenly) */
+const usdWhole = (n: number) => `$${n.toLocaleString('en-US')}`;
+const perUnit = (budget: number, units: number) => {
+  const share = budget / units;
+  return Number.isInteger(share) ? usdWhole(share) : `$${share.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+};
+/** Review change: the Tenancy drop-down on each door row */
+const TENANCY_OPTIONS = [
+  { value: 'vacant', label: 'Vacant' },
+  { value: 'occupied', label: 'Occupied' },
 ];
 const IMPORT_STEPS = ['Reading the file', 'Matching addresses', 'Adding properties'];
 /** How long the processing animation runs before the confirmation */
@@ -106,7 +126,7 @@ export default function AddProperties(_: ScreenProps) {
   const fromPortfolio = params.get('from') === 'portfolio';
   const saveOne = () => {
     const { address: street, city } = splitAddress(address);
-    const added = addProperties([{ address: street, city, units, occupied, billing: { plan, start } }], portfolioProperties);
+    const added = addProperties([{ address: street, city, units, doors, tenants: doors.map((d, i) => (d === 'occupied' ? invitees[i] : undefined)), budget: monthlyBudget, billing: { plan, start }, details }], portfolioProperties);
     if (fromPortfolio) flow.go('C79', "?added=" + added);
     else flow.goNext();
   };
@@ -116,9 +136,9 @@ export default function AddProperties(_: ScreenProps) {
         address: h.address,
         city: h.city,
         units: h.units,
-        occupied: h.occupied !== 'No',
-        // A fixed home keeps the plan / billing start chosen in its dialog
-        billing: h.plan && h.start ? { plan: h.plan, start: h.start } : undefined,
+        doors: doorsFromFile(h.units, h.occupied),
+        // A fixed home keeps the billing start chosen in its dialog (the plan is the account's)
+        billing: h.start ? { plan, start: h.start } : undefined,
       })),
       portfolioProperties,
     );
@@ -130,14 +150,36 @@ export default function AddProperties(_: ScreenProps) {
   const hasAddress = address.trim().length > 0;
   useDemoActions(mode === 'one' ? [{ label: 'Landlord Demo', onClick: () => setAddress(SAMPLE_ADDRESS) }] : []);
   const [units, setUnits] = useState(2);
-  const [occupied, setOccupied] = useState(true);
-  const [plan, setPlan] = useState<BillingPlan>('monthly');
+  // Review change: each door's tenancy (was one Occupied now toggle); the list follows the Units count, new doors vacant
+  const [doors, setDoors] = useState<DoorTenancy[]>(['vacant', 'vacant']);
+  // Review change: the address's monthly budget; null follows the Units count ($100 a door) until one is picked
+  const [budget, setBudget] = useState<number | null>(null);
+  // Review change: Property details (optional, under Doors): imported or typed in, saved with the property
+  const [details, setDetailsDraft] = useState<PropertyDetails>(EMPTY_DETAILS);
+  const monthlyBudget = budget ?? 100 * units;
+  // Review change: tenants invited on occupied doors (by door index): Edit next to "No tenant invited" opens a dialog for
+  // their name and email, and Send invite emails them to join (prototype: nothing is sent)
+  const [invitees, setInvitees] = useState<Record<number, Invitee>>({});
+  const [inviting, setInviting] = useState<number | null>(null);
+  const dropInvitees = (keep: (i: number) => boolean) =>
+    setInvitees((all) => Object.fromEntries(Object.entries(all).filter(([i]) => keep(Number(i)))));
+  const changeUnits = (n: number) => {
+    setUnits(n);
+    setDoors((d) => resizeDoors(d, n));
+    dropInvitees((i) => i < n);
+  };
+  const changeTenancy = (i: number, v: DoorTenancy) => {
+    setDoors((list) => list.map((x, j) => (j === i ? v : x)));
+    if (v === 'vacant') dropInvitees((j) => j !== i);
+  };
+  // Review change: the account's plan (set on Account › Billing), not chosen here
+  const plan = usePortfolioPlan();
   const [start, setStart] = useState<BillingStart>('next');
   /** Several at once: the CSV chosen (none at first) */
   const [csv, setCsv] = useState<{ name: string; size: number; rows: number } | null>(null);
   // Review change: Cancel is off until something is entered or changed (an address, units, occupied, plan, start, or a
   // file); Back to portfolio at the top always leaves
-  const edited = address.trim() !== '' || units !== 2 || !occupied || plan !== 'monthly' || start !== 'next' || csv !== null;
+  const edited = address.trim() !== '' || units !== 2 || doors.some((d) => d !== 'vacant') || budget !== null || details !== EMPTY_DETAILS || start !== 'next' || csv !== null;
 
   /**
    * Review change: Save on Several at once imports the file without leaving the page: the upload box shows a 4-second
@@ -162,7 +204,7 @@ export default function AddProperties(_: ScreenProps) {
   };
   /**
    * Review change: Fix this address opens a dialog (was a jump to One property): the address with a street number, its
-   * units and whether it's occupied. Saving marks the row Fixed; it's counted as imported and added with the others.
+   * units, plan and billing start (doors added vacant). Saving marks the row Fixed; it's counted as imported and added with the others.
    */
   const [fixes, setFixes] = useState<Record<string, ImportedHome>>({});
   const [fixing, setFixing] = useState<ImportedHome | null>(null);
@@ -182,12 +224,11 @@ export default function AddProperties(_: ScreenProps) {
           validate: (v) => (/^\s*\d+\s+\S/.test(v) ? undefined : 'Start with the street number, e.g. 5901 W Bell Rd.'),
         },
         { key: 'units', label: 'Units (doors)', field: { kind: 'select', options: ['1', '2', '3', '4', '5', '6'] } },
-        { key: 'occupied', label: 'Occupied now', field: { kind: 'select', options: ['Yes', 'No'] } },
-        // Review change: the fixed home's Plan and Billing starts, the same options as on One property
-        { key: 'plan', label: 'Plan', field: { kind: 'select', options: PLAN_OPTIONS.map((o) => o.label) } },
+        // Review change: the fixed home's Billing starts, the same options as on One property (the plan is the account's,
+        // set on Account › Billing, so there's no Plan question here any more)
         { key: 'start', label: 'Billing starts', field: { kind: 'select', options: START_OPTIONS.map((o) => o.label) } },
       ]}
-      values={{ address: `${fixing.address}, ${fixing.city}, AZ`, units: String(fixing.units), occupied: fixing.occupied === 'No' ? 'No' : 'Yes', plan: labelOf(PLAN_OPTIONS, fixing.plan ?? plan), start: labelOf(START_OPTIONS, fixing.start ?? start) }}
+      values={{ address: `${fixing.address}, ${fixing.city}, AZ`, units: String(fixing.units), start: labelOf(START_OPTIONS, fixing.start ?? start) }}
       submitLabel="Save address"
       countsAsEdit={false}
       onSave={(v) => {
@@ -198,9 +239,9 @@ export default function AddProperties(_: ScreenProps) {
             address: street,
             city: city || fixing.city,
             units: Number(v.units),
-            occupied: v.occupied,
+            // Review change: no Occupied now question here any more; the fixed home's doors are added vacant
+            occupied: 'No',
             fixed: true,
-            plan: valueOf(PLAN_OPTIONS, v.plan) as BillingPlan,
             start: valueOf(START_OPTIONS, v.start) as BillingStart,
           },
         }));
@@ -255,28 +296,130 @@ export default function AddProperties(_: ScreenProps) {
       {/* Review change: the doors count (portfolio doors plus these units) sits in the middle of the Units row (was after
           From next cycle) */}
       <div className="hc-c80-units">
-        <NumberStepper title="Units (doors)" helper="Each rentable unit is one door" value={units} onValueChange={setUnits} min={1} />
+        <NumberStepper title="Units (doors)" helper="Each rentable unit is one door" value={units} onValueChange={changeUnits} min={1} />
         <span className="hc-small hc-muted hc-c80-units__doors" aria-live="polite">
           {PORTFOLIO_DOORS + units} doors on your plan
         </span>
       </div>
-      {/* Review change: Occupied now went to the top right of the card and is back under Units (review decision) */}
-      <Switch label="Occupied now" checked={occupied} onCheckedChange={setOccupied} />
+      {/* Review change: this address's monthly maintenance budget (what the Portfolio's Spent of budget measures against).
+          It follows the Units count ($100 a door) until one is picked */}
+      <div className="hc-c80-row hc-c80-row--select">
+        {/* Review change: a line under the label says how the budget splits across the units (updates as either changes) */}
+        <span className="hc-c80-budget">
+          <span className="hc-medium hc-muted">Monthly budget</span>
+          <span className="hc-small hc-muted" aria-live="polite">
+            {units === 1
+              ? `The whole ${usdWhole(monthlyBudget)} goes to this unit each month.`
+              : `Divided evenly across the ${units} units: ${perUnit(monthlyBudget, units)} a unit each month.`}
+          </span>
+        </span>
+        <Select
+          label="Monthly budget"
+          hideLabel
+          placeholder=""
+          options={budgetOptions(monthlyBudget)}
+          value={String(monthlyBudget)}
+          onValueChange={(v) => setBudget(Number(v))}
+          className="hc-c80-row__select"
+        />
+      </div>
       {/* Review change: Plan and From next cycle sit in this card (were only in the Summary); the next bill counts the
           portfolio's 9 doors plus this property's units */}
       {/* Review change: each on its own row, with a line under it like the questions */}
       {/* Review change: Plan and Billing starts (was From next cycle) are drop-downs; the note under them says what
           you'll pay for the choices */}
-      <div className="hc-c80-row hc-c80-row--select">
-        <span className="hc-medium hc-muted">Plan</span>
-        <Select label="Plan" hideLabel placeholder="" options={PLAN_OPTIONS} value={plan} onValueChange={(v) => setPlan(v as BillingPlan)} className="hc-c80-row__select" />
-      </div>
+      {/* Review change: no Plan row here; the plan is the account's, set on Account › Billing (the note below still
+          prices the doors on it) */}
       <div className="hc-c80-row hc-c80-row--select">
         <span className="hc-medium hc-muted">Billing starts</span>
         <Select label="Billing starts" hideLabel placeholder="" options={START_OPTIONS} value={start} onValueChange={(v) => setStart(v as BillingStart)} className="hc-c80-row__select" />
       </div>
       <Banner tone="info">{billingNote(plan, start, units)}</Banner>
     </>
+  );
+
+  /**
+   * Review change: the doors get their own table under the form card (was inside it), built like the Portfolio table:
+   * a Doors heading, the property's row (its address, a tenancy tag summing the doors), then one row per door that
+   * follows the Units count, each with its tenancy drop-down (review change: no Status column; it only ever said New). The Occupied now toggle is gone.
+   */
+  const occupiedCount = doors.filter((d) => d === 'occupied').length;
+  const doorsTable = (
+    <section className="hc-c80-doors-section" aria-labelledby="hc-c80-doors-title">
+      <h2 id="hc-c80-doors-title" className="hc-large-bold">
+        Doors
+      </h2>
+      <div className="hc-c80-doors" role="table" aria-label="Doors">
+        <div className="hc-c80-doors__row hc-c80-doors__row--head" role="row">
+          <span role="columnheader">Property</span>
+          <span role="columnheader">Tenancy</span>
+        </div>
+        <div className="hc-c80-doors__row" role="row">
+          <span role="cell" className={hasAddress ? 'hc-c80-doors__address' : 'hc-c80-doors__address hc-muted'}>
+            {hasAddress ? splitAddress(address).address : 'Enter an address above'}
+          </span>
+          <span role="cell">
+            <StatusPill
+              label={occupiedCount ? `${occupiedCount} occupied` : units === 1 ? 'Vacant' : `${units} vacant`}
+              tone={occupiedCount ? 'warning' : 'neutral'}
+            />
+          </span>
+        </div>
+        {doors.map((d, i) => (
+          <div key={i} className="hc-c80-doors__row hc-c80-doors__row--unit" role="row">
+            <span role="cell" className="hc-c80-doors__unit">
+              {/* Review change: with one unit there's no "Unit A", just its tenant line */}
+              {units > 1 && <span className="hc-c80-doors__unit-name">Unit {doorName(i)}</span>}
+              <span className="hc-c80-doors__unit-tenant">
+                {d === 'occupied' ? (invitees[i] ? `${invitees[i].name} · invite sent` : 'No tenant invited') : 'No tenant'}
+              </span>
+              {/* Review change: an occupied door gets Edit, to add its tenant and email them an invite */}
+              {d === 'occupied' && (
+                // Review change: Edit is a small pill button (like the Month / Year chips), not a link
+                <button type="button" className="hc-c80-doors__edit" onClick={() => setInviting(i)} aria-label={`Edit Unit ${doorName(i)} tenant`}>
+                  <StatusPill label="Edit" tone="neutral" />
+                </button>
+              )}
+            </span>
+            <span role="cell">
+              <Select
+                label={`Unit ${doorName(i)} tenancy`}
+                hideLabel
+                placeholder=""
+                options={TENANCY_OPTIONS}
+                value={d}
+                onValueChange={(v) => changeTenancy(i, v as DoorTenancy)}
+                className="hc-c80-doors__select"
+              />
+            </span>
+          </div>
+        ))}
+      </div>
+      {inviting !== null && (
+        <FormDialog
+          title={units > 1 ? `Invite a tenant · Unit ${doorName(inviting)}` : 'Invite a tenant'}
+          description={`${hasAddress ? splitAddress(address).address : 'This property'}${units > 1 ? `, Unit ${doorName(inviting)}` : ''}. They get an email to join HouseCue, where they can report problems and set when pros can come in.`}
+          fields={[
+            { key: 'name', label: 'Tenant name', field: { kind: 'text', placeholder: 'e.g. Jordan Reyes' } },
+            {
+              key: 'email',
+              label: 'Email',
+              field: { kind: 'email', placeholder: 'name@example.com' },
+              validate: (v) => (isEmail(v) ? undefined : 'Enter an email like name@example.com.'),
+            },
+          ]}
+          values={{ name: invitees[inviting]?.name ?? '', email: invitees[inviting]?.email ?? '' }}
+          submitLabel={invitees[inviting] ? 'Resend invite' : 'Send invite'}
+          countsAsEdit={false}
+          extraAction={invitees[inviting] ? { label: 'Remove tenant', onClick: () => { dropInvitees((j) => j !== inviting); setInviting(null); } } : undefined}
+          onSave={(v) => {
+            setInvitees((all) => ({ ...all, [inviting]: { name: v.name.trim(), email: v.email.trim() } }));
+            setInviting(null);
+          }}
+          onCancel={() => setInviting(null)}
+        />
+      )}
+    </section>
   );
 
   // Review change: Several at once shows only this upload box for now. It starts empty; choosing or dropping a CSV shows
@@ -352,8 +495,8 @@ export default function AddProperties(_: ScreenProps) {
               <span className="hc-medium-semibold">{h.address}</span>
               <span className="hc-small hc-muted">
                 {h.city} · {h.units} {h.units === 1 ? 'unit' : 'units'} · Occupied {h.occupied}
-                {/* Review change: a fixed row shows the plan and billing start chosen in the dialog */}
-                {h.fixed && h.plan && ` · ${h.plan === 'yearly' ? 'Yearly' : 'Monthly'}, billing starts ${h.start === 'today' ? 'today' : 'Dec 1'}`}
+                {/* Review change: a fixed row shows the billing start chosen in the dialog */}
+                {h.fixed && h.start && ` · billing starts ${h.start === 'today' ? 'today' : 'Dec 1'}`}
               </span>
             </span>
             {h.fix ? (
@@ -426,7 +569,15 @@ export default function AddProperties(_: ScreenProps) {
         <div key={mode} id="hc-c80-panel" role="tabpanel" aria-labelledby={`hc-c80-tab-${mode}`} className="hc-c80-panel">
         {/* Review change: Several at once shows only the CSV upload box while its flow is worked out (the matched-address
             list and table are still defined above for when it comes back) */}
-        {mode === 'one' ? oneForm : severalContent}
+        {mode === 'one' ? (
+          <>
+            {oneForm}
+            {doorsTable}
+            <PropertyDetailsEditor value={details} onChange={setDetailsDraft} address={hasAddress ? splitAddress(address).address : ''} />
+          </>
+        ) : (
+          severalContent
+        )}
         </div>
       </MobileShell>
     );
@@ -450,7 +601,16 @@ export default function AddProperties(_: ScreenProps) {
             {/* Review change: the content for the selected tab; it fades in when the tab changes */}
             <div key={mode} id="hc-c80-panel" role="tabpanel" aria-labelledby={`hc-c80-tab-${mode}`} className="hc-c80-panel">
               {/* Review change: Several at once shows only the CSV upload box while its flow is worked out (table kept above) */}
-              {mode === 'one' ? <section className="hc-c80-card hc-c80-card--form">{oneForm}</section> : severalContent}
+              {/* Review change: Address, Units, Plan and Billing starts in one card, the Doors table in its own under it */}
+              {mode === 'one' ? (
+                <>
+                  <section className="hc-c80-card hc-c80-card--form">{oneForm}</section>
+                  {doorsTable}
+                  <PropertyDetailsEditor value={details} onChange={setDetailsDraft} address={hasAddress ? splitAddress(address).address : ''} />
+                </>
+              ) : (
+                severalContent
+              )}
             </div>
           </div>
           <aside className="hc-c80-web__side">
